@@ -6,4 +6,4 @@ library(targets)
 tar_option_set(packages = "dplyr")
 
 
-PFUAggDatabase::get_plan()
+PFUAggDatabase::get_workflow()

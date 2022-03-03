@@ -1,4 +1,13 @@
-get_plan <- function() {
+#' Create a targets workflow
+#'
+#' Arguments to this function specify the details of a targets workflow to be executed.
+#'
+#' @return A list of `tar_target`s to be executed in a workflow.
+#'
+#' @export
+#'
+#' @examples
+get_workflow <- function() {
   # Create the targets list
   list(
     # Set the release that we'll use
