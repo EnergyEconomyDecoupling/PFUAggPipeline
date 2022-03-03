@@ -7,8 +7,8 @@
 #' @export
 #'
 #' @examples
-get_workflow <- function() {
-  # Create the targets list
+get_pipeline <- function() {
+  # Create the pipeline
   list(
     # Set the release that we'll use
     targets::tar_target(

@@ -1,7 +1,8 @@
 library(targets)
-# Run targets::tar_make() to run the pipeline
-# Rung targets::tar_make_clustermq(workers = 8) to execute across multiple cores.
-# and targets::tar_read(<<target_name>>) to view the results.
+# targets::tar_make() to run the pipeline
+# targets::tar_make_clustermq(workers = 8) to execute across multiple cores.
+# targets::tar_read(<<target_name>>) to view the results.
+# targets::tar_destroy() to start over with everything,
 
 # Set target-specific options such as packages.
 targets::tar_option_set(
@@ -13,4 +14,5 @@ targets::tar_option_set(
 options(clustermq.scheduler = "multiprocess")
 
 
-PFUAggDatabase::get_workflow()
+# Pull in the pipeline
+PFUAggDatabase::get_pipeline()
