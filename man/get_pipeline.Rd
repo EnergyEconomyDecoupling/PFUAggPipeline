@@ -4,11 +4,25 @@
 \alias{get_pipeline}
 \title{Create a targets workflow}
 \usage{
-get_pipeline(psut_release, psut_releases_folder)
+get_pipeline(psut_release, psut_releases_folder, exemplar_table_path)
+}
+\arguments{
+\item{psut_release}{The release we'll use from \code{psut_releases_folder}.}
+
+\item{psut_releases_folder}{The path to the \code{pins} archive of \code{PSUT} releases.}
+
+\item{exemplar_table_path}{The path to the examplar table.}
 }
 \value{
 A list of \code{tar_target}s to be executed in a workflow.
 }
 \description{
 Arguments to this function specify the details of a targets workflow to be executed.
+}
+\details{
+The exemplar table is assumed to be an Excel file with the following columns:
+"Region.code" and years (as numbers).
+The body of the table should contain 3-letter codes
+of countries.
+The exemplar table is assumed to be on the "exemplar_table" tab of the Excel file.
 }

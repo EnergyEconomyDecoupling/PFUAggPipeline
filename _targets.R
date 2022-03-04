@@ -6,9 +6,15 @@ library(targets)
 
 # Set target-specific options such as packages.
 targets::tar_option_set(
-  packages = "dplyr",
+  packages = c(
+    "dplyr",
+    "IEATools",
+    "PFUAggDatabase",
+    "pins",
+    "tidyr"),
+  # debug = "continent_table",
   resources = tar_resources(
-    clustermq = tar_resources_clustermq(template = list(num_cores = 2))
+    clustermq = tar_resources_clustermq(template = list(num_cores = 8))
   )
 )
 options(clustermq.scheduler = "multiprocess")
@@ -16,4 +22,5 @@ options(clustermq.scheduler = "multiprocess")
 
 # Pull in the pipeline
 PFUAggDatabase::get_pipeline(psut_release = "20220225T012039Z-c2035",
-                             psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]])
+                             psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]],
+                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]])
