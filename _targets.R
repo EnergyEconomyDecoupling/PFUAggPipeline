@@ -15,4 +15,5 @@ options(clustermq.scheduler = "multiprocess")
 
 
 # Pull in the pipeline
-PFUAggDatabase::get_pipeline()
+PFUAggDatabase::get_pipeline(psut_release = "20220225T012039Z-c2035",
+                             psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]])
