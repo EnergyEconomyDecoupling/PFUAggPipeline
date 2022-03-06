@@ -6,6 +6,7 @@ library(targets)
 
 # Set target-specific options such as packages.
 targets::tar_option_set(
+  debug = "continent_aggregation_map",
   packages = c(
     "dplyr",
     "IEATools",

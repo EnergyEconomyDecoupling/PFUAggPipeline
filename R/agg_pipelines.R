@@ -49,8 +49,8 @@ get_pipeline <- function(psut_release,
 
     # Create the data frame to be used for regional aggregation
     targets::tar_target(
-      continent_table,
-      PFUAggDatabase::create_continent_table(exemplar_table_path)
+      continent_aggregation_map,
+      PFUAggDatabase::continent_aggregation_map(exemplar_table_path)
     )
 
     # Aggregate by continent
@@ -63,51 +63,3 @@ get_pipeline <- function(psut_release,
 
 
 
-#' Load and create a data frame for use with continent aggregation
-#'
-#' The exemplar table is assumed to be an Excel file with the following columns:
-#' `region_code` and years (as numbers).
-#' The body of the table should contain 3-letter codes
-#' of countries.
-#' The exemplar table is assumed to be on the `exemplar_table_tab` tab of the Excel file.
-
-#'
-#' @param exemplar_table_path The path to the exemplar table
-#' @param region_code The name of a column containing region codes.
-#'                    Default is "Region.code".
-#' @param exemplar_table_tab The name of the tab in the file at `exemplar_table_path`
-#'                           where the region information exists.
-#'                           Default is "exemplar_table".
-#' @param country The name of the country column in the outgoing data frame.
-#'                Default is `IEATools::iea_cols$country`.
-#' @param year The name of the year column in the outgoing data frame.
-#'             Default is `IEATools::iea_cols$year`.
-#'
-#' @return A data frame with columns "Country", "Year", and `region_code`.
-#'
-#' @export
-create_continent_table <- function(exemplar_table_path,
-                                   exemplar_table_tab = "exemplar_table",
-                                   region_code = "Region.code",
-                                   continent = "Continent",
-                                   country = IEATools::iea_cols$country,
-                                   year = IEATools::iea_cols$year) {
-
-  # Load the file
-  region_table <- readxl::read_excel(path = exemplar_table_path,
-                                     sheet = exemplar_table_tab)
-  # Find names for the region_code column and year columns
-  region_code_col <- which((names(region_table) == region_code), arr.ind = TRUE)
-  year_col_nums <- IEATools::year_cols(region_table)
-  year_col_names <- IEATools::year_cols(region_table, return_names = TRUE)
-  keep <- c(region_code_col, year_col_nums)
-  # pivot the table and return
-  region_table |>
-    dplyr::select(keep) |>
-    tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) |>
-    # Remove an blank entries that appear as NA
-    dplyr::filter(!is.na(.data[[country]])) |>
-    dplyr::rename(
-      "{continent}" := .data[[region_code]]
-    )
-}
