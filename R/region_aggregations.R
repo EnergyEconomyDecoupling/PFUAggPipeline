@@ -40,24 +40,11 @@ continent_aggregation_map <- function(exemplar_table_path,
   year_col_names <- IEATools::year_cols(region_table, return_names = TRUE)
   keep <- c(region_code_col, year_col_nums)
   # pivot the table and return
-  df <- region_table |>
-    dplyr::select(keep) |>
-    tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) |>
-    # Remove an blank entries that appear as NA
-    dplyr::filter(!is.na(.data[[country]])) |>
+  df <- region_table %>%
+    dplyr::select(keep) %>%
+    tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) %>%
     dplyr::rename(
       "{continent}" := .data[[region_code]]
-    ) |>
-    dplyr::select(-.data[[year]]) |>
-    unique() |>
-    # Create a nested tibble
-    dplyr::nest_by(.data[[continent]], .key = country) |>
-    dplyr::mutate(
-      "{country}" := .data[[country]] |>
-        as.list() |>
-        unname()
-    )
-  # Return a list with countries as list items and continents as names.
-  df[[country]] |>
-    setNames(df[[continent]])
+    ) %>%
+    matsbyname::df_to_aggregation_map(few_colname = continent, many_colname = country)
 }
