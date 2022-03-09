@@ -4,9 +4,17 @@
 \alias{get_pipeline}
 \title{Create a targets workflow}
 \usage{
-get_pipeline(psut_release, psut_releases_folder, exemplar_table_path)
+get_pipeline(
+  countries = NULL,
+  psut_release,
+  psut_releases_folder,
+  exemplar_table_path
+)
 }
 \arguments{
+\item{countries}{A string vector of 3-letter country codes.
+Default is \code{NULL}, meaning all countries should be analyzed.}
+
 \item{psut_release}{The release we'll use from \code{psut_releases_folder}.}
 
 \item{psut_releases_folder}{The path to the \code{pins} archive of \code{PSUT} releases.}

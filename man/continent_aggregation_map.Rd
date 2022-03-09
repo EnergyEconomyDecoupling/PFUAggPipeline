@@ -42,5 +42,6 @@ The exemplar table is assumed to be an Excel file with the following columns:
 \code{region_code} and years (as numbers).
 The body of the table should contain 3-letter codes
 of countries.
-The exemplar table is assumed to be on the \code{exemplar_table_tab} tab of the Excel file.
+The exemplar table is assumed to be on the \code{exemplar_table_tab} tab
+of the Excel file.
 }

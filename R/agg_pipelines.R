@@ -8,6 +8,8 @@
 #' of countries.
 #' The exemplar table is assumed to be on the "exemplar_table" tab of the Excel file.
 #'
+#' @param countries A string vector of 3-letter country codes.
+#'                  Default is `NULL`, meaning all countries should be analyzed.
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param exemplar_table_path The path to the examplar table.
@@ -15,11 +17,19 @@
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
 #' @export
-get_pipeline <- function(psut_release,
+get_pipeline <- function(countries = NULL,
+                         psut_release,
                          psut_releases_folder,
                          exemplar_table_path) {
   # Create the pipeline
   list(
+    # Identify the countries for this analysis.
+    targets::tar_target(
+      name = keep_countries,
+      command = countries
+    ),
+
+    # NULL means all countries.
     # Set the release that we'll use
     targets::tar_target_raw(
       name = "PSUT_release",
@@ -36,8 +46,9 @@ get_pipeline <- function(psut_release,
     # Pull in the PSUT data frame
     targets::tar_target(
       PSUT,
-      pins::board_folder(pinboard_folder, versioned = TRUE) |>
-        pins::pin_read("psut", version = PSUT_release)
+      pins::board_folder(pinboard_folder, versioned = TRUE) %>%
+        pins::pin_read("psut", version = PSUT_release) %>%
+        filter_countries(keep_countries)
     ),
 
     # Set the path to the exemplar_table,
@@ -51,13 +62,14 @@ get_pipeline <- function(psut_release,
     targets::tar_target(
       continent_aggregation_map,
       PFUAggDatabase::continent_aggregation_map(exemplar_table_path)
-    )
+    ),
 
     # Aggregate by continent
-    # targets::tar_target(
-    #   PSUT_Re_continents,
-    #   agg_continents(PSUT)
-    # )
+    targets::tar_target(
+      PSUT_Re_continents,
+      Recca::region_aggregates(PSUT,
+                               aggregation_map = continent_aggregation_map)
+    )
   )
 }
 

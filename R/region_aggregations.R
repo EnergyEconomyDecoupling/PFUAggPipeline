@@ -49,3 +49,4 @@ continent_aggregation_map <- function(exemplar_table_path,
     ) %>%
     matsbyname::df_to_aggregation_map(few_colname = continent, many_colname = country)
 }
+
