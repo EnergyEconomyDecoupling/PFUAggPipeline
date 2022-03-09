@@ -42,22 +42,22 @@ continent_aggregation_map <- function(exemplar_table_path,
   # pivot the table and return
   df <- region_table |>
     dplyr::select(keep) |>
-    tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) |>
+    tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) %>%
     # Remove an blank entries that appear as NA
-    dplyr::filter(!is.na(.data[[country]])) |>
+    dplyr::filter(!is.na(.data[[country]])) %>%
     dplyr::rename(
       "{continent}" := .data[[region_code]]
-    ) |>
-    dplyr::select(-.data[[year]]) |>
-    unique() |>
+    ) %>%
+    dplyr::select(-.data[[year]]) %>%
+    unique() %>%
     # Create a nested tibble
-    dplyr::nest_by(.data[[continent]], .key = country) |>
+    dplyr::nest_by(.data[[continent]], .key = country) %>%
     dplyr::mutate(
-      "{country}" := .data[[country]] |>
-        as.list() |>
+      "{country}" := .data[[country]] %>%
+        as.list() %>%
         unname()
     )
   # Return a list with countries as list items and continents as names.
-  df[[country]] |>
+  df[[country]] %>%
     setNames(df[[continent]])
 }
