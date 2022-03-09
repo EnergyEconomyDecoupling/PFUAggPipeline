@@ -6,7 +6,7 @@ library(targets)
 
 # Set target-specific options such as packages.
 targets::tar_option_set(
-  # debug = "PSUT_Re_continents",
+  debug = "PSUT_Re_world",
   packages = c(
     "dplyr",
     "IEATools",
@@ -28,4 +28,6 @@ countries <- NULL
 PFUAggDatabase::get_pipeline(countries = countries,
                              psut_release = "20220225T012039Z-c2035",
                              psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]],
-                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]])
+                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]],
+                             world_aggregation_map = list(WLD = c("AMR", "ASA", "EUR", "OCN", "AFR", "BNK"))
+                             )

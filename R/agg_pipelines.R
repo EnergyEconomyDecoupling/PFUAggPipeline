@@ -13,6 +13,7 @@
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param exemplar_table_path The path to the examplar table.
+#' @param world_aggregation_map The aggregation map to aggregate from continents to the world.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -20,7 +21,8 @@
 get_pipeline <- function(countries = NULL,
                          psut_release,
                          psut_releases_folder,
-                         exemplar_table_path) {
+                         exemplar_table_path,
+                         world_aggregation_map) {
   # Create the pipeline
   list(
     # Identify the countries for this analysis.
@@ -64,12 +66,26 @@ get_pipeline <- function(countries = NULL,
       PFUAggDatabase::continent_aggregation_map(exemplar_table_path)
     ),
 
+    # Create the world aggregation map
+    targets::tar_target_raw(
+      name = "world_aggregation_map",
+      command = world_aggregation_map
+    ),
+
     # Aggregate by continent
     targets::tar_target(
       PSUT_Re_continents,
       Recca::region_aggregates(PSUT,
                                aggregation_map = continent_aggregation_map)
+    ),
+
+    # Aggregate to world (WLD)
+    targets::tar_target(
+      PSUT_Re_world,
+      Recca::region_aggregates(PSUT_Re_continents,
+                               aggregation_map = world_aggregation_map)
     )
+
   )
 }
 
