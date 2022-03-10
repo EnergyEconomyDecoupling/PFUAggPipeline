@@ -39,7 +39,7 @@ continent_aggregation_map <- function(exemplar_table_path,
   year_col_nums <- IEATools::year_cols(region_table)
   year_col_names <- IEATools::year_cols(region_table, return_names = TRUE)
   keep <- c(region_code_col, year_col_nums)
-  # pivot the table and return
+  # pivot the table and return an aggregation map
   df <- region_table %>%
     dplyr::select(keep) %>%
     tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) %>%
