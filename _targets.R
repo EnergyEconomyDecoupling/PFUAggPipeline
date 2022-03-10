@@ -6,7 +6,7 @@ library(targets)
 
 # Set target-specific options such as packages.
 targets::tar_option_set(
-  # debug = "PSUT_Re_world",
+  # debug = "PSUT_Re_all_St_pfu",
   packages = c(
     "dplyr",
     "IEATools",
@@ -20,9 +20,9 @@ targets::tar_option_set(
 )
 options(clustermq.scheduler = "multiprocess")
 
-countries <- c("WMB", "WAB")
+# countries <- c("WMB", "WAB")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
-# countries <- NULL
+countries <- NULL
 
 
 # Pull in the pipeline

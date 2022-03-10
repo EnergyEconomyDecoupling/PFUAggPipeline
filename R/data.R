@@ -1,0 +1,28 @@
+#' PFUAggDatabase data frame column names
+#'
+#' A string list containing named names of columns in PFUAggDatabase data frames.
+#' The data frames can be
+#' tidy (with one row for each data point) or
+#' wide (with years spread to the right).
+#' Items in the list act to compliment the column names in `IEATools::iea_cols`.
+#'
+#' @format A string list with `r length(sea_cols)` entries.
+#' \describe{
+#' \item{stage_colname}{The name of a metadata column containing the stage of the energy conversion chain, usually "Primary", "Final", or "Useful".}
+#' \item{gross_net_colname}{The name of a metadata column containing information as to whether aggregated data at the final and useful stage is in "Gross" or "Net" terms, see `Recca::finaldemand_aggregates()` and `Recca::primary_aggregates()`.}
+#' \item{e_product}{The name of a metadata column containing the names of energy products.}
+#' \item{sector_colname}{The name of a metadata column containing the names of final demand sectors.}
+#' \item{flow_colname}{The name of a metadata column containing the names of primary flows.}
+#' \item{agg_by_colname}{The name of a column containing the variable by which data was aggregated. Usually using `Recca::finaldemand_aggregates()` and `Recca::primary_aggregates()`, and usually one of "Flow", "Sector", "Product", or "Total".}
+#' \item{fd_sectors_colname}{The name of a column containing the list of final demand sectors desired for analysis. Usually created by `PFUWorkflow::get_fd_sectors()` and `PFUWorkflow::create_fd_sectors_list()`.}
+#' \item{p_ind_comp_colname}{The name of a column containing lists of primary industries desired for analysis. Usually created by using `Recca::find_p_industry_names()`.}
+#' \item{p_ind_prefix_colname}{The name of a column containing the list of primary industry prefixes desired for analysis. Usually supplied to `Recca::find_p_industry_names()` to return `p_ind_comp`.}
+#' \item{ex_colname}{The name of a column containing energy or exergy data.}
+#' \item{ex_p_colname}{The name of a column containing energy or exergy data at the primary stage. Usually produced by `Recca::primary_aggregates()`.}
+#' \item{ex_net_colname}{The name of a column containing energy or exergy data at the final and/or useful stage and in net terms. Usually produced by `Recca::finaldemand_aggregates()`.}
+#' \item{ex_gross_colname}{The name of a column containing energy or exergy data at the final and/or useful stage and in gross terms. Usually produced by `Recca::finaldemand_aggregates()`.}
+#' }
+#'
+#' @examples
+#' sea_cols
+"sea_cols"
