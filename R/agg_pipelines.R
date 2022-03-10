@@ -12,7 +12,7 @@
 #'                  Default is `NULL`, meaning all countries should be analyzed.
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
-#' @param exemplar_table_path The path to the examplar table.
+#' @param exemplar_table_path The path to the exemplar table.
 #' @param world_agg_map The aggregation map to aggregate from continents to the world.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
