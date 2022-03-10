@@ -20,9 +20,9 @@ targets::tar_option_set(
 )
 options(clustermq.scheduler = "multiprocess")
 
-# countries <- c("WMB")
+countries <- c("WMB", "WAB")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
-countries <- NULL
+# countries <- NULL
 
 
 # Pull in the pipeline

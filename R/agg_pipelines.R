@@ -91,8 +91,14 @@ get_pipeline <- function(countries = NULL,
     # Bind all aggregations together
     targets::tar_target(
       PSUT_Re_all,
-      dplyr::bind_rows(PSUT_Re_continents, PSUT_Re_world)
+      dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world)
     )
+
+    # Work on primary, final, useful aggregations
+    # targets::tar_target(
+    #   PSUT_Re_all_PFU,
+    #   pfu_aggregations(PSUT_Re_all)
+    # )
 
   )
 }
