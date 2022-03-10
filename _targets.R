@@ -6,7 +6,7 @@ library(targets)
 
 # Set target-specific options such as packages.
 targets::tar_option_set(
-  debug = "continent_aggregation_map",
+  debug = "PSUT_Re_world",
   packages = c(
     "dplyr",
     "IEATools",
@@ -20,8 +20,14 @@ targets::tar_option_set(
 )
 options(clustermq.scheduler = "multiprocess")
 
+# countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
+countries <- NULL
+
 
 # Pull in the pipeline
-PFUAggDatabase::get_pipeline(psut_release = "20220225T012039Z-c2035",
+PFUAggDatabase::get_pipeline(countries = countries,
+                             psut_release = "20220225T012039Z-c2035",
                              psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]],
-                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]])
+                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]],
+                             world_aggregation_map = list(WLD = c("AMR", "ASA", "EUR", "OCN", "AFR", "BNK"))
+                             )

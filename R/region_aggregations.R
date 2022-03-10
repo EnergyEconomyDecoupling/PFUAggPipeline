@@ -8,7 +8,8 @@
 #' `region_code` and years (as numbers).
 #' The body of the table should contain 3-letter codes
 #' of countries.
-#' The exemplar table is assumed to be on the `exemplar_table_tab` tab of the Excel file.
+#' The exemplar table is assumed to be on the `exemplar_table_tab` tab
+#' of the Excel file.
 #'
 #' @param exemplar_table_path The path to the exemplar table
 #' @param region_code The name of a column containing region codes.
@@ -48,3 +49,4 @@ continent_aggregation_map <- function(exemplar_table_path,
     ) %>%
     matsbyname::df_to_aggregation_map(few_colname = continent, many_colname = country)
 }
+
