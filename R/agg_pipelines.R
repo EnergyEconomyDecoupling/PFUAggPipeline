@@ -22,16 +22,17 @@ get_pipeline <- function(countries = NULL,
                          psut_release,
                          psut_releases_folder,
                          exemplar_table_path,
-                         world_aggregation_map) {
+                         world_agg_map) {
   # Create the pipeline
   list(
+
     # Identify the countries for this analysis.
+    # NULL means all countries.
     targets::tar_target(
       name = keep_countries,
       command = countries
     ),
 
-    # NULL means all countries.
     # Set the release that we'll use
     targets::tar_target_raw(
       name = "PSUT_release",
@@ -66,10 +67,11 @@ get_pipeline <- function(countries = NULL,
       PFUAggDatabase::continent_aggregation_map(exemplar_table_path)
     ),
 
-    # Create the world aggregation map
+    # Create the world aggregation map,
+    # which is simply the incoming object.
     targets::tar_target_raw(
-      name = "world_aggregation_map",
-      command = world_aggregation_map
+      "world_aggregation_map",
+      world_agg_map
     ),
 
     # Aggregate by continent
@@ -88,6 +90,3 @@ get_pipeline <- function(countries = NULL,
 
   )
 }
-
-
-

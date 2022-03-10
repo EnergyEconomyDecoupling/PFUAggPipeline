@@ -9,7 +9,7 @@ get_pipeline(
   psut_release,
   psut_releases_folder,
   exemplar_table_path,
-  world_aggregation_map
+  world_agg_map
 )
 }
 \arguments{
