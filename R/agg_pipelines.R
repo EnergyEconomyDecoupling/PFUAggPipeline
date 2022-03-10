@@ -86,6 +86,12 @@ get_pipeline <- function(countries = NULL,
       PSUT_Re_world,
       Recca::region_aggregates(PSUT_Re_continents,
                                aggregation_map = world_aggregation_map)
+    ),
+
+    # Bind all aggregations together
+    targets::tar_target(
+      PSUT_Re_all,
+      dplyr::bind_rows(PSUT_Re_continents, PSUT_Re_world)
     )
 
   )
