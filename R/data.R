@@ -26,3 +26,39 @@
 #' @examples
 #' sea_cols
 "sea_cols"
+
+
+#' Aggregation groups metadata information
+#'
+#' A string list containing values to be supplied to the metadata columns `PFUWorkflow::sea_cols$e_product_colname`,
+#' `PFUWorkflow::sea_cols$agg_by_colname`, `PFUWorkflow::sea_cols$sector_colname`, and `PFUWorkflow::sea_cols$flow_colname`.
+#'
+#' @format A string list with `r length(agg_metadata)` entries.
+#' \describe{
+#' \item{total_value}{The string "Total" indicating that data has been aggregated across all products and sectors/flows. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
+#' \item{all_value}{The string "All" indicating that data has been aggregated across one or more of: "Product", "Flow", or "Sector". Supplied to one or more of `PFUWorkflow::sea_cols$e_product_colname`, `PFUWorkflow::sea_cols$sector_colname`, and `PFUWorkflow::sea_cols$flow_colname` depending on the aggregation.}
+#' \item{product_value}{The string "Product" indicating that data has been aggregated by product. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
+#' \item{sector_value}{The string "Sector" indicating that data has been aggregated by sector. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
+#' \item{flow_value}{The string "Flow" indicating that data has been aggregated by flow. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
+#' }
+#'
+#' @examples
+#' agg_metadata
+"agg_metadata"
+
+
+#' Gross or Net metadata information
+#'
+#' A string list containing values indicating whether the output of the functions `Recca::finaldemand_aggregates`, `PFUWorkflow::calculate_fu_ex_total`,
+#' `PFUWorkflow::calculate_fu_ex_product`, `PFUWorkflow::calculate_fu_ex_sector`, and `PFUWorkflow::calculate_finaluseful_ex_data`
+#' are in Gross or Net terms. To be supplied to the metadata columns `PFUWorkflow::sea_cols$gross_net_colname`.
+#'
+#' @format A string list with `r length(gross_net_metadata)` entries.
+#' \describe{
+#' \item{gross_value}{The string "Gross" indicating that final demand was calculated for both EIOU and non-EIOU sectors. See `Recca::finaldemand_aggregates`.}
+#' \item{net_value}{The string "Net" indicating that final demand was calculated for only non-EIOU sectors. See `Recca::finaldemand_aggregates`.}
+#' }
+#'
+#' @examples
+#' gross_net_metadata
+"gross_net_metadata"

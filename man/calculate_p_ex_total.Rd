@@ -33,11 +33,11 @@ Usually "Resources", "Imports", and "Stock changes".}
 
 \item{country_colname, method_colname, energy_type_colname, year_colname}{See \code{IEATools::iea_cols}.}
 
-\item{flow_colname, e_product_colname, stage_colname, gross_net_colname, agg_by_colname, p_ind_comp_colname, p_ind_prefix_colname, ex_colname, ex_p_colname}{See \code{PFUWorkflow::sea_cols}.}
+\item{flow_colname, e_product_colname, stage_colname, gross_net_colname, agg_by_colname, p_ind_comp_colname, p_ind_prefix_colname, ex_colname, ex_p_colname}{See \code{PFUAggDatabase::sea_cols}.}
 
 \item{primary_value}{The string "Primary", representing the Primary stage of the energy conversion chain, see \code{IEATools::all_stages}.}
 
-\item{all_value, total_value}{See \code{PFUWorkflow::agg_metadata}.}
+\item{all_value, total_value}{See \code{PFUAggDatabase::agg_metadata}.}
 }
 \value{
 A data frame containing aggregate primary energy/exergy data by total (total energy supply (TES)).

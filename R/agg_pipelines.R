@@ -13,7 +13,7 @@
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param exemplar_table_path The path to the examplar table.
-#' @param world_aggregation_map The aggregation map to aggregate from continents to the world.
+#' @param world_agg_map The aggregation map to aggregate from continents to the world.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -23,6 +23,22 @@ get_pipeline <- function(countries = NULL,
                          psut_releases_folder,
                          exemplar_table_path,
                          world_agg_map) {
+
+  # Avoid notes
+  keep_countries <- NULL
+  PSUT <- NULL
+  pinboard_folder <- NULL
+  PSUT_release <- NULL
+  PSUT_Re_continents <- NULL
+  PSUT_Re_world <- NULL
+  world_aggregation_map <- NULL
+  PSUT_Re_all <- NULL
+  p_industry_prefixes <- NULL
+  PSUT_Re_all_St_p <- NULL
+  final_demand_sectors <- NULL
+  PSUT_Re_all_St_fu <- NULL
+  PSUT_Re_all_St_pfu <- NULL
+
   # Create the pipeline
   list(
 

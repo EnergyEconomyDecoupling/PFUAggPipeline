@@ -23,6 +23,8 @@ Default is "exemplar_table".}
 \item{region_code}{The name of a column containing region codes.
 Default is "Region.code".}
 
+\item{continent}{The name of the continent column. Default is "Continent".}
+
 \item{country}{The name of the country column in the outgoing data frame.
 Default is \code{IEATools::iea_cols$country}.}
 

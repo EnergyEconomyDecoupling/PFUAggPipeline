@@ -37,3 +37,21 @@ usethis::use_data(agg_metadata, overwrite = TRUE)
 gross_net_metadata <- list(gross_value = "Gross",
                            net_value = "Net")
 usethis::use_data(gross_net_metadata, overwrite = TRUE)
+
+
+#' Gross or Net metadata information
+#'
+#' A string list containing values indicating whether the output of the functions `Recca::finaldemand_aggregates`, `PFUWorkflow::calculate_fu_ex_total`,
+#' `PFUWorkflow::calculate_fu_ex_product`, `PFUWorkflow::calculate_fu_ex_sector`, and `PFUWorkflow::calculate_finaluseful_ex_data`
+#' are in Gross or Net terms. To be supplied to the metadata columns `PFUWorkflow::sea_cols$gross_net_colname`.
+#'
+#' @format A string list with `r length(gross_net_metadata)` entries.
+#' \describe{
+#' \item{gross_value}{The string "Gross" indicating that final demand was calculated for both EIOU and non-EIOU sectors. See `Recca::finaldemand_aggregates`.}
+#' \item{net_value}{The string "Net" indicating that final demand was calculated for only non-EIOU sectors. See `Recca::finaldemand_aggregates`.}
+#' }
+#'
+#' @examples
+#' gross_net_metadata
+"gross_net_metadata"
+

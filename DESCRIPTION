@@ -10,12 +10,21 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports:
+    assertthat,
+    dplyr,
+    IEATools, 
+    magrittr,
+    matsbyname,
+    matsindf,
     PFUSetup,
     pins,
-    targets
+    readxl,
+    Recca, 
+    rlang,
+    stringr,
+    targets,
+    tidyr
 Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
 LazyData: true

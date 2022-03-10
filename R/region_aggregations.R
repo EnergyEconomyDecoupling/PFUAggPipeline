@@ -12,11 +12,12 @@
 #' of the Excel file.
 #'
 #' @param exemplar_table_path The path to the exemplar table
-#' @param region_code The name of a column containing region codes.
-#'                    Default is "Region.code".
 #' @param exemplar_table_tab The name of the tab in the file at `exemplar_table_path`
 #'                           where the region information exists.
 #'                           Default is "exemplar_table".
+#' @param region_code The name of a column containing region codes.
+#'                    Default is "Region.code".
+#' @param continent The name of the continent column. Default is "Continent".
 #' @param country The name of the country column in the outgoing data frame.
 #'                Default is `IEATools::iea_cols$country`.
 #' @param year The name of the year column in the outgoing data frame.

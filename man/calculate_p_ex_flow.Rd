@@ -11,18 +11,18 @@ calculate_p_ex_flow(
   method_colname = IEATools::iea_cols$method,
   energy_type_colname = IEATools::iea_cols$energy_type,
   year_colname = IEATools::iea_cols$year,
-  flow_colname = PFUWorkflow::sea_cols$flow_colname,
-  e_product_colname = PFUWorkflow::sea_cols$e_product_colname,
-  stage_colname = PFUWorkflow::sea_cols$stage_colname,
-  gross_net_colname = PFUWorkflow::sea_cols$gross_net_colname,
-  agg_by_colname = PFUWorkflow::sea_cols$agg_by_colname,
-  p_ind_comp_colname = PFUWorkflow::sea_cols$p_ind_comp_colname,
-  p_ind_prefix_colname = PFUWorkflow::sea_cols$p_ind_prefix_colname,
-  ex_colname = PFUWorkflow::sea_cols$ex_colname,
-  ex_p_colname = PFUWorkflow::sea_cols$ex_p_colname,
+  flow_colname = PFUAggDatabase::sea_cols$flow_colname,
+  e_product_colname = PFUAggDatabase::sea_cols$e_product_colname,
+  stage_colname = PFUAggDatabase::sea_cols$stage_colname,
+  gross_net_colname = PFUAggDatabase::sea_cols$gross_net_colname,
+  agg_by_colname = PFUAggDatabase::sea_cols$agg_by_colname,
+  p_ind_comp_colname = PFUAggDatabase::sea_cols$p_ind_comp_colname,
+  p_ind_prefix_colname = PFUAggDatabase::sea_cols$p_ind_prefix_colname,
+  ex_colname = PFUAggDatabase::sea_cols$ex_colname,
+  ex_p_colname = PFUAggDatabase::sea_cols$ex_p_colname,
   primary_value = IEATools::all_stages$primary,
-  all_value = PFUWorkflow::agg_metadata$all_value,
-  flow_value = PFUWorkflow::agg_metadata$flow_value
+  all_value = PFUAggDatabase::agg_metadata$all_value,
+  flow_value = PFUAggDatabase::agg_metadata$flow_value
 )
 }
 \arguments{
@@ -34,11 +34,11 @@ Usually "Resources", "Imports", and "Stock changes".}
 
 \item{country_colname, method_colname, energy_type_colname, year_colname}{See \code{IEATools::iea_cols}.}
 
-\item{flow_colname, e_product_colname, stage_colname, gross_net_colname, agg_by_colname, p_ind_comp_colname, p_ind_prefix_colname, ex_colname, ex_p_colname}{See \code{PFUWorkflow::sea_cols}.}
+\item{flow_colname, e_product_colname, stage_colname, gross_net_colname, agg_by_colname, p_ind_comp_colname, p_ind_prefix_colname, ex_colname, ex_p_colname}{See \code{PFUAggDatabase::sea_cols}.}
 
 \item{primary_value}{The string "Primary", representing the Primary stage of the energy conversion chain, see \code{IEATools::all_stages}.}
 
-\item{all_value, flow_value}{See \code{PFUWorkflow::agg_metadata}.}
+\item{all_value, flow_value}{See \code{PFUAggDatabase::agg_metadata}.}
 }
 \value{
 A data frame containing aggregate primary energy/exergy data by flow.

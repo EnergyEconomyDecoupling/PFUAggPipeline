@@ -12,19 +12,19 @@ calculate_fu_ex_sector(
   energy_type_colname = IEATools::iea_cols$energy_type,
   last_stage_colname = IEATools::iea_cols$last_stage,
   year_colname = IEATools::iea_cols$year,
-  sector_colname = PFUWorkflow::sea_cols$sector_colname,
-  fd_sectors_colname = PFUWorkflow::sea_cols$fd_sectors_colname,
-  e_product_colname = PFUWorkflow::sea_cols$e_product_colname,
-  stage_colname = PFUWorkflow::sea_cols$stage_colname,
-  gross_net_colname = PFUWorkflow::sea_cols$gross_net_colname,
-  agg_by_colname = PFUWorkflow::sea_cols$agg_by_colname,
-  ex_colname = PFUWorkflow::sea_cols$ex_colname,
-  ex_net_colname = PFUWorkflow::sea_cols$ex_net_colname,
-  ex_gross_colname = PFUWorkflow::sea_cols$ex_gross_colname,
-  net_value = PFUWorkflow::gross_net_metadata$net_value,
-  gross_value = PFUWorkflow::gross_net_metadata$gross_value,
-  all_value = PFUWorkflow::agg_metadata$all_value,
-  sector_value = PFUWorkflow::agg_metadata$sector_value
+  sector_colname = PFUAggDatabase::sea_cols$sector_colname,
+  fd_sectors_colname = PFUAggDatabase::sea_cols$fd_sectors_colname,
+  e_product_colname = PFUAggDatabase::sea_cols$e_product_colname,
+  stage_colname = PFUAggDatabase::sea_cols$stage_colname,
+  gross_net_colname = PFUAggDatabase::sea_cols$gross_net_colname,
+  agg_by_colname = PFUAggDatabase::sea_cols$agg_by_colname,
+  ex_colname = PFUAggDatabase::sea_cols$ex_colname,
+  ex_net_colname = PFUAggDatabase::sea_cols$ex_net_colname,
+  ex_gross_colname = PFUAggDatabase::sea_cols$ex_gross_colname,
+  net_value = PFUAggDatabase::gross_net_metadata$net_value,
+  gross_value = PFUAggDatabase::gross_net_metadata$gross_value,
+  all_value = PFUAggDatabase::agg_metadata$all_value,
+  sector_value = PFUAggDatabase::agg_metadata$sector_value
 )
 }
 \arguments{
@@ -35,11 +35,11 @@ matrices with associated final demand sector names}
 
 \item{country_colname, method_colname, energy_type_colname, last_stage_colname, year_colname}{See \code{IEATools::iea_cols}.}
 
-\item{sector_colname, fd_sectors_colname, e_product_colname, stage_colname, gross_net_colname, agg_by_colname, ex_colname, ex_net_colname, ex_gross_colname}{See \code{PFUWorkflow::sea_cols}.}
+\item{sector_colname, fd_sectors_colname, e_product_colname, stage_colname, gross_net_colname, agg_by_colname, ex_colname, ex_net_colname, ex_gross_colname}{See \code{PFUAggDatabase::sea_cols}.}
 
-\item{net_value, gross_value}{See \code{PFUWorkflow::gross_net_metadata}.}
+\item{net_value, gross_value}{See \code{PFUAggDatabase::gross_net_metadata}.}
 
-\item{all_value, sector_value}{See \code{PFUWorkflow::agg_metadata}.}
+\item{all_value, sector_value}{See \code{PFUAggDatabase::agg_metadata}.}
 }
 \value{
 A data frame containing total final and useful consumption by sector
