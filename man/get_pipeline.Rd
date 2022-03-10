@@ -22,7 +22,7 @@ Default is \code{NULL}, meaning all countries should be analyzed.}
 
 \item{exemplar_table_path}{The path to the examplar table.}
 
-\item{world_aggregation_map}{The aggregation map to aggregate from continents to the world.}
+\item{world_agg_map}{The aggregation map to aggregate from continents to the world.}
 }
 \value{
 A list of \code{tar_target}s to be executed in a workflow.
