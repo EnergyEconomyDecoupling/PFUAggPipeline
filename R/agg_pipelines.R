@@ -24,7 +24,7 @@ get_pipeline <- function(countries = NULL,
                          exemplar_table_path,
                          world_agg_map) {
 
-  # Avoid notes
+  # Avoid notes when checking the package.
   keep_countries <- NULL
   PSUT <- NULL
   pinboard_folder <- NULL
