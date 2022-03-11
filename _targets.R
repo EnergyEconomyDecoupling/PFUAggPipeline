@@ -25,7 +25,7 @@ num_cores <- 8
 # Set the target to debug.  Set to NULL to turn off debugging.
 # To debug, set appropriate breakpoints and use
 # tar_make(callr_function = NULL).
-debug_target <- "continent_aggregation_map"
+debug_target <- "PSUT_Re_continents"
 
 
 # End user-adjustable parameters.
