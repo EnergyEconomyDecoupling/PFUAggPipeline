@@ -92,19 +92,24 @@ get_pipeline <- function(countries = "all",
       PFUAggDatabase::continent_aggregation_map(exemplar_table_path)
     ),
 
-    # Create a continents data frame
-    targets::tar_target(
-      PSUT_with_continents,
-      join_psut_continents(PSUT = PSUT,
-                           continent_aggregation_map = continent_aggregation_map,
-                           continent = "Continent")
+    # Create a continents data frame, grouped by continent,
+    # so subsequent operations (region aggregation)
+    # will be performed in parallel, if desired.
+    tarchetypes::tar_group_by(
+      name = PSUT_with_continent_col,
+      command = join_psut_continents(PSUT = PSUT,
+                                     continent_aggregation_map = continent_aggregation_map,
+                                     continent = "Continent"),
+      # The columns to group by, as symbols.
+      Continent,
+      storage = "worker",
+      retrieval = "worker"
       #
       #
       #
       #
       #
-      # Make this parallelizable by continent
-      # Also, possibly keep it in memory and transient, so we don't need to write it to disk.
+      # Keep this only in memory. No need to dump it to disk.
       #
       #
       #
@@ -115,20 +120,10 @@ get_pipeline <- function(countries = "all",
     # Aggregate by continent
     targets::tar_target(
       PSUT_Re_continents,
-      Recca::region_aggregates(PSUT_with_continents, region = "Continent"),
+      Recca::region_aggregates(PSUT_with_continent_col, region = "Continent"),
+      pattern = map(PSUT_with_continent_col),
       storage = "worker",
       retrieval = "worker"
-      #
-      #
-      #
-      #
-      #
-      # Parallelize across continents
-      #
-      #
-      #
-      #
-      #
     )
 
     # # Create the world aggregation map,

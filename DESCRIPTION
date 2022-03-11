@@ -22,6 +22,7 @@ Imports:
     Recca, 
     rlang,
     stringr,
+    tarchetypes,
     targets,
     tidyr
 Suggests: 

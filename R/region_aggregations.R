@@ -69,7 +69,7 @@ join_psut_continents <- function(PSUT,
                                  country = IEATools::iea_cols$country,
                                  continent = "Continent") {
   agg_df <- matsbyname::aggregation_map_to_df(continent_aggregation_map,
-                                              few_colname = IEATools::iea_cols$country,
-                                              many_colname = "Continent")
+                                              few_colname = "Continent",
+                                              many_colname = IEATools::iea_cols$country)
   dplyr::left_join(PSUT, agg_df, by = country)
 }
