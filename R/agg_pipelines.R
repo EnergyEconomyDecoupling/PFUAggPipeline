@@ -18,7 +18,7 @@
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
 #' @export
-get_pipeline <- function(countries = NULL,
+get_pipeline <- function(countries = "all",
                          psut_release,
                          psut_releases_folder,
                          exemplar_table_path,
@@ -67,7 +67,11 @@ get_pipeline <- function(countries = NULL,
       PSUT,
       pins::board_folder(pinboard_folder, versioned = TRUE) %>%
         pins::pin_read("psut", version = PSUT_release) %>%
-        filter_countries(keep_countries)
+        filter_countries(keep_countries),
+      # Very important to assign storage and retrieval tasks to workers,
+      # else the pipeline seemingly never finishes.
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     # Set the path to the exemplar_table,
@@ -91,64 +95,68 @@ get_pipeline <- function(countries = NULL,
     # Aggregate by continent
     targets::tar_target(
       PSUT_Re_continents,
-      Recca::region_aggregates(PSUT,
-                               aggregation_map = continent_aggregation_map)
-    ),
-
-    # Create the world aggregation map,
-    # which is simply the incoming object.
-    targets::tar_target_raw(
-      "world_aggregation_map",
-      world_agg_map
-    ),
-
-    # Aggregate to world (WLD)
-    targets::tar_target(
-      PSUT_Re_world,
-      Recca::region_aggregates(PSUT_Re_continents,
-                               aggregation_map = world_aggregation_map)
-    ),
-
-    # Bind all region aggregations together
-    targets::tar_target(
-      PSUT_Re_all,
-      dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world)
-    ),
-
-
-    #
-    # PFU aggregations
-    #
-
-    # Establish prefixes for primary industries
-    targets::tar_target(
-      p_industry_prefixes,
-      IEATools::prim_agg_flows %>% unname() %>% unlist() %>% list()
-    ),
-
-    # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
-    targets::tar_target(
-      PSUT_Re_all_St_p,
-      calculate_primary_ex_data(PSUT_Re_all, p_industry_prefixes = p_industry_prefixes)
-    ),
-
-    # Establish final demand sectors
-    targets::tar_target(
-      final_demand_sectors,
-      IEATools::fd_sectors
-    ),
-
-    # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
-    targets::tar_target(
-      PSUT_Re_all_St_fu,
-      calculate_finaluseful_ex_data(.sutdata = PSUT_Re_all, fd_sectors = final_demand_sectors)
-    ),
-
-    # Bring the aggregations together in a single data frame
-    targets::tar_target(
-      PSUT_Re_all_St_pfu,
-      dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu)
+      join_psut_continents(PSUT = PSUT,
+                           continent_aggregation_map = continent_aggregation_map,
+                           continent = "Continent") %>%
+        Recca::region_aggregates(PSUT, region = "Continent"),
+      storage = "worker",
+      retrieval = "worker"
     )
+
+    # # Create the world aggregation map,
+    # # which is simply the incoming object.
+    # targets::tar_target_raw(
+    #   "world_aggregation_map",
+    #   world_agg_map
+    # ),
+    #
+    # # Aggregate to world (WLD)
+    # targets::tar_target(
+    #   PSUT_Re_world,
+    #   Recca::region_aggregates(PSUT_Re_continents,
+    #                            aggregation_map = world_aggregation_map)
+    # ),
+    #
+    # # Bind all region aggregations together
+    # targets::tar_target(
+    #   PSUT_Re_all,
+    #   dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world)
+    # ),
+    #
+    #
+    # #
+    # # PFU aggregations
+    # #
+    #
+    # # Establish prefixes for primary industries
+    # targets::tar_target(
+    #   p_industry_prefixes,
+    #   IEATools::prim_agg_flows %>% unname() %>% unlist() %>% list()
+    # ),
+    #
+    # # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
+    # targets::tar_target(
+    #   PSUT_Re_all_St_p,
+    #   calculate_primary_ex_data(PSUT_Re_all, p_industry_prefixes = p_industry_prefixes)
+    # ),
+    #
+    # # Establish final demand sectors
+    # targets::tar_target(
+    #   final_demand_sectors,
+    #   IEATools::fd_sectors
+    # ),
+    #
+    # # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
+    # targets::tar_target(
+    #   PSUT_Re_all_St_fu,
+    #   calculate_finaluseful_ex_data(.sutdata = PSUT_Re_all, fd_sectors = final_demand_sectors)
+    # ),
+    #
+    # # Bring the aggregations together in a single data frame
+    # targets::tar_target(
+    #   PSUT_Re_all_St_pfu,
+    #   dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu)
+    # )
 
   )
 }
