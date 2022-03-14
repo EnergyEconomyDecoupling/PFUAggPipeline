@@ -104,17 +104,6 @@ get_pipeline <- function(countries = "all",
       Continent,
       storage = "worker",
       retrieval = "worker"
-      #
-      #
-      #
-      #
-      #
-      # Keep this only in memory. No need to dump it to disk.
-      #
-      #
-      #
-      #
-      #
     ),
 
     # Aggregate by continent
