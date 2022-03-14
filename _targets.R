@@ -1,3 +1,4 @@
+library(magrittr)
 library(targets)
 # targets::tar_make() to run the pipeline
 # targets::tar_make_clustermq(workers = 8) to execute across multiple cores.
@@ -9,6 +10,7 @@ library(targets)
 # Set the countries to be analyzed.
 # countries <- c("WMB", "WAB")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
+# countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
 countries <- "all" # Run all countries
 
 # Set the release of PSUT to be used.
@@ -29,8 +31,8 @@ num_cores <- 8
 # Set the target to debug.  Set to NULL to turn off debugging.
 # To debug, set appropriate breakpoints and use
 # tar_make(callr_function = NULL).
-# debug_target <- "PSUT_with_continent_col"
-debug_target <- NULL
+debug_target <- "PSUT_Re_world"
+# debug_target <- NULL
 
 # End user-adjustable parameters.
 
