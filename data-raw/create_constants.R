@@ -11,10 +11,7 @@ sea_cols <- list(stage_colname = "Stage",
                  fd_sectors_colname = "Fd.sectors",
                  p_ind_comp_colname = "p_industries_complete",
                  p_ind_prefix_colname = "p_industry_prefixes",
-                 ex_colname = "EX",
-                 ex_p_colname = "EX.p",
-                 ex_net_colname = "EX.d_net",
-                 ex_gross_colname = "EX.d_gross")
+                 ex_colname = "EX")
 usethis::use_data(sea_cols, overwrite = TRUE)
 
 

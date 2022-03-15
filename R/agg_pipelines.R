@@ -109,7 +109,9 @@ get_pipeline <- function(countries = "all",
     # Aggregate by continent
     targets::tar_target(
       PSUT_Re_continents,
-      Recca::region_aggregates(PSUT_with_continent_col, region = "Continent"),
+      Recca::region_aggregates(PSUT_with_continent_col,
+                               many_colname = IEATools::iea_cols$country,
+                               few_colname = "Continent"),
       pattern = map(PSUT_with_continent_col),
       storage = "worker",
       retrieval = "worker"
