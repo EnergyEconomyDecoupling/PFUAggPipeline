@@ -31,7 +31,7 @@ num_cores <- 8
 # Set the target to debug.  Set to NULL to turn off debugging.
 # To debug, set appropriate breakpoints and use
 # tar_make(callr_function = NULL).
-debug_target <- "PSUT_Re_all_St_fu"
+debug_target <- "eta_Re_all_St_pfu"
 # debug_target <- NULL
 
 # End user-adjustable parameters.

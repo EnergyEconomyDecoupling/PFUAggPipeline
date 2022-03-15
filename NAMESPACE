@@ -3,6 +3,7 @@
 export("%>%")
 export(":=")
 export(.data)
+export(calc_efficiencies)
 export(calculate_finaluseful_ex_data)
 export(calculate_fu_ex_product)
 export(calculate_fu_ex_sector)

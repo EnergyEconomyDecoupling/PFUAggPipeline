@@ -82,9 +82,9 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    #
-    # Regional aggregations
-    #
+    #########################
+    # Regional aggregations #
+    #########################
 
     # Create the data frame to be used for continental aggregation
     targets::tar_target(
@@ -142,9 +142,9 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    #
-    # PFU aggregations
-    #
+    ####################
+    # PFU aggregations #
+    ####################
 
     # Establish prefixes for primary industries
     targets::tar_target(
@@ -174,7 +174,19 @@ get_pipeline <- function(countries = "all",
     targets::tar_target(
       PSUT_Re_all_St_pfu,
       dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu)
+    ),
+
+
+    ################
+    # Efficiencies #
+    ################
+
+    targets::tar_target(
+      eta_Re_all_St_pfu,
+      calc_agg_etas(PSUT_Re_all_St_pfu)
     )
+
+
 
   )
 }

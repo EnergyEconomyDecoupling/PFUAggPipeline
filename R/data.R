@@ -62,3 +62,20 @@
 #' @examples
 #' gross_net_metadata
 "gross_net_metadata"
+
+
+#' PFUAggDatabase efficiency data frame column names
+#'
+#' A string list containing named names of columns in the efficiency data frame of the
+#' PFUAggDatabase.
+#'
+#' @format A string list with `r length(efficiency_cols)` entries.
+#' \describe{
+#' \item{eta_pf}{The name of a column containing primary-to-final efficiencies.}
+#' \item{eta_fu}{The name of a column containing final-to-useful efficiencies.}
+#' \item{eta_pu}{The name of a column containing primary-to-useful efficiencies.}
+#' }
+#'
+#' @examples
+#' efficiency_cols
+"efficiency_cols"
