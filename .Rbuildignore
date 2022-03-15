@@ -1,0 +1,10 @@
+^PFUAggDatabase\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^data-raw$
+^_targets$
+^_targets\.R$
+^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
