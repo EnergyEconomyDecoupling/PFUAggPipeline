@@ -6,8 +6,6 @@
 #' @return
 #'
 #' @export
-#'
-#' @examples
 calc_agg_etas <- function(.aggregates,
                           stage_colname = PFUAggDatabase::sea_cols$stage_colname,
                           ex_colname = PFUAggDatabase::sea_cols$ex_colname,
