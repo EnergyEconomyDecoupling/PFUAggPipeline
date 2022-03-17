@@ -173,7 +173,7 @@ get_pipeline <- function(countries = "all",
       PSUT_Re_all_St_p,
       calculate_primary_ex_data(PSUT_Re_all_by_country,
                                 p_industry_prefixes = p_industry_prefixes),
-      pattern = map(PSUT_with_continent_col),
+      pattern = map(PSUT_Re_all_by_country),
       storage = "worker",
       retrieval = "worker"
     ),

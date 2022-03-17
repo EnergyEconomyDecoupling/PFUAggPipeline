@@ -26,8 +26,8 @@ world_agg_map <- list(list(WLD = c("AMR", "ASA", "EUR", "OCN", "AFR", "BNK")))
 # To parallellize the execution of this pipeline, say
 # targets::tar_make_clustermq(workers = X),
 # where X is the same as the number of cores.
-num_cores <- 3
-# num_cores <- 8
+# num_cores <- 3
+num_cores <- 8
 
 # Set the target to debug.  Set to NULL to turn off debugging.
 # To debug, set appropriate breakpoints and use
