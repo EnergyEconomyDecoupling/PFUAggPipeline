@@ -7,8 +7,9 @@
 write_agg_etas_xlsx(
   .agg_etas,
   path,
-  tab,
-  pivot_wide = TRUE,
+  aggs_tabname = PFUAggDatabase::output_file_info$agg_tabname,
+  etas_tabname = PFUAggDatabase::output_file_info$eta_tabname,
+  wide_by_year = TRUE,
   primary = IEATools::all_stages$primary,
   final = IEATools::all_stages$final,
   useful = IEATools::all_stages$useful,
@@ -25,10 +26,6 @@ write_agg_etas_xlsx(
 
 \item{path}{The path where the Excel file will be saved.}
 
-\item{tab}{The name of the tab in the Excel file.}
-
-\item{pivot_wide}{If \code{TRUE}, the incoming data frame will be pivoted wider so that years are in columns.}
-
 \item{primary, final, useful}{See \code{IEATools::all_stages}.}
 
 \item{eta_pf_colname, eta_fu_colname, eta_pu_colname}{See \code{PFUAggDatabase::efficiency_cols}.}
@@ -36,6 +33,10 @@ write_agg_etas_xlsx(
 \item{year}{A column of years. Default is \code{IEATools::iea_cols$year}.}
 
 \item{quantity, .values}{See \code{IEATools::template_cols}.}
+
+\item{tab}{The name of the tab in the Excel file.}
+
+\item{pivot_wide}{If \code{TRUE}, the incoming data frame will be pivoted wider so that years are in columns.}
 }
 \value{
 \code{TRUE} if the file was written successfully.

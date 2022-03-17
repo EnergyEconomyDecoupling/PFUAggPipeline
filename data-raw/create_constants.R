@@ -46,3 +46,11 @@ efficiency_cols <- list(eta_pf = "eta_pf",
 usethis::use_data(efficiency_cols, overwrite = TRUE)
 
 
+#
+# File and tab names
+#
+
+output_file_info <- list(agg_eta_filename = "AggregateEfficiencyResults.xlsx",
+                         agg_tabname = "Aggregates",
+                         eta_tabname = "etas")
+usethis::use_data(output_file_info, overwrite = TRUE)

@@ -207,7 +207,10 @@ get_pipeline <- function(countries = "all",
 
     tarchetypes::tar_group_by(
       name = PSUT_Re_all_St_pfu_by_country,
-      command = PSUT_Re_all_St_pfu,
+      command = PSUT_Re_all_St_pfu %>%
+        dplyr::mutate(
+          tar_group = NULL
+        ),
       # The columns to group by, as symbols.
       Country,
       storage = "worker",
@@ -217,7 +220,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target(
       name = eta_Re_all_St_pfu,
       command = calc_agg_etas(PSUT_Re_all_St_pfu_by_country),
-      pattern = map(PSUT_Re_all_by_country),
+      pattern = map(PSUT_Re_all_St_pfu_by_country),
       storage = "worker",
       retrieval = "worker"
     ),

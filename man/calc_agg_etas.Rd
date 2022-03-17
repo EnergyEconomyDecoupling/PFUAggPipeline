@@ -25,7 +25,8 @@ calc_agg_etas(
   energy_type = IEATools::iea_cols$energy_type,
   flow = IEATools::iea_cols$flow,
   gross = PFUAggDatabase::gross_net_metadata$gross,
-  net = PFUAggDatabase::gross_net_metadata$net
+  net = PFUAggDatabase::gross_net_metadata$net,
+  tar_group = "tar_group"
 )
 }
 \arguments{
@@ -33,8 +34,12 @@ calc_agg_etas(
 This data frame should be the output of the}
 }
 \value{
-
+A data frame of aggregates and aggregate efficiencies.
 }
 \description{
-Calculate efficiencies from an aggregates data frame
+This function calculates efficiencies (etas) from the aggregates data frame.
+Aggregate energy and exergy are retained.
+}
+\details{
+This function removes the \code{tar_group} column.
 }

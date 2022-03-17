@@ -1,9 +1,14 @@
 #' Calculate efficiencies from an aggregates data frame
 #'
+#' This function calculates efficiencies (etas) from the aggregates data frame.
+#' Aggregate energy and exergy are retained.
+#'
+#' This function removes the `tar_group` column.
+#'
 #' @param .aggregates The data frame from which efficiencies are to be calculated.
 #'                    This data frame should be the output of the
 #'
-#' @return
+#' @return A data frame of aggregates and aggregate efficiencies.
 #'
 #' @export
 calc_agg_etas <- function(.aggregates,
@@ -26,7 +31,8 @@ calc_agg_etas <- function(.aggregates,
                           energy_type = IEATools::iea_cols$energy_type,
                           flow = IEATools::iea_cols$flow,
                           gross = PFUAggDatabase::gross_net_metadata$gross,
-                          net = PFUAggDatabase::gross_net_metadata$net) {
+                          net = PFUAggDatabase::gross_net_metadata$net,
+                          tar_group = "tar_group") {
 
   # Filter .aggregates to only Aggregation.by == "Total", because that's the only
   # way it makes sense to do aggregate efficiencies.
@@ -50,7 +56,8 @@ calc_agg_etas <- function(.aggregates,
       "{e_product_colname}" := NULL,
       "{flow}" := NULL,
       "{agg_by_colname}" := NULL,
-      "{sector_colname}" := NULL
+      "{sector_colname}" := NULL,
+      "{tar_group}" := NULL
     ) %>%
     # Put the primary energy into a column.
     tidyr::pivot_wider(names_from = stage_colname, values_from = ex_colname)
@@ -64,7 +71,8 @@ calc_agg_etas <- function(.aggregates,
       "{e_product_colname}" := NULL,
       "{flow}" := NULL,
       "{agg_by_colname}" := NULL,
-      "{sector_colname}" := NULL
+      "{sector_colname}" := NULL,
+      "{tar_group}" := NULL
     ) %>%
     # Put the final and useful energy into a column.
     tidyr::pivot_wider(names_from = stage_colname, values_from = ex_colname)
@@ -100,8 +108,9 @@ calc_agg_etas <- function(.aggregates,
 #' @export
 write_agg_etas_xlsx <- function(.agg_etas,
                                 path,
-                                tab,
-                                pivot_wide = TRUE,
+                                aggs_tabname = PFUAggDatabase::output_file_info$agg_tabname,
+                                etas_tabname = PFUAggDatabase::output_file_info$eta_tabname,
+                                wide_by_year = TRUE,
                                 primary = IEATools::all_stages$primary,
                                 final = IEATools::all_stages$final,
                                 useful = IEATools::all_stages$useful,
@@ -111,15 +120,33 @@ write_agg_etas_xlsx <- function(.agg_etas,
                                 year = IEATools::iea_cols$year,
                                 quantity = IEATools::template_cols$quantity,
                                 .values = IEATools::template_cols$.values) {
-  if (pivot_wide) {
-    .agg_etas <- .agg_etas %>%
-      tidyr::pivot_longer(cols = c(primary, final, useful, eta_pf_colname, eta_fu_colname, eta_pu_colname),
+  agg_df <- .agg_etas %>%
+    dplyr::mutate(
+      "{eta_pf_colname}" := NULL,
+      "{eta_fu_colname}" := NULL,
+      "{eta_pu_colname}" := NULL
+    )
+  eta_df <- .agg_etas %>%
+    dplyr::mutate(
+      "{primary}" := NULL,
+      "{final}" := NULL,
+      "{useful}" := NULL
+    )
+  if (wide_by_year) {
+    agg_df <- agg_df %>%
+      tidyr::pivot_longer(cols = c(primary, final, useful),
+                          names_to = quantity,
+                          values_to = .values) %>%
+      tidyr::pivot_wider(names_from = year, values_from = .values)
+    eta_df <- eta_df %>%
+      tidyr::pivot_longer(cols = c(eta_pf_colname, eta_fu_colname, eta_pu_colname),
                           names_to = quantity,
                           values_to = .values) %>%
       tidyr::pivot_wider(names_from = year, values_from = .values)
   }
-  .agg_etas %>%
-    writexl::write_xlsx(list(path) %>%
-                          magrittr::set_names(tab))
+
+  writexl::write_xlsx(list(agg_df, eta_df) %>%
+                        magrittr::set_names(c(aggs_tabname, etas_tabname)),
+                      path = path)
   return(TRUE)
 }
