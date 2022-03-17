@@ -80,3 +80,47 @@ calc_agg_etas <- function(.aggregates,
       "{eta_pu_colname}" := .data[[useful]] / .data[[primary]]
     )
 }
+
+
+#' Pivot and write aggregate efficiencies to an Excel file
+#'
+#' The incoming data frame is expected to contain
+#' a `year` column as well as
+#' `primary`, `final`, `useful`, `eta_pf`, `eta_fu`, and `eta_pu` columns.
+#'
+#' @param .agg_etas A data frame created by the `eta_Re_all_St_pfu` target.
+#' @param path The path where the Excel file will be saved.
+#' @param tab The name of the tab in the Excel file.
+#' @param pivot_wide If `TRUE`, the incoming data frame will be pivoted wider so that years are in columns.
+#' @param primary,final,useful See `IEATools::all_stages`.
+#' @param eta_pf_colname,eta_fu_colname,eta_pu_colname See `PFUAggDatabase::efficiency_cols`.
+#' @param year A column of years. Default is `IEATools::iea_cols$year`.
+#' @param quantity,.values See `IEATools::template_cols`.
+#'
+#' @return `TRUE` if the file was written successfully.
+#'
+#' @export
+write_agg_etas_xlsx <- function(.agg_etas,
+                                path,
+                                tab,
+                                pivot_wide = TRUE,
+                                primary = IEATools::all_stages$primary,
+                                final = IEATools::all_stages$final,
+                                useful = IEATools::all_stages$useful,
+                                eta_pf_colname = PFUAggDatabase::efficiency_cols$eta_pf,
+                                eta_fu_colname = PFUAggDatabase::efficiency_cols$eta_fu,
+                                eta_pu_colname = PFUAggDatabase::efficiency_cols$eta_pu,
+                                year = IEATools::iea_cols$year,
+                                quantity = IEATools::template_cols$quantity,
+                                .values = IEATools::template_cols$.values) {
+  if (pivot_wide) {
+    .agg_etas <- .agg_etas %>%
+      tidyr::pivot_longer(cols = c(primary, final, useful, eta_pf_colname, eta_fu_colname, eta_pu_colname),
+                          names_to = quantity,
+                          values_to = .values) %>%
+      tidyr::pivot_wider(names_from = year, values_from = .values)
+  }
+  .agg_etas %>%
+    writexl::write_xlsx(path = path)
+  return(TRUE)
+}

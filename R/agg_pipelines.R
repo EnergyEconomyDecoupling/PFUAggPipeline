@@ -111,7 +111,11 @@ get_pipeline <- function(countries = "all",
       PSUT_Re_continents,
       Recca::region_aggregates(PSUT_with_continent_col,
                                many_colname = IEATools::iea_cols$country,
-                               few_colname = "Continent"),
+                               few_colname = "Continent") %>%
+        # Eliminate the targets grouping.
+        dplyr::mutate(
+          tar_group = NULL
+        ),
       pattern = map(PSUT_with_continent_col),
       storage = "worker",
       retrieval = "worker"
@@ -184,6 +188,12 @@ get_pipeline <- function(countries = "all",
     targets::tar_target(
       eta_Re_all_St_pfu,
       calc_agg_etas(PSUT_Re_all_St_pfu)
+    ),
+
+    targets::tar_target(
+      write_agg_etas_xlsx,
+      write_agg_etas_xlsx(eta_Re_all_St_pfu,
+                          path = file.path(PFUSetup::get_abs_paths()[["reports_dest_folder"]], "AggregateEfficiencyResults.xlsx"))
     )
 
 

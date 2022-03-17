@@ -9,9 +9,9 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("WMB", "WAB")
-countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
+# countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
-# countries <- "all" # Run all countries
+countries <- "all" # Run all countries
 
 # Set the release of PSUT to be used.
 psut_release <- "20220225T012039Z-c2035"
@@ -31,8 +31,8 @@ num_cores <- 8
 # Set the target to debug.  Set to NULL to turn off debugging.
 # To debug, set appropriate breakpoints and use
 # tar_make(callr_function = NULL).
-debug_target <- "eta_Re_all_St_pfu"
-# debug_target <- NULL
+# debug_target <- "write_agg_etas_xlsx"
+debug_target <- NULL
 
 # End user-adjustable parameters.
 
