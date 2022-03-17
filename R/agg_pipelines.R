@@ -112,7 +112,8 @@ get_pipeline <- function(countries = "all",
       Recca::region_aggregates(PSUT_with_continent_col,
                                many_colname = IEATools::iea_cols$country,
                                few_colname = "Continent") %>%
-        # Eliminate the targets grouping.
+        # Eliminate the targets grouping on Continent
+        # so we can group by country later.
         dplyr::mutate(
           tar_group = NULL
         ),
@@ -150,6 +151,17 @@ get_pipeline <- function(countries = "all",
     # PFU aggregations #
     ####################
 
+    # Set up a grouped-by-country data frame
+    # so all future calculations are parallelized across countries.
+    tarchetypes::tar_group_by(
+      name = PSUT_Re_all_by_country,
+      command = PSUT_Re_all,
+      # The columns to group by, as symbols.
+      Country,
+      storage = "worker",
+      retrieval = "worker"
+    ),
+
     # Establish prefixes for primary industries
     targets::tar_target(
       p_industry_prefixes,
@@ -159,7 +171,11 @@ get_pipeline <- function(countries = "all",
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target(
       PSUT_Re_all_St_p,
-      calculate_primary_ex_data(PSUT_Re_all, p_industry_prefixes = p_industry_prefixes)
+      calculate_primary_ex_data(PSUT_Re_all_by_country,
+                                p_industry_prefixes = p_industry_prefixes),
+      pattern = map(PSUT_with_continent_col),
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     # Establish final demand sectors
