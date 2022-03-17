@@ -5,7 +5,7 @@
 \alias{sea_cols}
 \title{PFUAggDatabase data frame column names}
 \format{
-A string list with 13 entries.
+A string list with 10 entries.
 \describe{
 \item{stage_colname}{The name of a metadata column containing the stage of the energy conversion chain, usually "Primary", "Final", or "Useful".}
 \item{gross_net_colname}{The name of a metadata column containing information as to whether aggregated data at the final and useful stage is in "Gross" or "Net" terms, see \code{Recca::finaldemand_aggregates()} and \code{Recca::primary_aggregates()}.}

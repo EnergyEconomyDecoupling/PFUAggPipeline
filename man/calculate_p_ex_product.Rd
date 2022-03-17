@@ -19,7 +19,7 @@ calculate_p_ex_product(
   p_ind_comp_colname = PFUAggDatabase::sea_cols$p_ind_comp_colname,
   p_ind_prefix_colname = PFUAggDatabase::sea_cols$p_ind_prefix_colname,
   ex_colname = PFUAggDatabase::sea_cols$ex_colname,
-  ex_p_colname = PFUAggDatabase::sea_cols$ex_p_colname,
+  ex_p_colname = Recca::aggregate_cols$aggregate_primary,
   primary_value = IEATools::all_stages$primary,
   all_value = PFUAggDatabase::agg_metadata$all_value,
   product_value = PFUAggDatabase::agg_metadata$product_value

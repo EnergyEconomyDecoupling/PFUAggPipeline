@@ -12,13 +12,13 @@
 #'                  Default is `NULL`, meaning all countries should be analyzed.
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
-#' @param exemplar_table_path The path to the examplar table.
+#' @param exemplar_table_path The path to the exemplar table.
 #' @param world_agg_map The aggregation map to aggregate from continents to the world.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
 #' @export
-get_pipeline <- function(countries = NULL,
+get_pipeline <- function(countries = "all",
                          psut_release,
                          psut_releases_folder,
                          exemplar_table_path,
@@ -67,7 +67,11 @@ get_pipeline <- function(countries = NULL,
       PSUT,
       pins::board_folder(pinboard_folder, versioned = TRUE) %>%
         pins::pin_read("psut", version = PSUT_release) %>%
-        filter_countries(keep_countries)
+        filter_countries(keep_countries),
+      # Very important to assign storage and retrieval tasks to workers,
+      # else the pipeline seemingly never finishes.
+      storage = "worker",
+      retrieval = "worker",
     ),
 
     # Set the path to the exemplar_table,
@@ -78,9 +82,9 @@ get_pipeline <- function(countries = NULL,
     ),
 
 
-    #
-    # Regional aggregations
-    #
+    #########################
+    # Regional aggregations #
+    #########################
 
     # Create the data frame to be used for continental aggregation
     targets::tar_target(
@@ -88,11 +92,33 @@ get_pipeline <- function(countries = NULL,
       PFUAggDatabase::continent_aggregation_map(exemplar_table_path)
     ),
 
+    # Create a continents data frame, grouped by continent,
+    # so subsequent operations (region aggregation)
+    # will be performed in parallel, if desired.
+    tarchetypes::tar_group_by(
+      name = PSUT_with_continent_col,
+      command = join_psut_continents(PSUT = PSUT,
+                                     continent_aggregation_map = continent_aggregation_map,
+                                     continent = "Continent"),
+      # The columns to group by, as symbols.
+      Continent,
+      storage = "worker",
+      retrieval = "worker"
+    ),
+
     # Aggregate by continent
     targets::tar_target(
       PSUT_Re_continents,
-      Recca::region_aggregates(PSUT,
-                               aggregation_map = continent_aggregation_map)
+      Recca::region_aggregates(PSUT_with_continent_col,
+                               many_colname = IEATools::iea_cols$country,
+                               few_colname = "Continent") %>%
+        # Eliminate the targets grouping.
+        dplyr::mutate(
+          tar_group = NULL
+        ),
+      pattern = map(PSUT_with_continent_col),
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     # Create the world aggregation map,
@@ -105,8 +131,12 @@ get_pipeline <- function(countries = NULL,
     # Aggregate to world (WLD)
     targets::tar_target(
       PSUT_Re_world,
-      Recca::region_aggregates(PSUT_Re_continents,
-                               aggregation_map = world_aggregation_map)
+      Recca::region_aggregates(PSUT_Re_continents %>%
+                                 dplyr::mutate(
+                                   World = "WLD"
+                                 ),
+                               many_colname = IEATools::iea_cols$country, # Which actually holds continents
+                               few_colname = "World")
     ),
 
     # Bind all region aggregations together
@@ -116,9 +146,9 @@ get_pipeline <- function(countries = NULL,
     ),
 
 
-    #
-    # PFU aggregations
-    #
+    ####################
+    # PFU aggregations #
+    ####################
 
     # Establish prefixes for primary industries
     targets::tar_target(
@@ -148,7 +178,25 @@ get_pipeline <- function(countries = NULL,
     targets::tar_target(
       PSUT_Re_all_St_pfu,
       dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu)
+    ),
+
+
+    ################
+    # Efficiencies #
+    ################
+
+    targets::tar_target(
+      eta_Re_all_St_pfu,
+      calc_agg_etas(PSUT_Re_all_St_pfu)
+    ),
+
+    targets::tar_target(
+      write_agg_etas_xlsx,
+      write_agg_etas_xlsx(eta_Re_all_St_pfu,
+                          path = file.path(PFUSetup::get_abs_paths()[["reports_dest_folder"]], "AggregateEfficiencyResults.xlsx"))
     )
+
+
 
   )
 }

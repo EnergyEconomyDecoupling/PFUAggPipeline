@@ -6,7 +6,7 @@
 \usage{
 filter_countries(
   .psut_data,
-  countries = NULL,
+  countries = "all",
   country = IEATools::iea_cols$country
 )
 }
@@ -14,14 +14,13 @@ filter_countries(
 \item{.psut_data}{The entire PSUT data frame, read from the pinboard.}
 
 \item{countries}{A vector of 3-letter country codes for the countries to be used in this analysis.
-Default value is \code{NULL}, meaning no filtering by country will occur, and
-all countries from \code{.psut_data} will be included.}
+Default value is "all", meaning that all countries in \code{.psut_data} will be included.}
 
 \item{country}{The name of the country column in \code{.psut_data}.
 Default is \code{IEATools::iea_cols$country}.}
 }
 \value{
-\code{.psut_data} filtered to include only \code{countries}.
+A filtered version of \code{.psut_data}..
 }
 \description{
 Chooses countries to use in the rest of the pipeline.

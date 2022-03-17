@@ -42,7 +42,7 @@ continent_aggregation_map <- function(exemplar_table_path,
   year_col_names <- IEATools::year_cols(region_table, return_names = TRUE)
   keep <- c(region_code_col, year_col_nums)
   # pivot the table and return an aggregation map
-  df <- region_table %>%
+  region_table %>%
     dplyr::select(keep) %>%
     tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) %>%
     dplyr::rename(
@@ -51,3 +51,25 @@ continent_aggregation_map <- function(exemplar_table_path,
     matsbyname::df_to_aggregation_map(few_colname = continent, many_colname = country)
 }
 
+
+#' Join the continent aggregation map to the PSUT data frame
+#'
+#' The join is accomplished in a way that supports aggregating into continents.
+#'
+#' @param PSUT The `PSUT` data frame.
+#' @param continent_aggregation_map A list with names for continents and vectors of countries as items.
+#' @param country The name of the country column. Default is `IEATools::iea_cols$country`.
+#' @param continent The name of the continent column. Default is "Continent".
+#'
+#' @return `PSUT` with an additional "Continent" column.
+#'
+#' @export
+join_psut_continents <- function(PSUT,
+                                 continent_aggregation_map,
+                                 country = IEATools::iea_cols$country,
+                                 continent = "Continent") {
+  agg_df <- matsbyname::aggregation_map_to_df(continent_aggregation_map,
+                                              few_colname = "Continent",
+                                              many_colname = IEATools::iea_cols$country)
+  dplyr::left_join(PSUT, agg_df, by = country)
+}

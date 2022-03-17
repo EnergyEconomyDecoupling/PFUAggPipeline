@@ -5,7 +5,7 @@
 \title{Create a targets workflow}
 \usage{
 get_pipeline(
-  countries = NULL,
+  countries = "all",
   psut_release,
   psut_releases_folder,
   exemplar_table_path,
@@ -20,7 +20,7 @@ Default is \code{NULL}, meaning all countries should be analyzed.}
 
 \item{psut_releases_folder}{The path to the \code{pins} archive of \code{PSUT} releases.}
 
-\item{exemplar_table_path}{The path to the examplar table.}
+\item{exemplar_table_path}{The path to the exemplar table.}
 
 \item{world_agg_map}{The aggregation map to aggregate from continents to the world.}
 }

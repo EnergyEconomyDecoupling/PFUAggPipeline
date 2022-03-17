@@ -5,3 +5,6 @@
 ^_targets$
 ^_targets\.R$
 ^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

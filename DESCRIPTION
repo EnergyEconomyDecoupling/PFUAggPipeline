@@ -22,9 +22,12 @@ Imports:
     Recca, 
     rlang,
     stringr,
+    tarchetypes,
     targets,
     tidyr
 Suggests: 
+    spelling
 Depends: 
     R (>= 2.10)
 LazyData: true
+Language: en-US
