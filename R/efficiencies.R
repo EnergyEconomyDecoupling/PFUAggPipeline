@@ -119,6 +119,7 @@ write_agg_etas_xlsx <- function(.agg_etas,
       tidyr::pivot_wider(names_from = year, values_from = .values)
   }
   .agg_etas %>%
-    writexl::write_xlsx(path = path)
+    writexl::write_xlsx(list(path) %>%
+                          magrittr::set_names(tab))
   return(TRUE)
 }
