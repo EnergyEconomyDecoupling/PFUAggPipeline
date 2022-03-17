@@ -186,8 +186,12 @@ get_pipeline <- function(countries = "all",
 
     # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
     targets::tar_target(
-      PSUT_Re_all_St_fu,
-      calculate_finaluseful_ex_data(.sutdata = PSUT_Re_all, fd_sectors = final_demand_sectors)
+      name = PSUT_Re_all_St_fu,
+      command = calculate_finaluseful_ex_data(PSUT_Re_all_by_country,
+                                              fd_sectors = final_demand_sectors),
+      pattern = map(PSUT_Re_all_by_country),
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     # Bring the aggregations together in a single data frame
@@ -202,8 +206,11 @@ get_pipeline <- function(countries = "all",
     ################
 
     targets::tar_target(
-      eta_Re_all_St_pfu,
-      calc_agg_etas(PSUT_Re_all_St_pfu)
+      name = eta_Re_all_St_pfu,
+      command = calc_agg_etas(PSUT_Re_all_St_pfu),
+      pattern = map(PSUT_Re_all_by_country),
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     targets::tar_target(
