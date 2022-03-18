@@ -9,21 +9,21 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("WMB", "WAB")
-countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
+# countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
-# countries <- "all" # Run all countries
+countries <- "all" # Run all countries
 
 # Set the release of PSUT to be used.
 psut_release <- "20220225T012039Z-c2035"
 
 # world_agg_map needs to be a double-nested list, because the first layer
 # is stripped off by the targets pipeline.
-world_agg_map <- list(list(WLD = c("AMR", "ASA", "EUR", "OCN", "AFR", "BNK")))
+# world_agg_map <- list(list(WLD = c("AMR", "ASA", "EUR", "OCN", "AFR", "BNK")))
 
 # Number of machine cores to use.
 # Set to less than available on your machine.
 # Applies only to tar_make_clustermq().
-# To parallellize the execution of this pipeline, say
+# To parallelize the execution of this pipeline, say
 # targets::tar_make_clustermq(workers = X),
 # where X is the same as the number of cores.
 # num_cores <- 3
@@ -68,5 +68,4 @@ targets::tar_option_set(
 PFUAggDatabase::get_pipeline(countries = countries,
                              psut_release = psut_release,
                              psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]],
-                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]],
-                             world_agg_map = world_agg_map)
+                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]])

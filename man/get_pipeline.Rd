@@ -8,8 +8,7 @@ get_pipeline(
   countries = "all",
   psut_release,
   psut_releases_folder,
-  exemplar_table_path,
-  world_agg_map
+  exemplar_table_path
 )
 }
 \arguments{
@@ -21,8 +20,6 @@ Default is \code{NULL}, meaning all countries should be analyzed.}
 \item{psut_releases_folder}{The path to the \code{pins} archive of \code{PSUT} releases.}
 
 \item{exemplar_table_path}{The path to the exemplar table.}
-
-\item{world_agg_map}{The aggregation map to aggregate from continents to the world.}
 }
 \value{
 A list of \code{tar_target}s to be executed in a workflow.

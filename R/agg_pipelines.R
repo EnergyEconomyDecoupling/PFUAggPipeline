@@ -13,7 +13,6 @@
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param exemplar_table_path The path to the exemplar table.
-#' @param world_agg_map The aggregation map to aggregate from continents to the world.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -21,8 +20,7 @@
 get_pipeline <- function(countries = "all",
                          psut_release,
                          psut_releases_folder,
-                         exemplar_table_path,
-                         world_agg_map) {
+                         exemplar_table_path) {
 
   # Avoid notes when checking the package.
   keep_countries <- NULL
@@ -31,7 +29,6 @@ get_pipeline <- function(countries = "all",
   PSUT_release <- NULL
   PSUT_Re_continents <- NULL
   PSUT_Re_world <- NULL
-  world_aggregation_map <- NULL
   PSUT_Re_all <- NULL
   p_industry_prefixes <- NULL
   PSUT_Re_all_St_p <- NULL
@@ -122,12 +119,12 @@ get_pipeline <- function(countries = "all",
       retrieval = "worker"
     ),
 
-    # Create the world aggregation map,
-    # which is simply the incoming object.
-    targets::tar_target_raw(
-      "world_aggregation_map",
-      world_agg_map
-    ),
+    # # Create the world aggregation map,
+    # # which is simply the incoming object.
+    # targets::tar_target_raw(
+    #   "world_aggregation_map",
+    #   world_agg_map
+    # ),
 
     # Aggregate to world (WLD)
     targets::tar_target(
