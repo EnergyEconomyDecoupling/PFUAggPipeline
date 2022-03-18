@@ -8,13 +8,15 @@ calc_agg_etas(
   .aggregates,
   stage_colname = PFUAggDatabase::sea_cols$stage_colname,
   ex_colname = PFUAggDatabase::sea_cols$ex_colname,
-  eta_pf_colname = PFUAggDatabase::efficiency_cols$eta_pf,
-  eta_fu_colname = PFUAggDatabase::efficiency_cols$eta_fu,
-  eta_pu_colname = PFUAggDatabase::efficiency_cols$eta_pu,
   agg_by_colname = PFUAggDatabase::sea_cols$agg_by_colname,
   e_product_colname = PFUAggDatabase::sea_cols$e_product_colname,
   gross_net_colname = PFUAggDatabase::sea_cols$gross_net_colname,
   sector_colname = PFUAggDatabase::sea_cols$sector_colname,
+  eta_pf_colname = PFUAggDatabase::efficiency_cols$eta_pf,
+  eta_fu_colname = PFUAggDatabase::efficiency_cols$eta_fu,
+  eta_pu_colname = PFUAggDatabase::efficiency_cols$eta_pu,
+  gross = PFUAggDatabase::gross_net_metadata$gross,
+  net = PFUAggDatabase::gross_net_metadata$net,
   total_value = PFUAggDatabase::agg_metadata$total_value,
   primary = IEATools::all_stages$primary,
   final = IEATools::all_stages$final,
@@ -24,14 +26,27 @@ calc_agg_etas(
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
   flow = IEATools::iea_cols$flow,
-  gross = PFUAggDatabase::gross_net_metadata$gross,
-  net = PFUAggDatabase::gross_net_metadata$net,
   tar_group = "tar_group"
 )
 }
 \arguments{
 \item{.aggregates}{The data frame from which efficiencies are to be calculated.
-This data frame should be the output of the}
+This data frame should be the output of the
+\code{PSUT_Re_all_St_pfu} or \code{PSUT_Re_all_St_pfu_by_country}
+targets.}
+
+\item{stage_colname, ex_colname, agg_by_colname, e_product_colname, gross_net_colname, sector_colname}{See \code{PFUAggDatabase::sea_cols}.}
+
+\item{eta_pf_colname, eta_fu_colname, eta_pu_colname}{See \code{PFUAggDatabase::efficiency_cols}.}
+
+\item{gross, net}{See \code{PFUAggDatabase::gross_net_metadata}}
+
+\item{total_value}{See \code{PFUAggDatabase::agg_metadata}.}
+
+\item{primary, final, useful, country, year, method, energy_type, flow}{See \code{IEATools::iea_cols}.}
+
+\item{tar_group}{The name of the targets grouping column in \code{.aggregates}.
+This column is deleted on output.}
 }
 \value{
 A data frame of aggregates and aggregate efficiencies.

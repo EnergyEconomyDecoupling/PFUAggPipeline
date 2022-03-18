@@ -7,6 +7,15 @@
 #'
 #' @param .aggregates The data frame from which efficiencies are to be calculated.
 #'                    This data frame should be the output of the
+#'                    `PSUT_Re_all_St_pfu` or `PSUT_Re_all_St_pfu_by_country`
+#'                    targets.
+#' @param stage_colname,ex_colname,agg_by_colname,e_product_colname,gross_net_colname,sector_colname See `PFUAggDatabase::sea_cols`.
+#' @param eta_pf_colname,eta_fu_colname,eta_pu_colname See `PFUAggDatabase::efficiency_cols`.
+#' @param total_value See `PFUAggDatabase::agg_metadata`.
+#' @param gross,net See `PFUAggDatabase::gross_net_metadata`
+#' @param primary,final,useful,country,year,method,energy_type,flow See `IEATools::iea_cols`.
+#' @param tar_group The name of the targets grouping column in `.aggregates`.
+#'                  This column is deleted on output.
 #'
 #' @return A data frame of aggregates and aggregate efficiencies.
 #'
@@ -14,14 +23,20 @@
 calc_agg_etas <- function(.aggregates,
                           stage_colname = PFUAggDatabase::sea_cols$stage_colname,
                           ex_colname = PFUAggDatabase::sea_cols$ex_colname,
-                          eta_pf_colname = PFUAggDatabase::efficiency_cols$eta_pf,
-                          eta_fu_colname = PFUAggDatabase::efficiency_cols$eta_fu,
-                          eta_pu_colname = PFUAggDatabase::efficiency_cols$eta_pu,
                           agg_by_colname = PFUAggDatabase::sea_cols$agg_by_colname,
                           e_product_colname = PFUAggDatabase::sea_cols$e_product_colname,
                           gross_net_colname = PFUAggDatabase::sea_cols$gross_net_colname,
                           sector_colname = PFUAggDatabase::sea_cols$sector_colname,
+
+                          eta_pf_colname = PFUAggDatabase::efficiency_cols$eta_pf,
+                          eta_fu_colname = PFUAggDatabase::efficiency_cols$eta_fu,
+                          eta_pu_colname = PFUAggDatabase::efficiency_cols$eta_pu,
+
+                          gross = PFUAggDatabase::gross_net_metadata$gross,
+                          net = PFUAggDatabase::gross_net_metadata$net,
+
                           total_value = PFUAggDatabase::agg_metadata$total_value,
+
                           primary = IEATools::all_stages$primary,
                           final = IEATools::all_stages$final,
                           useful = IEATools::all_stages$useful,
@@ -30,8 +45,7 @@ calc_agg_etas <- function(.aggregates,
                           method = IEATools::iea_cols$method,
                           energy_type = IEATools::iea_cols$energy_type,
                           flow = IEATools::iea_cols$flow,
-                          gross = PFUAggDatabase::gross_net_metadata$gross,
-                          net = PFUAggDatabase::gross_net_metadata$net,
+
                           tar_group = "tar_group") {
 
   # Filter .aggregates to only Aggregation.by == "Total", because that's the only
@@ -96,8 +110,9 @@ calc_agg_etas <- function(.aggregates,
 #'
 #' @param .agg_etas A data frame created by the `eta_Re_all_St_pfu` target.
 #' @param path The path where the Excel file will be saved.
-#' @param tab The name of the tab in the Excel file.
-#' @param pivot_wide If `TRUE`, the incoming data frame will be pivoted wider so that years are in columns.
+#' @param aggs_tabname,etas_tabname See `PFUAggDatabase::output_file_info`.
+#' @param wide_by_year If `TRUE` (the default), the incoming data frame will be pivoted to be wide by years.
+#'                     If `FALSE`, data will be unchanged.
 #' @param primary,final,useful See `IEATools::all_stages`.
 #' @param eta_pf_colname,eta_fu_colname,eta_pu_colname See `PFUAggDatabase::efficiency_cols`.
 #' @param year A column of years. Default is `IEATools::iea_cols$year`.

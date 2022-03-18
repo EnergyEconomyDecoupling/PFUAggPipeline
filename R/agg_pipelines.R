@@ -35,6 +35,14 @@ get_pipeline <- function(countries = "all",
   final_demand_sectors <- NULL
   PSUT_Re_all_St_fu <- NULL
   PSUT_Re_all_St_pfu <- NULL
+  PSUT_with_continent_col <- NULL
+  PSUT_Re_all_by_country <- NULL
+  PSUT_Re_all_St_pfu_by_country <- NULL
+  eta_Re_all_St_pfu <- NULL
+
+  Continent <- NULL
+  Country <- NULL
+  map <- NULL
 
   # Create the pipeline
   list(
@@ -118,13 +126,6 @@ get_pipeline <- function(countries = "all",
       storage = "worker",
       retrieval = "worker"
     ),
-
-    # # Create the world aggregation map,
-    # # which is simply the incoming object.
-    # targets::tar_target_raw(
-    #   "world_aggregation_map",
-    #   world_agg_map
-    # ),
 
     # Aggregate to world (WLD)
     targets::tar_target(

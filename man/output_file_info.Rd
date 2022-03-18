@@ -8,8 +8,8 @@
 A string list with 3 entries.
 \describe{
 \item{agg_eta_filename}{The name of the Excel file containing aggregate energy and exergy values and aggregate efficiencies.}
-\item{agg_tabname}{The name of the tab in \code{agg_eta_filename} ontaining aggregated energy and exergy values.}
-\item{eta_tabname}{The name of the tab in \code{agg_eta_filename} ontaining aggregated efficiencies.}
+\item{agg_tabname}{The name of the tab in \code{agg_eta_filename} containing aggregated energy and exergy values.}
+\item{eta_tabname}{The name of the tab in \code{agg_eta_filename} containing aggregated efficiencies.}
 }
 }
 \usage{
