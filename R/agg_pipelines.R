@@ -13,7 +13,6 @@
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param exemplar_table_path The path to the exemplar table.
-#' @param world_agg_map The aggregation map to aggregate from continents to the world.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -21,8 +20,7 @@
 get_pipeline <- function(countries = "all",
                          psut_release,
                          psut_releases_folder,
-                         exemplar_table_path,
-                         world_agg_map) {
+                         exemplar_table_path) {
 
   # Avoid notes when checking the package.
   keep_countries <- NULL
@@ -31,13 +29,20 @@ get_pipeline <- function(countries = "all",
   PSUT_release <- NULL
   PSUT_Re_continents <- NULL
   PSUT_Re_world <- NULL
-  world_aggregation_map <- NULL
   PSUT_Re_all <- NULL
   p_industry_prefixes <- NULL
   PSUT_Re_all_St_p <- NULL
   final_demand_sectors <- NULL
   PSUT_Re_all_St_fu <- NULL
   PSUT_Re_all_St_pfu <- NULL
+  PSUT_with_continent_col <- NULL
+  PSUT_Re_all_by_country <- NULL
+  PSUT_Re_all_St_pfu_by_country <- NULL
+  eta_Re_all_St_pfu <- NULL
+
+  Continent <- NULL
+  Country <- NULL
+  map <- NULL
 
   # Create the pipeline
   list(
@@ -112,20 +117,14 @@ get_pipeline <- function(countries = "all",
       Recca::region_aggregates(PSUT_with_continent_col,
                                many_colname = IEATools::iea_cols$country,
                                few_colname = "Continent") %>%
-        # Eliminate the targets grouping.
+        # Eliminate the targets grouping on Continent
+        # so we can group by country later.
         dplyr::mutate(
           tar_group = NULL
         ),
       pattern = map(PSUT_with_continent_col),
       storage = "worker",
       retrieval = "worker"
-    ),
-
-    # Create the world aggregation map,
-    # which is simply the incoming object.
-    targets::tar_target_raw(
-      "world_aggregation_map",
-      world_agg_map
     ),
 
     # Aggregate to world (WLD)
@@ -150,6 +149,17 @@ get_pipeline <- function(countries = "all",
     # PFU aggregations #
     ####################
 
+    # Set up a grouped-by-country data frame
+    # so all future calculations are parallelized across countries.
+    tarchetypes::tar_group_by(
+      name = PSUT_Re_all_by_country,
+      command = PSUT_Re_all,
+      # The columns to group by, as symbols.
+      Country,
+      storage = "worker",
+      retrieval = "worker"
+    ),
+
     # Establish prefixes for primary industries
     targets::tar_target(
       p_industry_prefixes,
@@ -159,7 +169,11 @@ get_pipeline <- function(countries = "all",
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target(
       PSUT_Re_all_St_p,
-      calculate_primary_ex_data(PSUT_Re_all, p_industry_prefixes = p_industry_prefixes)
+      calculate_primary_ex_data(PSUT_Re_all_by_country,
+                                p_industry_prefixes = p_industry_prefixes),
+      pattern = map(PSUT_Re_all_by_country),
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     # Establish final demand sectors
@@ -170,8 +184,12 @@ get_pipeline <- function(countries = "all",
 
     # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
     targets::tar_target(
-      PSUT_Re_all_St_fu,
-      calculate_finaluseful_ex_data(.sutdata = PSUT_Re_all, fd_sectors = final_demand_sectors)
+      name = PSUT_Re_all_St_fu,
+      command = calculate_finaluseful_ex_data(PSUT_Re_all_by_country,
+                                              fd_sectors = final_demand_sectors),
+      pattern = map(PSUT_Re_all_by_country),
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     # Bring the aggregations together in a single data frame
@@ -185,9 +203,24 @@ get_pipeline <- function(countries = "all",
     # Efficiencies #
     ################
 
+    tarchetypes::tar_group_by(
+      name = PSUT_Re_all_St_pfu_by_country,
+      command = PSUT_Re_all_St_pfu %>%
+        dplyr::mutate(
+          tar_group = NULL
+        ),
+      # The columns to group by, as symbols.
+      Country,
+      storage = "worker",
+      retrieval = "worker"
+    ),
+
     targets::tar_target(
-      eta_Re_all_St_pfu,
-      calc_agg_etas(PSUT_Re_all_St_pfu)
+      name = eta_Re_all_St_pfu,
+      command = calc_agg_etas(PSUT_Re_all_St_pfu_by_country),
+      pattern = map(PSUT_Re_all_St_pfu_by_country),
+      storage = "worker",
+      retrieval = "worker"
     ),
 
     targets::tar_target(

@@ -79,3 +79,19 @@
 #' @examples
 #' efficiency_cols
 "efficiency_cols"
+
+
+#' Output file information
+#'
+#' A string list containing named names of files and tabs for outputs from this pipeline.
+#'
+#' @format A string list with `r length(output_file_info)` entries.
+#' \describe{
+#' \item{agg_eta_filename}{The name of the Excel file containing aggregate energy and exergy values and aggregate efficiencies.}
+#' \item{agg_tabname}{The name of the tab in `agg_eta_filename` containing aggregated energy and exergy values.}
+#' \item{eta_tabname}{The name of the tab in `agg_eta_filename` containing aggregated efficiencies.}
+#' }
+#'
+#' @examples
+#' output_file_info
+"output_file_info"
