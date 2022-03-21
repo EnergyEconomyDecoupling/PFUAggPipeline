@@ -43,6 +43,7 @@ get_pipeline <- function(countries = "all",
   PSUT_Re_all_by_country <- NULL
   PSUT_Re_all_St_pfu_by_country <- NULL
   eta_Re_all_St_pfu <- NULL
+  aggregation_maps <- NULL
 
   Continent <- NULL
   Country <- NULL

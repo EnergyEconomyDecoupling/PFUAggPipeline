@@ -48,7 +48,7 @@ continent_aggregation_map <- function(exemplar_table_path,
     dplyr::rename(
       "{continent}" := .data[[region_code]]
     ) %>%
-    matsbyname::df_to_aggregation_map(few_colname = continent, many_colname = country)
+    matsbyname::agg_table_to_agg_map(few_colname = continent, many_colname = country)
 }
 
 

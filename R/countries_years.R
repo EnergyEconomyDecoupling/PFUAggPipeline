@@ -6,7 +6,7 @@
 #' @param countries A vector of 3-letter country codes for the countries to be used in this analysis.
 #'                  Default value is "all", meaning that all countries in `.psut_data` will be included.
 #' @param years A numeric vector of years to be used in this analysis.
-#'              Devault value is "all", meaning that ll years in `.psut_dat` will be included.
+#'              Default value is "all", meaning that ll years in `.psut_dat` will be included.
 #' @param country,year See `IEATools::iea_cols`.
 #'
 #'
