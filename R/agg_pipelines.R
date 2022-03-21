@@ -9,7 +9,9 @@
 #' The exemplar table is assumed to be on the "exemplar_table" tab of the Excel file.
 #'
 #' @param countries A string vector of 3-letter country codes.
-#'                  Default is `NULL`, meaning all countries should be analyzed.
+#'                  Default is "all", meaning all available countries should be analyzed.
+#' @param years A numeric vector of years to be analyzed.
+#'              Default is "all", meaning all available years should be analyzed.
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
@@ -18,12 +20,14 @@
 #'
 #' @export
 get_pipeline <- function(countries = "all",
+                         years = "all",
                          psut_release,
                          psut_releases_folder,
                          aggregation_maps_path) {
 
   # Avoid notes when checking the package.
   keep_countries <- NULL
+  keep_years <- NULL
   PSUT <- NULL
   pinboard_folder <- NULL
   PSUT_release <- NULL
@@ -48,10 +52,17 @@ get_pipeline <- function(countries = "all",
   list(
 
     # Identify the countries for this analysis.
-    # NULL means all countries.
+    # "all" means all countries.
     targets::tar_target(
       name = keep_countries,
       command = countries
+    ),
+
+    # Identify the countries for this analysis.
+    # "all" means all countries.
+    targets::tar_target(
+      name = keep_years,
+      command = years
     ),
 
     # Set the release that we'll use
@@ -78,7 +89,7 @@ get_pipeline <- function(countries = "all",
       PSUT,
       pins::board_folder(pinboard_folder, versioned = TRUE) %>%
         pins::pin_read("psut", version = PSUT_release) %>%
-        filter_countries(keep_countries),
+        filter_countries_and_years(countries = keep_countries, years = keep_years),
       # Very important to assign storage and retrieval tasks to workers,
       # else the pipeline seemingly never finishes.
       storage = "worker",

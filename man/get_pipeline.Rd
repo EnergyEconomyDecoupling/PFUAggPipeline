@@ -6,6 +6,7 @@
 \usage{
 get_pipeline(
   countries = "all",
+  years = "all",
   psut_release,
   psut_releases_folder,
   aggregation_maps_path
@@ -13,7 +14,10 @@ get_pipeline(
 }
 \arguments{
 \item{countries}{A string vector of 3-letter country codes.
-Default is \code{NULL}, meaning all countries should be analyzed.}
+Default is "all", meaning all available countries should be analyzed.}
+
+\item{years}{A numeric vector of years to be analyzed.
+Default is "all", meaning all available years should be analyzed.}
 
 \item{psut_release}{The release we'll use from \code{psut_releases_folder}.}
 
