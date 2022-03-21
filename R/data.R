@@ -95,3 +95,42 @@
 #' @examples
 #' output_file_info
 "output_file_info"
+
+
+#' Aggregation file tabs
+#'
+#' A string list containing names of tabs for an Excel aggregation file.
+#'
+#' The aggregation file should have several tabs, one for each type of aggregation.
+#'
+#' @format A string list with `r length(aggregation_file_tab_names)` entries.
+#' \describe{
+#' \item{continent_aggregation_tab}{The name of the continent aggregation tab.}
+#' \item{world_aggregation_tab}{The name of the world aggregation tab.}
+#' \item{exiobase_region_aggregation_tab}{The name of the Exiobase region aggregation tab.}
+#' \item{eu.product_aggregation_tab}{The name of the useful product aggregation tab.}
+#' \item{ef.product_aggregation_tab}{The name of the final product aggregation tab.}
+#' \item{destination_aggregation_tab}{The name of the destination aggregation tab.}
+#' }
+#'
+#' @examples
+#' aggregation_file_tab_names
+"aggregation_file_tab_names"
+
+
+#' Aggregation table column names
+#'
+#' A string list containing names of column names in aggregation tables.
+#'
+#' @format A string list with `r length(aggregation_file_cols)` entries.
+#' \describe{
+#' \item{many_colname}{The name of the many column in each tab.}
+#' \item{few_colname}{The name of the few column in each tab.}
+#' }
+#'
+#' @examples
+#' aggregation_file_cols
+"aggregation_file_cols"
+
+
+

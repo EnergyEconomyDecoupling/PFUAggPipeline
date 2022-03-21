@@ -115,7 +115,7 @@ calc_agg_etas <- function(.aggregates,
 #'                     If `FALSE`, data will be unchanged.
 #' @param primary,final,useful See `IEATools::all_stages`.
 #' @param eta_pf_colname,eta_fu_colname,eta_pu_colname See `PFUAggDatabase::efficiency_cols`.
-#' @param year A column of years. Default is `IEATools::iea_cols$year`.
+#' @param year,country See `IEATools::iea_cols`.
 #' @param quantity,.values See `IEATools::template_cols`.
 #'
 #' @return `TRUE` if the file was written successfully.
@@ -133,6 +133,7 @@ write_agg_etas_xlsx <- function(.agg_etas,
                                 eta_fu_colname = PFUAggDatabase::efficiency_cols$eta_fu,
                                 eta_pu_colname = PFUAggDatabase::efficiency_cols$eta_pu,
                                 year = IEATools::iea_cols$year,
+                                country = IEATools::iea_cols$country,
                                 quantity = IEATools::template_cols$quantity,
                                 .values = IEATools::template_cols$.values) {
   agg_df <- .agg_etas %>%
@@ -152,11 +153,13 @@ write_agg_etas_xlsx <- function(.agg_etas,
       tidyr::pivot_longer(cols = c(primary, final, useful),
                           names_to = quantity,
                           values_to = .values) %>%
+      dplyr::arrange(.data[[year]], .data[[country]]) %>%
       tidyr::pivot_wider(names_from = year, values_from = .values)
     eta_df <- eta_df %>%
       tidyr::pivot_longer(cols = c(eta_pf_colname, eta_fu_colname, eta_pu_colname),
                           names_to = quantity,
                           values_to = .values) %>%
+      dplyr::arrange(.data[[year]], .data[[country]]) %>%
       tidyr::pivot_wider(names_from = year, values_from = .values)
   }
 

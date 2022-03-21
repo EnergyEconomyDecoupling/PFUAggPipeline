@@ -32,7 +32,7 @@ num_cores <- 8
 # Set the target to debug.  Set to NULL to turn off debugging.
 # To debug, set appropriate breakpoints and use
 # tar_make(callr_function = NULL).
-# debug_target <- "write_agg_etas_xlsx"
+# debug_target <- "eta_Re_all_St_pfu"
 debug_target <- NULL
 
 # End user-adjustable parameters.
@@ -68,4 +68,4 @@ targets::tar_option_set(
 PFUAggDatabase::get_pipeline(countries = countries,
                              psut_release = psut_release,
                              psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]],
-                             exemplar_table_path = PFUSetup::get_abs_paths()[["exemplar_table_path"]])
+                             aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]])

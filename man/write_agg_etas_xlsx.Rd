@@ -17,6 +17,7 @@ write_agg_etas_xlsx(
   eta_fu_colname = PFUAggDatabase::efficiency_cols$eta_fu,
   eta_pu_colname = PFUAggDatabase::efficiency_cols$eta_pu,
   year = IEATools::iea_cols$year,
+  country = IEATools::iea_cols$country,
   quantity = IEATools::template_cols$quantity,
   .values = IEATools::template_cols$.values
 )
@@ -35,7 +36,7 @@ If \code{FALSE}, data will be unchanged.}
 
 \item{eta_pf_colname, eta_fu_colname, eta_pu_colname}{See \code{PFUAggDatabase::efficiency_cols}.}
 
-\item{year}{A column of years. Default is \code{IEATools::iea_cols$year}.}
+\item{year, country}{See \code{IEATools::iea_cols}.}
 
 \item{quantity, .values}{See \code{IEATools::template_cols}.}
 }

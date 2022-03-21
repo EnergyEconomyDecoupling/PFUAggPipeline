@@ -12,7 +12,7 @@
 #'                  Default is `NULL`, meaning all countries should be analyzed.
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
-#' @param exemplar_table_path The path to the exemplar table.
+#' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -20,7 +20,7 @@
 get_pipeline <- function(countries = "all",
                          psut_release,
                          psut_releases_folder,
-                         exemplar_table_path) {
+                         aggregation_maps_path) {
 
   # Avoid notes when checking the package.
   keep_countries <- NULL
@@ -60,6 +60,12 @@ get_pipeline <- function(countries = "all",
       command = psut_release
     ),
 
+    # Set the path to the aggregation maps file.
+    targets::tar_target_raw(
+      name = "aggregation_maps_path",
+      command = aggregation_maps_path
+    ),
+
     # Set the pinboard folder
     targets::tar_target_raw(
       "pinboard_folder",
@@ -79,11 +85,15 @@ get_pipeline <- function(countries = "all",
       retrieval = "worker",
     ),
 
-    # Set the path to the exemplar_table,
-    # which we use for regional aggregations.
-    targets::tar_target_raw(
-      "exemplar_table_path",
-      exemplar_table_path
+
+    ############################
+    # Prepare for aggregations #
+    ############################
+
+    # Gather the aggregation maps.
+    targets::tar_target(
+      aggregation_maps,
+      load_aggregation_maps(path = aggregation_maps_path)
     ),
 
 
@@ -91,19 +101,13 @@ get_pipeline <- function(countries = "all",
     # Regional aggregations #
     #########################
 
-    # Create the data frame to be used for continental aggregation
-    targets::tar_target(
-      continent_aggregation_map,
-      PFUAggDatabase::continent_aggregation_map(exemplar_table_path)
-    ),
-
     # Create a continents data frame, grouped by continent,
     # so subsequent operations (region aggregation)
     # will be performed in parallel, if desired.
     tarchetypes::tar_group_by(
       name = PSUT_with_continent_col,
       command = join_psut_continents(PSUT = PSUT,
-                                     continent_aggregation_map = continent_aggregation_map,
+                                     continent_aggregation_map = aggregation_maps$continent_aggregation,
                                      continent = "Continent"),
       # The columns to group by, as symbols.
       Continent,
@@ -132,7 +136,7 @@ get_pipeline <- function(countries = "all",
       PSUT_Re_world,
       Recca::region_aggregates(PSUT_Re_continents %>%
                                  dplyr::mutate(
-                                   World = "WLD"
+                                   World = "WRLD"
                                  ),
                                many_colname = IEATools::iea_cols$country, # Which actually holds continents
                                few_colname = "World")
