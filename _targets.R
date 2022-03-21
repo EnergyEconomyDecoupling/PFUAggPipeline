@@ -13,6 +13,10 @@ library(targets)
 # countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
 countries <- "all" # Run all countries
 
+# Set the years to be analyzed.
+# years <- 1960
+years <- "all"
+
 # Set the release of PSUT to be used.
 psut_release <- "20220225T012039Z-c2035"
 
@@ -66,6 +70,7 @@ targets::tar_option_set(
 
 # Pull in the pipeline
 PFUAggDatabase::get_pipeline(countries = countries,
+                             years = years,
                              psut_release = psut_release,
                              psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]],
                              aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]])
