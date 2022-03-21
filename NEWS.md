@@ -4,6 +4,7 @@ output: html_document
 ---
 
 
+* Added a new `years` variable that allows user-selection of years to be analyzed.
 * Added efficiency calculations with target `write_agg_etas_xlsx`.
 * Added spell-checking to the build process.
 * Added primary, final, and useful energy and exergy targets
