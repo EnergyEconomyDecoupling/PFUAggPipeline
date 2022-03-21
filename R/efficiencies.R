@@ -153,14 +153,16 @@ write_agg_etas_xlsx <- function(.agg_etas,
       tidyr::pivot_longer(cols = c(primary, final, useful),
                           names_to = quantity,
                           values_to = .values) %>%
-      dplyr::arrange(.data[[year]], .data[[country]]) %>%
-      tidyr::pivot_wider(names_from = year, values_from = .values)
+      dplyr::arrange(.data[[year]]) %>%
+      tidyr::pivot_wider(names_from = year, values_from = .values) %>%
+      dplyr::arrange(.data[[country]])
     eta_df <- eta_df %>%
       tidyr::pivot_longer(cols = c(eta_pf_colname, eta_fu_colname, eta_pu_colname),
                           names_to = quantity,
                           values_to = .values) %>%
-      dplyr::arrange(.data[[year]], .data[[country]]) %>%
-      tidyr::pivot_wider(names_from = year, values_from = .values)
+      dplyr::arrange(.data[[year]]) %>%
+      tidyr::pivot_wider(names_from = year, values_from = .values) %>%
+      dplyr::arrange(.data[[country]])
   }
 
   writexl::write_xlsx(list(agg_df, eta_df) %>%
