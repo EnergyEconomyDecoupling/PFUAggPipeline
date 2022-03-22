@@ -15,6 +15,10 @@
 #' @param psut_release The release we'll use from `psut_releases_folder`.
 #' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
+#' @param workflow_output_folder The path to a folder where .zip files of the targets pipeline are stored.
+#' @param workflow_releases_folder The path to a folder where releases of the
+#'                                 output targets are pinned.
+#' @param release Boolean that tells whether to do a release of the results.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -23,7 +27,10 @@ get_pipeline <- function(countries = "all",
                          years = "all",
                          psut_release,
                          psut_releases_folder,
-                         aggregation_maps_path) {
+                         aggregation_maps_path,
+                         workflow_output_folder,
+                         workflow_releases_folder,
+                         release = FALSE) {
 
   # Avoid notes when checking the package.
   keep_countries <- NULL
