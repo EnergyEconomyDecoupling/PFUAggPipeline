@@ -190,7 +190,7 @@ get_pipeline <- function(countries = "all",
     # Establish prefixes for primary industries
     targets::tar_target(
       p_industry_prefixes,
-      IEATools::prim_agg_flows %>% unname() %>% unlist() %>% list()
+      IEATools::tpes_flows %>% unname() %>% unlist() %>% list()
     ),
 
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
