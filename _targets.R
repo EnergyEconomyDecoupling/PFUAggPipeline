@@ -8,6 +8,7 @@ library(targets)
 # Set control parameters for the pipeline.
 
 # Set the countries to be analyzed.
+# countries <- c("GBR")
 # countries <- c("WMB", "WAB")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
@@ -15,6 +16,7 @@ countries <- "all" # Run all countries
 
 # Set the years to be analyzed.
 # years <- 1960
+# years <- 2000
 years <- "all"
 
 # Set the release of PSUT to be used for input.
@@ -36,7 +38,7 @@ num_cores <- 8
 # Set the target to debug.  Set to NULL to turn off debugging.
 # To debug, set appropriate breakpoints and use
 # tar_make(callr_function = NULL).
-# debug_target <- "eta_Re_all_St_pfu"
+# debug_target <- "PSUT_Re_all_St_fu"
 debug_target <- NULL
 
 # Should we do a release of the results?
