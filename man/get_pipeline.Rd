@@ -8,8 +8,10 @@ get_pipeline(
   countries = "all",
   years = "all",
   psut_release,
-  psut_releases_folder,
-  aggregation_maps_path
+  aggregation_maps_path,
+  pipeline_caches_folder,
+  pipeline_releases_folder,
+  release = FALSE
 )
 }
 \arguments{
@@ -21,9 +23,13 @@ Default is "all", meaning all available years should be analyzed.}
 
 \item{psut_release}{The release we'll use from \code{psut_releases_folder}.}
 
-\item{psut_releases_folder}{The path to the \code{pins} archive of \code{PSUT} releases.}
-
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
+
+\item{pipeline_caches_folder}{The path to a folder where .zip files of the targets pipeline are saved.}
+
+\item{pipeline_releases_folder}{The path to a folder where releases of output targets are pinned.}
+
+\item{release}{Boolean that tells whether to do a release of the results.}
 }
 \value{
 A list of \code{tar_target}s to be executed in a workflow.

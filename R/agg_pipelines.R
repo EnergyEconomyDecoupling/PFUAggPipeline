@@ -13,8 +13,10 @@
 #' @param years A numeric vector of years to be analyzed.
 #'              Default is "all", meaning all available years should be analyzed.
 #' @param psut_release The release we'll use from `psut_releases_folder`.
-#' @param psut_releases_folder The path to the `pins` archive of `PSUT` releases.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
+#' @param pipeline_caches_folder The path to a folder where .zip files of the targets pipeline are saved.
+#' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
+#' @param release Boolean that tells whether to do a release of the results.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -22,8 +24,10 @@
 get_pipeline <- function(countries = "all",
                          years = "all",
                          psut_release,
-                         psut_releases_folder,
-                         aggregation_maps_path) {
+                         aggregation_maps_path,
+                         pipeline_caches_folder,
+                         pipeline_releases_folder,
+                         release = FALSE) {
 
   # Avoid notes when checking the package.
   keep_countries <- NULL
@@ -78,10 +82,17 @@ get_pipeline <- function(countries = "all",
       command = aggregation_maps_path
     ),
 
+    # Set the folder for storing targets caches
+    targets::tar_target_raw(
+      name = "pipeline_caches_output_folder",
+      command = pipeline_caches_folder,
+      format = "file"
+    ),
+
     # Set the pinboard folder
     targets::tar_target_raw(
       "pinboard_folder",
-      psut_releases_folder,
+      pipeline_releases_folder,
       format = "file"
     ),
 
@@ -239,14 +250,35 @@ get_pipeline <- function(countries = "all",
       retrieval = "worker"
     ),
 
+
+    ################
+    # Save results #
+    ################
+
+    # Save an Excel file of aggregations and efficiencies
     targets::tar_target(
       write_agg_etas_xlsx,
       write_agg_etas_xlsx(eta_Re_all_St_pfu,
                           path = file.path(PFUSetup::get_abs_paths()[["reports_dest_folder"]], "AggregateEfficiencyResults.xlsx"))
+    ),
+
+    # Pin the aggregates and efficiencies
+    targets::tar_target(
+      pin_agg_etas,
+      PFUWorkflow::release_target(pipeline_releases_folder = pinboard_folder,
+                                  targ = eta_Re_all_St_pfu,
+                                  targ_name = "eta_Re_all_St_pfu",
+                                  release = release)
+    ),
+
+    # Save the cache for posterity.
+    targets::tar_target(
+      store_cache,
+      PFUWorkflow::stash_cache(pipeline_caches_folder = pipeline_caches_output_folder,
+                               cache_folder = "_targets",
+                               file_prefix = "pfu_agg_workflow_cache_",
+                               dependency = eta_Re_all_St_pfu)
     )
-
-
-
   )
 }
 

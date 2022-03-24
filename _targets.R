@@ -17,7 +17,7 @@ countries <- "all" # Run all countries
 # years <- 1960
 years <- "all"
 
-# Set the release of PSUT to be used.
+# Set the release of PSUT to be used for input.
 psut_release <- "20220225T012039Z-c2035"
 
 # world_agg_map needs to be a double-nested list, because the first layer
@@ -39,6 +39,10 @@ num_cores <- 8
 # debug_target <- "eta_Re_all_St_pfu"
 debug_target <- NULL
 
+# Should we do a release of the results?
+release <- FALSE
+
+
 # End user-adjustable parameters.
 
 
@@ -58,6 +62,7 @@ targets::tar_option_set(
   packages = c(
     "dplyr",
     "IEATools",
+    "parsedate",
     "PFUAggDatabase",
     "pins",
     "tidyr"),
@@ -72,5 +77,7 @@ targets::tar_option_set(
 PFUAggDatabase::get_pipeline(countries = countries,
                              years = years,
                              psut_release = psut_release,
-                             psut_releases_folder = PFUSetup::get_abs_paths()[["workflow_releases_folder"]],
-                             aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]])
+                             aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
+                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
+                             pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
+                             release = release)
