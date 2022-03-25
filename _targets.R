@@ -42,7 +42,7 @@ num_cores <- 8
 debug_target <- NULL
 
 # Should we do a release of the results?
-release <- TRUE
+release <- FALSE
 
 
 # End user-adjustable parameters.
