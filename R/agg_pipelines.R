@@ -243,9 +243,35 @@ get_pipeline <- function(countries = "all",
     ),
 
     targets::tar_target(
-      name = eta_Re_all_St_pfu,
+      name = agg_eta_Re_all_St_pfu,
       command = calc_agg_etas(PSUT_Re_all_St_pfu_by_country),
       pattern = map(PSUT_Re_all_St_pfu_by_country),
+      storage = "worker",
+      retrieval = "worker"
+    ),
+
+    # Split the aggregations and efficiencies apart
+    # to enable easier saving of separate .csv files later.
+    targets::tar_target(
+      name = agg_Re_all_St_pfu,
+      command = agg_eta_Re_all_St_pfu %>%
+        dplyr::mutate(
+          "{PFUAggDatabase::efficiency_cols$eta_pf}" := NULL,
+          "{PFUAggDatabase::efficiency_cols$eta_fu}" := NULL,
+          "{PFUAggDatabase::efficiency_cols$eta_pu}" := NULL,
+        ),
+      storage = "worker",
+      retrieval = "worker"
+    ),
+
+    targets::tar_target(
+      name = eta_Re_all_St_pfu,
+      command = agg_eta_Re_all_St_pfu %>%
+        dplyr::mutate(
+          "{IEATools::all_stages$primary}" := NULL,
+          "{IEATools::all_stages$final}" := NULL,
+          "{IEATools::all_stages$useful}" := NULL,
+        ),
       storage = "worker",
       retrieval = "worker"
     ),
@@ -255,19 +281,38 @@ get_pipeline <- function(countries = "all",
     # Save results #
     ################
 
-    # Save an Excel file of aggregations and efficiencies
+    # Pin the aggregates and efficiencies as an .rds file
     targets::tar_target(
-      write_agg_etas_xlsx,
-      write_agg_etas_xlsx(eta_Re_all_St_pfu,
-                          path = file.path(PFUSetup::get_abs_paths()[["reports_dest_folder"]], "AggregateEfficiencyResults.xlsx"))
+      pin_agg_eta_Re_all_St_pfu,
+      PFUWorkflow::release_target(pipeline_releases_folder = pinboard_folder,
+                                  targ = agg_eta_Re_all_St_pfu,
+                                  targ_name = "agg_eta_Re_all_St_pfu",
+                                  release = release)
     ),
 
-    # Pin the aggregates and efficiencies
+    # Pin aggregates as a wide-by-years .csv file
     targets::tar_target(
-      pin_agg_etas,
+      pin_agg_csv,
       PFUWorkflow::release_target(pipeline_releases_folder = pinboard_folder,
-                                  targ = eta_Re_all_St_pfu,
+                                  targ = agg_Re_all_St_pfu%>%
+                                    pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
+                                                                              IEATools::all_stages$final,
+                                                                              IEATools::all_stages$useful)),
+                                  targ_name = "agg_Re_all_St_pfu",
+                                  type = "csv",
+                                  release = release)
+    ),
+
+    # Pin efficiencies as a wide-by-years .csv file
+    targets::tar_target(
+      pin_eta_csv,
+      PFUWorkflow::release_target(pipeline_releases_folder = pinboard_folder,
+                                  targ = eta_Re_all_St_pfu %>%
+                                    pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
+                                                                              PFUAggDatabase::efficiency_cols$eta_fu,
+                                                                              PFUAggDatabase::efficiency_cols$eta_pu)),
                                   targ_name = "eta_Re_all_St_pfu",
+                                  type = "csv",
                                   release = release)
     ),
 
@@ -277,7 +322,7 @@ get_pipeline <- function(countries = "all",
       PFUWorkflow::stash_cache(pipeline_caches_folder = pipeline_caches_output_folder,
                                cache_folder = "_targets",
                                file_prefix = "pfu_agg_workflow_cache_",
-                               dependency = eta_Re_all_St_pfu)
+                               dependency = c(agg_Re_all_St_pfu, eta_Re_all_St_pfu))
     )
   )
 }
