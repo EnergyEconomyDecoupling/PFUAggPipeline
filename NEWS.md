@@ -4,6 +4,7 @@ output: html_document
 ---
 
 
+* Add GitHub actions continuous integration.
 * Add DOI badge to Readme.Rmd.
 
 
