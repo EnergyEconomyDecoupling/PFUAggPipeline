@@ -23,7 +23,7 @@ pivot_agg_eta_wide_by_year(
 \item{quantity, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
-A version of .df that is pivoted wide by years.
+A version of \code{.df} that is pivoted wide by years.
 }
 \description{
 Converts a aggregation of efficiencies data frame (in tidy format)

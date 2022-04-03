@@ -53,6 +53,15 @@ get_pipeline <- function(countries = "all",
   Country <- NULL
   map <- NULL
 
+  agg_eta_Re_all_St_pfu <- NULL
+  agg_Re_all_St_pfu <- NULL
+  pin_agg_csv <- NULL
+  pin_eta_csv <- NULL
+  pin_agg_eta_Re_all_St_pfu <- NULL
+  store_cache <- NULL
+  pipeline_caches_output_folder <- NULL
+
+
   # Create the pipeline
   list(
 

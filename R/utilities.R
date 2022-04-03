@@ -8,7 +8,7 @@
 #' @param country,year See `IEATools::iea_cols`.
 #' @param quantity,.values See `IEATools::template_cols`.
 #'
-#' @return A version of .df that is pivoted wide by years.
+#' @return A version of `.df` that is pivoted wide by years.
 #'
 #' @export
 pivot_agg_eta_wide_by_year <- function(.df,
