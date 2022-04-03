@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* Add DOI badge to Readme.Rmd.
+
+
 # PFUAggDatabase 0.0.1 (2022-04-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6409760.svg)](https://doi.org/10.5281/zenodo.6409760)
 
 * Now saving important results to a pinboard.
