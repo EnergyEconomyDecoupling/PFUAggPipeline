@@ -15,6 +15,7 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 [![R build
 status](https://github.com/MatthewHeun/PFUAggDatabase/workflows/check-master-develop/badge.svg)](https://github.com/MatthewHeun/PFUAggDatabase/actions)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6409759.svg)](https://doi.org/10.5281/zenodo.6409759)
+[![R-CMD-check](https://github.com/EnergyEconomyDecoupling/PFUAggDatabase/workflows/R-CMD-check/badge.svg)](https://github.com/EnergyEconomyDecoupling/PFUAggDatabase/actions)
 <!-- badges: end -->
 
 The goal of PFUAggWorkflow is to aggregate data in the `PFUDatabase`.
