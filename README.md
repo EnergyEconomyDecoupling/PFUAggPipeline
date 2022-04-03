@@ -1,17 +1,5 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
 
 # PFUAggWorkflow
 
@@ -22,20 +10,14 @@ The goal of PFUAggWorkflow is to aggregate data in the `PFUDatabase`.
 
 ## Installation
 
-You can install the development version of `PFUAggWorkflow` from [GitHub](https://github.com/) with:
+You can install the development version of `PFUAggWorkflow` from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("EnergyEconomyDecoupling/PFUAggWorkflow")
 ```
 
-
 ## Example
 
 Add an example here.
-
-
-
-
-
-

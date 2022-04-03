@@ -1,10 +1,19 @@
 Package: PFUAggDatabase
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Calculate Aggregations and Efficiencies For Energy Conversion Chains in PSUT Format
+Version: 0.0.1
+Date: 2022-04-03
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-7438-214X"))
-Description: What the package does (one paragraph).
+    c(person(given = "Matthew",
+             family = "Heun",
+             role = c("aut", "cre"),
+             email = "matthew.heun@me.com",
+             comment = c(ORCID = "0000-0002-7438-214X")))
+Description: It is helpful to be able to aggregate and calculate efficiencies for 
+             energy conversion chains. 
+             This package provides functions to support and create a `targets` workflow
+             for such calculations.
+             Several targets create outputs in different forms:
+             `.csv` files, `.rds` files, and `.pdf` reports.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -16,7 +25,9 @@ Imports:
     magrittr,
     matsbyname,
     matsindf,
+    parsedate,
     PFUSetup,
+    PFUWorkflow,
     pins,
     readxl,
     Recca, 
@@ -24,7 +35,8 @@ Imports:
     stringr,
     tarchetypes,
     targets,
-    tidyr
+    tidyr, 
+    writexl
 Suggests: 
     spelling
 Depends: 

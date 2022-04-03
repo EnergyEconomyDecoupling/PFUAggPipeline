@@ -22,6 +22,15 @@
     <loc>/reference/agg_metadata.html</loc>
   </url>
   <url>
+    <loc>/reference/aggregation_file_cols.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aggregation_file_tab_names.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calc_agg_etas.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_finaluseful_ex_data.html</loc>
   </url>
   <url>
@@ -55,7 +64,13 @@
     <loc>/reference/data.html</loc>
   </url>
   <url>
+    <loc>/reference/efficiency_cols.html</loc>
+  </url>
+  <url>
     <loc>/reference/filter_countries.html</loc>
+  </url>
+  <url>
+    <loc>/reference/filter_countries_and_years.html</loc>
   </url>
   <url>
     <loc>/reference/get_pipeline.html</loc>
@@ -67,12 +82,27 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/join_psut_continents.html</loc>
+  </url>
+  <url>
+    <loc>/reference/load_aggregation_maps.html</loc>
+  </url>
+  <url>
+    <loc>/reference/output_file_info.html</loc>
+  </url>
+  <url>
     <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pivot_agg_eta_wide_by_year.html</loc>
   </url>
   <url>
     <loc>/reference/quasi-quote-assign.html</loc>
   </url>
   <url>
     <loc>/reference/sea_cols.html</loc>
+  </url>
+  <url>
+    <loc>/reference/write_agg_etas_xlsx.html</loc>
   </url>
 </urlset>

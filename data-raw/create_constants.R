@@ -36,19 +36,40 @@ gross_net_metadata <- list(gross_value = "Gross",
 usethis::use_data(gross_net_metadata, overwrite = TRUE)
 
 
-#' Gross or Net metadata information
-#'
-#' A string list containing values indicating whether the output of the functions `Recca::finaldemand_aggregates`, `PFUWorkflow::calculate_fu_ex_total`,
-#' `PFUWorkflow::calculate_fu_ex_product`, `PFUWorkflow::calculate_fu_ex_sector`, and `PFUWorkflow::calculate_finaluseful_ex_data`
-#' are in Gross or Net terms. To be supplied to the metadata columns `PFUWorkflow::sea_cols$gross_net_colname`.
-#'
-#' @format A string list with `r length(gross_net_metadata)` entries.
-#' \describe{
-#' \item{gross_value}{The string "Gross" indicating that final demand was calculated for both EIOU and non-EIOU sectors. See `Recca::finaldemand_aggregates`.}
-#' \item{net_value}{The string "Net" indicating that final demand was calculated for only non-EIOU sectors. See `Recca::finaldemand_aggregates`.}
-#' }
-#'
-#' @examples
-#' gross_net_metadata
-"gross_net_metadata"
+#
+# Efficiency column names
+#
+
+efficiency_cols <- list(eta_pf = "eta_pf",
+                        eta_fu = "eta_fu",
+                        eta_pu = "eta_pu")
+usethis::use_data(efficiency_cols, overwrite = TRUE)
+
+
+#
+# File and tab names
+#
+
+output_file_info <- list(agg_eta_filename = "AggregateEfficiencyResults.xlsx",
+                         agg_tabname = "Aggregates",
+                         eta_tabname = "etas")
+usethis::use_data(output_file_info, overwrite = TRUE)
+
+
+#
+# Aggregation file information
+#
+
+aggregation_file_tab_names <- list(continent_aggregation = "continent_aggregation",
+                                   world_aggregation = "world_aggregation",
+                                   exiobase_region_aggregation = "exiobase_region_aggregation",
+                                   eu.product_aggregation = "eu.product_aggregation",
+                                   ef.product_aggregation = "ef.product_aggregation",
+                                   destination_aggregation = "destination_aggregation")
+usethis::use_data(aggregation_file_tab_names, overwrite = TRUE)
+
+
+aggregation_file_cols <- list(many_colname = "Many",
+                              few_colname = "Few")
+usethis::use_data(aggregation_file_cols, overwrite = TRUE)
 

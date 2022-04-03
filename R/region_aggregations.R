@@ -48,7 +48,7 @@ continent_aggregation_map <- function(exemplar_table_path,
     dplyr::rename(
       "{continent}" := .data[[region_code]]
     ) %>%
-    matsbyname::df_to_aggregation_map(few_colname = continent, many_colname = country)
+    matsbyname::agg_table_to_agg_map(few_colname = continent, many_colname = country)
 }
 
 
@@ -68,8 +68,8 @@ join_psut_continents <- function(PSUT,
                                  continent_aggregation_map,
                                  country = IEATools::iea_cols$country,
                                  continent = "Continent") {
-  agg_df <- matsbyname::aggregation_map_to_df(continent_aggregation_map,
-                                              few_colname = "Continent",
-                                              many_colname = IEATools::iea_cols$country)
+  agg_df <- matsbyname::agg_map_to_agg_table(continent_aggregation_map,
+                                             few_colname = "Continent",
+                                             many_colname = IEATools::iea_cols$country)
   dplyr::left_join(PSUT, agg_df, by = country)
 }

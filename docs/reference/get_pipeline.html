@@ -10,14 +10,14 @@
     
     <a class="navbar-brand me-2" href="../index.html">PFUAggDatabase</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
@@ -47,10 +47,12 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_pipeline</span><span class="op">(</span>
   countries <span class="op">=</span> <span class="st">"all"</span>,
+  years <span class="op">=</span> <span class="st">"all"</span>,
   <span class="va">psut_release</span>,
-  <span class="va">psut_releases_folder</span>,
-  <span class="va">exemplar_table_path</span>,
-  <span class="va">world_agg_map</span>
+  <span class="va">aggregation_maps_path</span>,
+  <span class="va">pipeline_caches_folder</span>,
+  <span class="va">pipeline_releases_folder</span>,
+  release <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -58,15 +60,20 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>countries</dt>
 <dd><p>A string vector of 3-letter country codes.
-Default is <code>NULL</code>, meaning all countries should be analyzed.</p></dd>
+Default is "all", meaning all available countries should be analyzed.</p></dd>
+<dt>years</dt>
+<dd><p>A numeric vector of years to be analyzed.
+Default is "all", meaning all available years should be analyzed.</p></dd>
 <dt>psut_release</dt>
 <dd><p>The release we'll use from <code>psut_releases_folder</code>.</p></dd>
-<dt>psut_releases_folder</dt>
-<dd><p>The path to the <code>pins</code> archive of <code>PSUT</code> releases.</p></dd>
-<dt>exemplar_table_path</dt>
-<dd><p>The path to the exemplar table.</p></dd>
-<dt>world_agg_map</dt>
-<dd><p>The aggregation map to aggregate from continents to the world.</p></dd>
+<dt>aggregation_maps_path</dt>
+<dd><p>The path to the Excel file of aggregation maps.</p></dd>
+<dt>pipeline_caches_folder</dt>
+<dd><p>The path to a folder where .zip files of the targets pipeline are saved.</p></dd>
+<dt>pipeline_releases_folder</dt>
+<dd><p>The path to a folder where releases of output targets are pinned.</p></dd>
+<dt>release</dt>
+<dd><p>Boolean that tells whether to do a release of the results.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -86,11 +93,11 @@ The exemplar table is assumed to be on the "exemplar_table" tab of the Excel fil
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by First Last.</p>
+  <p></p><p>Developed by Matthew Heun.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
     </footer></div>
