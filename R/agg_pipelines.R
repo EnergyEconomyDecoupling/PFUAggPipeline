@@ -94,8 +94,7 @@ get_pipeline <- function(countries = "all",
     # Set the folder for storing targets caches
     targets::tar_target_raw(
       name = "pipeline_caches_output_folder",
-      command = pipeline_caches_folder,
-      format = "file"
+      command = pipeline_caches_folder
     ),
 
     # Set the pinboard folder
