@@ -20,7 +20,7 @@ countries <- "all" # Run all countries
 years <- "all"
 
 # Set the release of PSUT to be used for input.
-psut_release <- "20220225T012039Z-c2035"
+psut_release <- "20220414T140245Z-2952b"
 
 # world_agg_map needs to be a double-nested list, because the first layer
 # is stripped off by the targets pipeline.
