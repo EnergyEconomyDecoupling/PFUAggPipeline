@@ -131,10 +131,7 @@ get_pipeline <- function(countries = "all",
     ),
 
     # Bind all region aggregations together
-    targets::tar_target(
-      PSUT_Re_all,
-      dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world)
-    ),
+    tar_target_raw("PSUT_Re_all", quote(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
 
 
     ####################
@@ -153,10 +150,7 @@ get_pipeline <- function(countries = "all",
     ),
 
     # Establish prefixes for primary industries
-    targets::tar_target(
-      p_industry_prefixes,
-      IEATools::tpes_flows %>% unname() %>% unlist() %>% list()
-    ),
+    tar_target_raw("p_industry_prefixes", quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
 
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target(
@@ -169,10 +163,7 @@ get_pipeline <- function(countries = "all",
     ),
 
     # Establish final demand sectors
-    targets::tar_target(
-      final_demand_sectors,
-      IEATools::fd_sectors
-    ),
+    tar_target_raw("final_demand_sectors", quote(IEATools::fd_sectors)),
 
     # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
     targets::tar_target(
@@ -185,10 +176,7 @@ get_pipeline <- function(countries = "all",
     ),
 
     # Bring the aggregations together in a single data frame
-    targets::tar_target(
-      PSUT_Re_all_St_pfu,
-      dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu)
-    ),
+    tar_target_raw("PSUT_Re_all_St_pfu", quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
 
 
     ################
