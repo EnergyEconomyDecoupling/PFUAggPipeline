@@ -30,7 +30,6 @@ get_pipeline <- function(countries = "all",
                          release = FALSE) {
 
   # Avoid notes when checking the package.
-  keep_countries <- NULL
   keep_years <- NULL
   PSUT <- NULL
   pinboard_folder <- NULL
@@ -65,12 +64,8 @@ get_pipeline <- function(countries = "all",
   # Create the pipeline
   list(
 
-    # Identify the countries for this analysis.
-    # "all" means all countries.
-    targets::tar_target(
-      name = keep_countries,
-      command = countries
-    ),
+    tar_target_raw("Countries", rlang::enexpr(countries)),
+
 
     # Identify the countries for this analysis.
     # "all" means all countries.
@@ -109,7 +104,7 @@ get_pipeline <- function(countries = "all",
       PSUT,
       pins::board_folder(pinboard_folder, versioned = TRUE) %>%
         pins::pin_read("psut", version = PSUT_release) %>%
-        filter_countries_and_years(countries = keep_countries, years = keep_years),
+        filter_countries_and_years(countries = Countries, years = keep_years),
       # Very important to assign storage and retrieval tasks to workers,
       # else the pipeline seemingly never finishes.
       storage = "worker",
