@@ -31,7 +31,6 @@ get_pipeline <- function(countries = "all",
 
   # Avoid notes when checking the package.
   PSUT <- NULL
-  pinboard_folder <- NULL
   PSUT_Re_continents <- NULL
   PSUT_Re_world <- NULL
   PSUT_Re_all <- NULL
@@ -44,7 +43,6 @@ get_pipeline <- function(countries = "all",
   PSUT_Re_all_by_country <- NULL
   PSUT_Re_all_St_pfu_by_country <- NULL
   eta_Re_all_St_pfu <- NULL
-  aggregation_maps <- NULL
 
   Continent <- NULL
   Country <- NULL
@@ -56,41 +54,34 @@ get_pipeline <- function(countries = "all",
   pin_eta_csv <- NULL
   pin_agg_eta_Re_all_St_pfu <- NULL
   store_cache <- NULL
-  pipeline_caches_output_folder <- NULL
 
 
   # Create the pipeline
   list(
 
+    #####################
+    # Preliminary setup #
+    #####################
+
+    # Store some incoming data as targets
     tar_target_raw("Countries", rlang::enexpr(countries)),
     tar_target_raw("Years", rlang::enexpr(years)),
     tar_target_raw("PSUTRelease", psut_release),
-    tar_target_raw("aggregation_maps_path", aggregation_maps_path),
-    tar_target_raw("pipeline_caches_output_folder", pipeline_caches_folder),
-    tar_target_raw("pinboard_folder", pipeline_releases_folder),
+    tar_target_raw("AggregationMapsPath", aggregation_maps_path),
+    tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
+    tar_target_raw("PinboardFolder", pipeline_releases_folder),
 
     # Pull in the PSUT data frame
-    tar_target(
-      PSUT,
-      pins::board_folder(pinboard_folder, versioned = TRUE) %>%
-        pins::pin_read("psut", version = PSUTRelease) %>%
-        filter_countries_and_years(countries = Countries, years = Years),
-      # Very important to assign storage and retrieval tasks to workers,
-      # else the pipeline seemingly never finishes.
-      storage = "worker",
-      retrieval = "worker",
-    ),
-
-
-    ############################
-    # Prepare for aggregations #
-    ############################
+    tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
+                     pins::pin_read("psut", version = PSUTRelease) %>%
+                     filter_countries_and_years(countries = Countries, years = Years)),
+                   # Very important to assign storage and retrieval tasks to workers,
+                   # else the pipeline seemingly never finishes.
+                   storage = "worker",
+                   retrieval = "worker"),
 
     # Gather the aggregation maps.
-    targets::tar_target(
-      aggregation_maps,
-      load_aggregation_maps(path = aggregation_maps_path)
-    ),
+    tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
 
 
     #########################
@@ -103,7 +94,7 @@ get_pipeline <- function(countries = "all",
     tarchetypes::tar_group_by(
       name = PSUT_with_continent_col,
       command = join_psut_continents(PSUT = PSUT,
-                                     continent_aggregation_map = aggregation_maps$continent_aggregation,
+                                     continent_aggregation_map = AggregationMaps$continent_aggregation,
                                      continent = "Continent"),
       # The columns to group by, as symbols.
       Continent,
@@ -131,7 +122,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target(
       PSUT_Re_world,
       Recca::region_aggregates(PSUT_Re_continents %>%
-                                 dplyr::left_join(aggregation_maps$world_aggregation %>%
+                                 dplyr::left_join(AggregationMaps$world_aggregation %>%
                                                     matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
                                                                                      few_colname = "World"),
                                                   by = IEATools::iea_cols$country),
@@ -258,7 +249,7 @@ get_pipeline <- function(countries = "all",
     # Pin the aggregates and efficiencies as an .rds file
     targets::tar_target(
       pin_agg_eta_Re_all_St_pfu,
-      PFUWorkflow::release_target(pipeline_releases_folder = pinboard_folder,
+      PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
                                   targ = agg_eta_Re_all_St_pfu,
                                   targ_name = "agg_eta_Re_all_St_pfu",
                                   release = release)
@@ -267,7 +258,7 @@ get_pipeline <- function(countries = "all",
     # Pin aggregates as a wide-by-years .csv file
     targets::tar_target(
       pin_agg_csv,
-      PFUWorkflow::release_target(pipeline_releases_folder = pinboard_folder,
+      PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
                                   targ = agg_Re_all_St_pfu%>%
                                     pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
                                                                               IEATools::all_stages$final,
@@ -280,7 +271,7 @@ get_pipeline <- function(countries = "all",
     # Pin efficiencies as a wide-by-years .csv file
     targets::tar_target(
       pin_eta_csv,
-      PFUWorkflow::release_target(pipeline_releases_folder = pinboard_folder,
+      PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
                                   targ = eta_Re_all_St_pfu %>%
                                     pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
                                                                               PFUAggDatabase::efficiency_cols$eta_fu,
@@ -293,7 +284,7 @@ get_pipeline <- function(countries = "all",
     # Save the cache for posterity.
     targets::tar_target(
       store_cache,
-      PFUWorkflow::stash_cache(pipeline_caches_folder = pipeline_caches_output_folder,
+      PFUWorkflow::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,
                                cache_folder = "_targets",
                                file_prefix = "pfu_agg_workflow_cache_",
                                dependency = c(agg_Re_all_St_pfu, eta_Re_all_St_pfu))
