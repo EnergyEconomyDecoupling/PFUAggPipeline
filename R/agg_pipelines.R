@@ -235,13 +235,10 @@ get_pipeline <- function(countries = "all",
     ################
 
     # Pin the aggregates and efficiencies as an .rds file
-    targets::tar_target(
-      pin_agg_eta_Re_all_St_pfu,
-      PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
-                                  targ = agg_eta_Re_all_St_pfu,
-                                  targ_name = "agg_eta_Re_all_St_pfu",
-                                  release = release)
-    ),
+    tar_target_raw("pin_agg_eta_Re_all_St_pfu", quote(PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
+                                                                                  targ = agg_eta_Re_all_St_pfu,
+                                                                                  targ_name = "agg_eta_Re_all_St_pfu",
+                                                                                  release = release))),
 
     # Pin aggregates as a wide-by-years .csv file
     targets::tar_target(
@@ -255,6 +252,7 @@ get_pipeline <- function(countries = "all",
                                   type = "csv",
                                   release = release)
     ),
+
 
     # Pin efficiencies as a wide-by-years .csv file
     targets::tar_target(
