@@ -30,10 +30,8 @@ get_pipeline <- function(countries = "all",
                          release = FALSE) {
 
   # Avoid notes when checking the package.
-  keep_years <- NULL
   PSUT <- NULL
   pinboard_folder <- NULL
-  PSUT_release <- NULL
   PSUT_Re_continents <- NULL
   PSUT_Re_world <- NULL
   PSUT_Re_all <- NULL
@@ -65,46 +63,18 @@ get_pipeline <- function(countries = "all",
   list(
 
     tar_target_raw("Countries", rlang::enexpr(countries)),
-
-
-    # Identify the countries for this analysis.
-    # "all" means all countries.
-    targets::tar_target(
-      name = keep_years,
-      command = years
-    ),
-
-    # Set the release that we'll use
-    targets::tar_target_raw(
-      name = "PSUT_release",
-      command = psut_release
-    ),
-
-    # Set the path to the aggregation maps file.
-    targets::tar_target_raw(
-      name = "aggregation_maps_path",
-      command = aggregation_maps_path
-    ),
-
-    # Set the folder for storing targets caches
-    targets::tar_target_raw(
-      name = "pipeline_caches_output_folder",
-      command = pipeline_caches_folder
-    ),
-
-    # Set the pinboard folder
-    targets::tar_target_raw(
-      "pinboard_folder",
-      pipeline_releases_folder,
-      format = "file"
-    ),
+    tar_target_raw("Years", rlang::enexpr(years)),
+    tar_target_raw("PSUTRelease", psut_release),
+    tar_target_raw("aggregation_maps_path", aggregation_maps_path),
+    tar_target_raw("pipeline_caches_output_folder", pipeline_caches_folder),
+    tar_target_raw("pinboard_folder", pipeline_releases_folder),
 
     # Pull in the PSUT data frame
-    targets::tar_target(
+    tar_target(
       PSUT,
       pins::board_folder(pinboard_folder, versioned = TRUE) %>%
-        pins::pin_read("psut", version = PSUT_release) %>%
-        filter_countries_and_years(countries = Countries, years = keep_years),
+        pins::pin_read("psut", version = PSUTRelease) %>%
+        filter_countries_and_years(countries = Countries, years = Years),
       # Very important to assign storage and retrieval tasks to workers,
       # else the pipeline seemingly never finishes.
       storage = "worker",
