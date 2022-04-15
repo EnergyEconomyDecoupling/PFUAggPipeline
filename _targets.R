@@ -13,12 +13,13 @@ library(targets)
 # countries <- c("WMBK", "WABK")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUWorkflow::canonical_countries %>% unlist()
-countries <- "all" # Run all countries
+countries <- "all" # Run all countries in PSUT.
 
 # Set the years to be analyzed.
 # years <- 1960
 # years <- 2000
 # years <- 1971:1972
+# years <- 1971
 # years <- "all" # might get 2020 or other partial years.
 years <- 1960:2019
 
@@ -28,11 +29,7 @@ psut_release <- "20220414T140245Z-2952b"
 # Should we do a release of the results?
 release <- FALSE
 
-
 # End user-adjustable parameters.
-
-
-
 
 
 # Set up for multithreaded work on the local machine.
