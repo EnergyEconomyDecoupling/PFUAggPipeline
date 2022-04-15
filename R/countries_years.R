@@ -14,10 +14,10 @@
 #'
 #' @export
 filter_countries_and_years <- function(.psut_data,
-                             countries = "all",
-                             years = "all",
-                             country = IEATools::iea_cols$country,
-                             year = IEATools::iea_cols$year) {
+                                       countries = "all",
+                                       years = "all",
+                                       country = IEATools::iea_cols$country,
+                                       year = IEATools::iea_cols$year) {
   if (length(countries) == 1 & countries == "all") {
     out <- .psut_data
   } else {
