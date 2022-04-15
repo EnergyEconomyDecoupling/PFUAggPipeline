@@ -21,6 +21,8 @@ RoxygenNote: 7.1.2
 Imports:
     assertthat,
     dplyr,
+    future,
+    future.callr,
     IEATools, 
     magrittr,
     matsbyname,

@@ -9,8 +9,8 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR")
-# countries <- c("WMBK", "WABK", "ZAF")
-countries <- c("WMBK", "WABK")
+countries <- c("WMBK", "WABK", "ZAF")
+# countries <- c("WMBK", "WABK")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
 # countries <- "all" # Run all countries
@@ -19,7 +19,7 @@ countries <- c("WMBK", "WABK")
 # years <- 1960
 # years <- 2000
 # years <- "all"
-years <- 1971
+years <- 1971:1972
 
 # Set the release of PSUT to be used for input.
 psut_release <- "20220414T140245Z-2952b"
@@ -37,12 +37,6 @@ psut_release <- "20220414T140245Z-2952b"
 # num_cores <- 3
 num_cores <- 8
 
-# Set the target to debug.  Set to NULL to turn off debugging.
-# To debug, set appropriate breakpoints and use
-# tar_make(callr_function = NULL).
-# debug_target <- "PSUT_Re_all_St_fu"
-debug_target <- NULL
-
 # Should we do a release of the results?
 release <- FALSE
 
@@ -54,13 +48,10 @@ release <- FALSE
 
 
 # Set up for multithreaded work on the local machine.
-options(clustermq.scheduler = "multiprocess")
+future::plan(future.callr::callr)
 
 # Set options for the targets package.
 targets::tar_option_set(
-
-  # Set the target to debug, if needed.
-  debug = debug_target,
 
   # Set packages to be used.
   packages = c(
