@@ -4,6 +4,11 @@ output: html_document
 ---
 
 
+# PFUAggDatabase 0.1.0 (2022-04-15)
+
+* First fully-working version where the pipeline
+  completes in parallel on its own,
+  without intervention or restarting.
 * Fixed a nasty bug where the `Countries` target picked up
   information from a different environment.
   Solution was to wrap `countries` in a `list()`.
