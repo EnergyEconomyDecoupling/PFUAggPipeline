@@ -49,8 +49,9 @@ get_pipeline <- function(countries = "all",
     #####################
 
     # Store some incoming data as targets
-    targets::tar_target_raw("Countries", rlang::enexpr(countries)),
-    targets::tar_target_raw("Years", rlang::enexpr(years)),
+    # targets::tar_target_raw("Countries", rlang::enexpr(my_countries)),
+    targets::tar_target_raw("Countries", list(countries)),
+    targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("PSUTRelease", psut_release),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
@@ -226,7 +227,7 @@ get_pipeline <- function(countries = "all",
     # Pin the aggregates and efficiencies as an .rds file
     targets::tar_target_raw(
       "pin_agg_eta_Re_all_St_pfu",
-      quote(PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                         targ = agg_eta_Re_all_St_pfu,
                                         targ_name = "agg_eta_Re_all_St_pfu",
                                         release = release))
@@ -235,7 +236,7 @@ get_pipeline <- function(countries = "all",
     # Pin aggregates as a wide-by-years .csv file
     targets::tar_target_raw(
       "pin_agg_csv",
-      quote(PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                         targ = agg_Re_all_St_pfu%>%
                                           pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
                                                                                     IEATools::all_stages$final,
@@ -249,7 +250,7 @@ get_pipeline <- function(countries = "all",
     # Pin efficiencies as a wide-by-years .csv file
     targets::tar_target_raw(
       "pin_eta_csv",
-      quote(PFUWorkflow::release_target(pipeline_releases_folder = PinboardFolder,
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                         targ = eta_Re_all_St_pfu %>%
                                           pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
                                                                                     PFUAggDatabase::efficiency_cols$eta_fu,
@@ -262,7 +263,7 @@ get_pipeline <- function(countries = "all",
     # Save the cache for posterity.
     targets::tar_target_raw(
       "store_cache",
-      quote(PFUWorkflow::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,
+      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,
                                      cache_folder = "_targets",
                                      file_prefix = "pfu_agg_workflow_cache_",
                                      dependency = c(agg_Re_all_St_pfu, eta_Re_all_St_pfu)))
