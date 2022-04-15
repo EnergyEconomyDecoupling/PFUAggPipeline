@@ -9,4 +9,6 @@ test_that("filter_countries_and_years() works as expected", {
   expect_equal(filter_countries_and_years(psut_data, "ZAF", 1971),
                tibble::tribble(~Country, ~Year,
                                "ZAF", 1971))
+
+  filter_countries_and_years(psut_data, c("ZAF", "USA"), 1971:1972)
 })
