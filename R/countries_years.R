@@ -18,17 +18,15 @@ filter_countries_and_years <- function(.psut_data,
                                        years = "all",
                                        country = IEATools::iea_cols$country,
                                        year = IEATools::iea_cols$year) {
-  if (length(countries) == 1 & countries == "all") {
-    out <- .psut_data
-  } else {
-    out <- .psut_data %>%
+
+  out <- .psut_data
+  if (length(countries) != 1 | (length(countries) == 1 & all(countries != "all"))) {
+    out <- out %>%
       dplyr::filter(.data[[country]] %in% countries)
   }
-  if (length(years) == 1 & years == "all") {
-    out <- out
-  } else {
+  if (length(years) != 1 | (length(years) == 1 & all(years != "all"))) {
     out <- out %>%
       dplyr::filter(.data[[year]] %in% years)
   }
-  out
+  return(out)
 }
