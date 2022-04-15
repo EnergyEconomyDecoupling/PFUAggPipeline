@@ -9,7 +9,8 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR")
-countries <- c("WMBK", "WABK", "ZAF")
+# countries <- c("WMBK", "WABK", "ZAF")
+countries <- c("WMBK", "WABK")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
 # countries <- "all" # Run all countries
