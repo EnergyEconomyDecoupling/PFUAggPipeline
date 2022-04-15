@@ -4,6 +4,12 @@ output: html_document
 ---
 
 
+* Fixed a nasty bug where the `Countries` target picked up
+  information from a different environment.
+  Solution was to wrap `countries` in a `list()`.
+  Did the same for `years` to defend against similar problems.
+* Now using `future` instead of `clustermq` for parallel processing,
+  to avoid hangs when executing the pipeline.
 * Add GitHub actions continuous integration.
 * Add DOI badge to Readme.Rmd.
 
