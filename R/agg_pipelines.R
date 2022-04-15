@@ -122,15 +122,15 @@ get_pipeline <- function(countries = "all",
 
 
     # Aggregate to world (WLD)
-    targets::tar_target(
-      PSUT_Re_world,
-      Recca::region_aggregates(PSUT_Re_continents %>%
+    targets::tar_target_raw(
+      "PSUT_Re_world",
+      quote(Recca::region_aggregates(PSUT_Re_continents %>%
                                  dplyr::left_join(AggregationMaps$world_aggregation %>%
                                                     matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
                                                                                      few_colname = "World"),
                                                   by = IEATools::iea_cols$country),
                                many_colname = IEATools::iea_cols$country, # Which actually holds continents
-                               few_colname = "World")
+                               few_colname = "World"))
     ),
 
     # Bind all region aggregations together
