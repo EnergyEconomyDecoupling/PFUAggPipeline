@@ -49,8 +49,9 @@ get_pipeline <- function(countries = "all",
     #####################
 
     # Store some incoming data as targets
-    targets::tar_target_raw("Countries", rlang::enexpr(countries)),
-    targets::tar_target_raw("Years", rlang::enexpr(years)),
+    # targets::tar_target_raw("Countries", rlang::enexpr(my_countries)),
+    targets::tar_target_raw("Countries", list(countries)),
+    targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("PSUTRelease", psut_release),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),

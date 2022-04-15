@@ -12,14 +12,14 @@ library(targets)
 # countries <- c("WMBK", "WABK", "ZAF")
 # countries <- c("WMBK", "WABK")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
-# countries <- PFUWorkflow::canonical_countries[1:76] %>% unlist()
+# countries <- PFUWorkflow::canonical_countries %>% unlist()
 countries <- "all" # Run all countries
 
 # Set the years to be analyzed.
 # years <- 1960
 # years <- 2000
 # years <- 1971:1972
-years <- "all"
+years <- 1960:2019
 
 # Set the release of PSUT to be used for input.
 psut_release <- "20220414T140245Z-2952b"
