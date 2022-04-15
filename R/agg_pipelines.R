@@ -33,28 +33,12 @@ get_pipeline <- function(countries = "all",
   PSUT_with_continent_col <- NULL
   PSUT <- NULL
   AggregationMaps <- NULL
-  # Continent <- NULL
-  .continent_col <- "Continent"
-  PSUT_Re_continents <- NULL
-  PSUT_Re_world <- NULL
+  Continent <- NULL
   PSUT_Re_all_by_country <- NULL
   PSUT_Re_all <- NULL
   Country <- NULL
-  PSUT_Re_all_St_p <- NULL
-  p_industry_prefixes <- NULL
-  PSUT_Re_all_St_fu <- NULL
-  final_demand_sectors <- NULL
   PSUT_Re_all_St_pfu_by_country <- NULL
   PSUT_Re_all_St_pfu <- NULL
-  agg_eta_Re_all_St_pfu <- NULL
-  agg_Re_all_St_pfu <- NULL
-  pin_agg_csv <- NULL
-  PinboardFolder <- NULL
-  pin_eta_csv <- NULL
-  store_cache <- NULL
-  PipelineCachesOutputFolder <- NULL
-  eta_Re_all_St_pfu <- NULL
-  map <- NULL
 
 
   # Create the pipeline
