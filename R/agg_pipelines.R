@@ -121,16 +121,16 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Aggregate to world (WLD)
+    # Aggregate to world
     targets::tar_target_raw(
       "PSUT_Re_world",
       quote(Recca::region_aggregates(PSUT_Re_continents %>%
-                                 dplyr::left_join(AggregationMaps$world_aggregation %>%
-                                                    matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
-                                                                                     few_colname = "World"),
-                                                  by = IEATools::iea_cols$country),
-                               many_colname = IEATools::iea_cols$country, # Which actually holds continents
-                               few_colname = "World"))
+                                       dplyr::left_join(AggregationMaps$world_aggregation %>%
+                                                          matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
+                                                                                           few_colname = "World"),
+                                                        by = IEATools::iea_cols$country),
+                                     many_colname = IEATools::iea_cols$country, # Which actually holds continents
+                                     few_colname = "World"))
     ),
 
     # Bind all region aggregations together
@@ -156,11 +156,10 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("p_industry_prefixes", quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
 
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
-    targets::tar_target(
-      PSUT_Re_all_St_p,
-      calculate_primary_ex_data(PSUT_Re_all_by_country,
-                                p_industry_prefixes = p_industry_prefixes),
-      pattern = map(PSUT_Re_all_by_country),
+    targets::tar_target_raw(
+      "PSUT_Re_all_St_p",
+      quote(calculate_primary_ex_data(PSUT_Re_all_by_country, p_industry_prefixes = p_industry_prefixes)),
+      pattern = quote(map(PSUT_Re_all_by_country)),
       iteration = "group",
       storage = "worker",
       retrieval = "worker"
