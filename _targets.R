@@ -41,10 +41,12 @@ release <- FALSE
 # Set up for multithreaded work on the local machine.
 future::plan(future.callr::callr)
 
-# Set options for the targets package.
+# Set options for all targets.
 targets::tar_option_set(
   # Set packages to be used.
-  packages = c("PFUAggDatabase")
+  packages = c("PFUAggDatabase"),
+  storage = "worker",
+  retrieval = "worker"
 )
 
 # Pull in the pipeline
@@ -55,3 +57,4 @@ PFUAggDatabase::get_pipeline(countries = countries,
                              pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
                              release = release)
+
