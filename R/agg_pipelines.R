@@ -56,6 +56,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
+    targets::tar_target_raw("Release", release),
 
     # Pull in the PSUT data frame
     targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
@@ -230,7 +231,7 @@ get_pipeline <- function(countries = "all",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                         targ = agg_eta_Re_all_St_pfu,
                                         targ_name = "agg_eta_Re_all_St_pfu",
-                                        release = release))
+                                        release = Release))
       ),
 
     # Pin aggregates as a wide-by-years .csv file
@@ -243,7 +244,7 @@ get_pipeline <- function(countries = "all",
                                                                                     IEATools::all_stages$useful)),
                                         targ_name = "agg_Re_all_St_pfu",
                                         type = "csv",
-                                        release = release))
+                                        release = Release))
     ),
 
 
@@ -257,7 +258,7 @@ get_pipeline <- function(countries = "all",
                                                                                     PFUAggDatabase::efficiency_cols$eta_pu)),
                                         targ_name = "eta_Re_all_St_pfu",
                                         type = "csv",
-                                        release = release))
+                                        release = Release))
     ),
 
     # Save the cache for posterity.

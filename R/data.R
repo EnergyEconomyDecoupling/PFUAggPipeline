@@ -14,7 +14,7 @@
 #' \item{sector_colname}{The name of a metadata column containing the names of final demand sectors.}
 #' \item{flow_colname}{The name of a metadata column containing the names of primary flows.}
 #' \item{agg_by_colname}{The name of a column containing the variable by which data was aggregated. Usually using `Recca::finaldemand_aggregates()` and `Recca::primary_aggregates()`, and usually one of "Flow", "Sector", "Product", or "Total".}
-#' \item{fd_sectors_colname}{The name of a column containing the list of final demand sectors desired for analysis. Usually created by `PFUWorkflow::get_fd_sectors()` and `PFUWorkflow::create_fd_sectors_list()`.}
+#' \item{fd_sectors_colname}{The name of a column containing the list of final demand sectors desired for analysis. Usually created by `PFUDatabase::get_fd_sectors()` and `PFUDatabase::create_fd_sectors_list()`.}
 #' \item{p_ind_comp_colname}{The name of a column containing lists of primary industries desired for analysis. Usually created by using `Recca::find_p_industry_names()`.}
 #' \item{p_ind_prefix_colname}{The name of a column containing the list of primary industry prefixes desired for analysis. Usually supplied to `Recca::find_p_industry_names()` to return `p_ind_comp`.}
 #' \item{ex_colname}{The name of a column containing energy or exergy data.}
@@ -30,16 +30,16 @@
 
 #' Aggregation groups metadata information
 #'
-#' A string list containing values to be supplied to the metadata columns `PFUWorkflow::sea_cols$e_product_colname`,
-#' `PFUWorkflow::sea_cols$agg_by_colname`, `PFUWorkflow::sea_cols$sector_colname`, and `PFUWorkflow::sea_cols$flow_colname`.
+#' A string list containing values to be supplied to the metadata columns `PFUDatabase::sea_cols$e_product_colname`,
+#' `PFUDatabase::sea_cols$agg_by_colname`, `PFUDatabase::sea_cols$sector_colname`, and `PFUDatabase::sea_cols$flow_colname`.
 #'
 #' @format A string list with `r length(agg_metadata)` entries.
 #' \describe{
-#' \item{total_value}{The string "Total" indicating that data has been aggregated across all products and sectors/flows. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
-#' \item{all_value}{The string "All" indicating that data has been aggregated across one or more of: "Product", "Flow", or "Sector". Supplied to one or more of `PFUWorkflow::sea_cols$e_product_colname`, `PFUWorkflow::sea_cols$sector_colname`, and `PFUWorkflow::sea_cols$flow_colname` depending on the aggregation.}
-#' \item{product_value}{The string "Product" indicating that data has been aggregated by product. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
-#' \item{sector_value}{The string "Sector" indicating that data has been aggregated by sector. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
-#' \item{flow_value}{The string "Flow" indicating that data has been aggregated by flow. Supplied to `PFUWorkflow::sea_cols$agg_by_colname`.}
+#' \item{total_value}{The string "Total" indicating that data has been aggregated across all products and sectors/flows. Supplied to `PFUDatabase::sea_cols$agg_by_colname`.}
+#' \item{all_value}{The string "All" indicating that data has been aggregated across one or more of: "Product", "Flow", or "Sector". Supplied to one or more of `PFUDatabase::sea_cols$e_product_colname`, `PFUDatabase::sea_cols$sector_colname`, and `PFUDatabase::sea_cols$flow_colname` depending on the aggregation.}
+#' \item{product_value}{The string "Product" indicating that data has been aggregated by product. Supplied to `PFUDatabase::sea_cols$agg_by_colname`.}
+#' \item{sector_value}{The string "Sector" indicating that data has been aggregated by sector. Supplied to `PFUDatabase::sea_cols$agg_by_colname`.}
+#' \item{flow_value}{The string "Flow" indicating that data has been aggregated by flow. Supplied to `PFUDatabase::sea_cols$agg_by_colname`.}
 #' }
 #'
 #' @examples
@@ -49,9 +49,9 @@
 
 #' Gross or Net metadata information
 #'
-#' A string list containing values indicating whether the output of the functions `Recca::finaldemand_aggregates`, `PFUWorkflow::calculate_fu_ex_total`,
-#' `PFUWorkflow::calculate_fu_ex_product`, `PFUWorkflow::calculate_fu_ex_sector`, and `PFUWorkflow::calculate_finaluseful_ex_data`
-#' are in Gross or Net terms. To be supplied to the metadata columns `PFUWorkflow::sea_cols$gross_net_colname`.
+#' A string list containing values indicating whether the output of the functions `Recca::finaldemand_aggregates`, `PFUDatabase::calculate_fu_ex_total`,
+#' `PFUDatabase::calculate_fu_ex_product`, `PFUDatabase::calculate_fu_ex_sector`, and `PFUDatabase::calculate_finaluseful_ex_data`
+#' are in Gross or Net terms. To be supplied to the metadata columns `PFUDatabase::sea_cols$gross_net_colname`.
 #'
 #' @format A string list with `r length(gross_net_metadata)` entries.
 #' \describe{

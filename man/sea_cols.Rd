@@ -13,7 +13,7 @@ A string list with 10 entries.
 \item{sector_colname}{The name of a metadata column containing the names of final demand sectors.}
 \item{flow_colname}{The name of a metadata column containing the names of primary flows.}
 \item{agg_by_colname}{The name of a column containing the variable by which data was aggregated. Usually using \code{Recca::finaldemand_aggregates()} and \code{Recca::primary_aggregates()}, and usually one of "Flow", "Sector", "Product", or "Total".}
-\item{fd_sectors_colname}{The name of a column containing the list of final demand sectors desired for analysis. Usually created by \code{PFUWorkflow::get_fd_sectors()} and \code{PFUWorkflow::create_fd_sectors_list()}.}
+\item{fd_sectors_colname}{The name of a column containing the list of final demand sectors desired for analysis. Usually created by \code{PFUDatabase::get_fd_sectors()} and \code{PFUDatabase::create_fd_sectors_list()}.}
 \item{p_ind_comp_colname}{The name of a column containing lists of primary industries desired for analysis. Usually created by using \code{Recca::find_p_industry_names()}.}
 \item{p_ind_prefix_colname}{The name of a column containing the list of primary industry prefixes desired for analysis. Usually supplied to \code{Recca::find_p_industry_names()} to return \code{p_ind_comp}.}
 \item{ex_colname}{The name of a column containing energy or exergy data.}

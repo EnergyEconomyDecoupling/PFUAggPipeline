@@ -7,19 +7,19 @@
 \format{
 A string list with 5 entries.
 \describe{
-\item{total_value}{The string "Total" indicating that data has been aggregated across all products and sectors/flows. Supplied to \code{PFUWorkflow::sea_cols$agg_by_colname}.}
-\item{all_value}{The string "All" indicating that data has been aggregated across one or more of: "Product", "Flow", or "Sector". Supplied to one or more of \code{PFUWorkflow::sea_cols$e_product_colname}, \code{PFUWorkflow::sea_cols$sector_colname}, and \code{PFUWorkflow::sea_cols$flow_colname} depending on the aggregation.}
-\item{product_value}{The string "Product" indicating that data has been aggregated by product. Supplied to \code{PFUWorkflow::sea_cols$agg_by_colname}.}
-\item{sector_value}{The string "Sector" indicating that data has been aggregated by sector. Supplied to \code{PFUWorkflow::sea_cols$agg_by_colname}.}
-\item{flow_value}{The string "Flow" indicating that data has been aggregated by flow. Supplied to \code{PFUWorkflow::sea_cols$agg_by_colname}.}
+\item{total_value}{The string "Total" indicating that data has been aggregated across all products and sectors/flows. Supplied to \code{PFUDatabase::sea_cols$agg_by_colname}.}
+\item{all_value}{The string "All" indicating that data has been aggregated across one or more of: "Product", "Flow", or "Sector". Supplied to one or more of \code{PFUDatabase::sea_cols$e_product_colname}, \code{PFUDatabase::sea_cols$sector_colname}, and \code{PFUDatabase::sea_cols$flow_colname} depending on the aggregation.}
+\item{product_value}{The string "Product" indicating that data has been aggregated by product. Supplied to \code{PFUDatabase::sea_cols$agg_by_colname}.}
+\item{sector_value}{The string "Sector" indicating that data has been aggregated by sector. Supplied to \code{PFUDatabase::sea_cols$agg_by_colname}.}
+\item{flow_value}{The string "Flow" indicating that data has been aggregated by flow. Supplied to \code{PFUDatabase::sea_cols$agg_by_colname}.}
 }
 }
 \usage{
 agg_metadata
 }
 \description{
-A string list containing values to be supplied to the metadata columns \code{PFUWorkflow::sea_cols$e_product_colname},
-\code{PFUWorkflow::sea_cols$agg_by_colname}, \code{PFUWorkflow::sea_cols$sector_colname}, and \code{PFUWorkflow::sea_cols$flow_colname}.
+A string list containing values to be supplied to the metadata columns \code{PFUDatabase::sea_cols$e_product_colname},
+\code{PFUDatabase::sea_cols$agg_by_colname}, \code{PFUDatabase::sea_cols$sector_colname}, and \code{PFUDatabase::sea_cols$flow_colname}.
 }
 \examples{
 agg_metadata

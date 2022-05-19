@@ -15,9 +15,9 @@ A string list with 2 entries.
 gross_net_metadata
 }
 \description{
-A string list containing values indicating whether the output of the functions \code{Recca::finaldemand_aggregates}, \code{PFUWorkflow::calculate_fu_ex_total},
-\code{PFUWorkflow::calculate_fu_ex_product}, \code{PFUWorkflow::calculate_fu_ex_sector}, and \code{PFUWorkflow::calculate_finaluseful_ex_data}
-are in Gross or Net terms. To be supplied to the metadata columns \code{PFUWorkflow::sea_cols$gross_net_colname}.
+A string list containing values indicating whether the output of the functions \code{Recca::finaldemand_aggregates}, \code{PFUDatabase::calculate_fu_ex_total},
+\code{PFUDatabase::calculate_fu_ex_product}, \code{PFUDatabase::calculate_fu_ex_sector}, and \code{PFUDatabase::calculate_finaluseful_ex_data}
+are in Gross or Net terms. To be supplied to the metadata columns \code{PFUDatabase::sea_cols$gross_net_colname}.
 }
 \examples{
 gross_net_metadata
