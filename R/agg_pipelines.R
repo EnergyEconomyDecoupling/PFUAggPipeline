@@ -66,6 +66,8 @@ get_pipeline <- function(countries = "all",
   }
 
   # At this point, we will have only a single, named value for psut_release.
+  # Get the name (the pin).
+  psut_pin <- names(psut_release)
   # Create the pipeline
   list(
 
@@ -77,6 +79,7 @@ get_pipeline <- function(countries = "all",
     # targets::tar_target_raw("Countries", rlang::enexpr(my_countries)),
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
+    targets::tar_target_raw("PSUTPin", psut_pin),
     targets::tar_target_raw("PSUTRelease", psut_release),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
