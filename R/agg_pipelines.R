@@ -58,14 +58,14 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
     targets::tar_target_raw("Release", release),
 
+    # Note:
+    # In _targets.R, storage and retrieval parameters for all targets are set to "worker",
+    # eliminating the need to set those arguments in the targets below.
+
     # Pull in the PSUT data frame
     targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
                                             pins::pin_read("psut", version = PSUTRelease) %>%
-                                            filter_countries_and_years(countries = Countries, years = Years)),
-                            # Very important to assign storage and retrieval tasks to workers,
-                            # else the pipeline seemingly never finishes.
-                            storage = "worker",
-                            retrieval = "worker"),
+                                            filter_countries_and_years(countries = Countries, years = Years))),
 
     # Gather the aggregation maps.
     targets::tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
@@ -84,10 +84,7 @@ get_pipeline <- function(countries = "all",
                                      continent_aggregation_map = AggregationMaps$continent_aggregation,
                                      continent = "Continent"),
       # The columns to group by, as symbols.
-      Continent,
-      storage = "worker",
-      retrieval = "worker"
-    ),
+      Continent),
 
     # Aggregate by continent
     targets::tar_target_raw(
@@ -101,10 +98,7 @@ get_pipeline <- function(countries = "all",
                 tar_group = NULL
               )),
       pattern = quote(map(PSUT_with_continent_col)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
-    ),
+      iteration = "group"),
 
 
     # Aggregate to world
@@ -133,10 +127,7 @@ get_pipeline <- function(countries = "all",
       name = PSUT_Re_all_by_country,
       command = PSUT_Re_all,
       # The columns to group by, as symbols.
-      Country,
-      storage = "worker",
-      retrieval = "worker"
-    ),
+      Country),
 
     # Establish prefixes for primary industries
     targets::tar_target_raw("p_industry_prefixes", quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
@@ -146,10 +137,7 @@ get_pipeline <- function(countries = "all",
       "PSUT_Re_all_St_p",
       quote(calculate_primary_ex_data(PSUT_Re_all_by_country, p_industry_prefixes = p_industry_prefixes)),
       pattern = quote(map(PSUT_Re_all_by_country)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
-    ),
+      iteration = "group"),
 
     # Establish final demand sectors
     targets::tar_target_raw("final_demand_sectors", quote(IEATools::fd_sectors)),
@@ -160,10 +148,7 @@ get_pipeline <- function(countries = "all",
       quote(calculate_finaluseful_ex_data(PSUT_Re_all_by_country,
                                           fd_sectors = final_demand_sectors)),
       pattern = quote(map(PSUT_Re_all_by_country)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
-    ),
+      iteration = "group"),
 
     # Bring the aggregations together in a single data frame
     targets::tar_target_raw("PSUT_Re_all_St_pfu", quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
@@ -180,19 +165,13 @@ get_pipeline <- function(countries = "all",
           tar_group = NULL
         ),
       # The columns to group by, as symbols.
-      Country,
-      storage = "worker",
-      retrieval = "worker"
-    ),
+      Country),
 
     targets::tar_target_raw(
       "agg_eta_Re_all_St_pfu",
       quote(calc_agg_etas(PSUT_Re_all_St_pfu_by_country)),
       pattern = quote(map(PSUT_Re_all_St_pfu_by_country)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
-    ),
+      iteration = "group"),
 
     # Split the aggregations and efficiencies apart
     # to enable easier saving of separate .csv files later.
@@ -203,10 +182,7 @@ get_pipeline <- function(countries = "all",
                 "{PFUAggDatabase::efficiency_cols$eta_pf}" := NULL,
                 "{PFUAggDatabase::efficiency_cols$eta_fu}" := NULL,
                 "{PFUAggDatabase::efficiency_cols$eta_pu}" := NULL,
-              )),
-      storage = "worker",
-      retrieval = "worker"
-    ),
+              ))),
 
     targets::tar_target_raw(
       "eta_Re_all_St_pfu",
@@ -215,10 +191,7 @@ get_pipeline <- function(countries = "all",
                 "{IEATools::all_stages$primary}" := NULL,
                 "{IEATools::all_stages$final}" := NULL,
                 "{IEATools::all_stages$useful}" := NULL,
-              )),
-      storage = "worker",
-      retrieval = "worker"
-    ),
+              ))),
 
 
     ################
