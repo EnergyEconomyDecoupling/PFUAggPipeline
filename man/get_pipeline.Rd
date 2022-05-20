@@ -21,8 +21,6 @@ Default is "all", meaning all available countries should be analyzed.}
 \item{years}{A numeric vector of years to be analyzed.
 Default is "all", meaning all available years should be analyzed.}
 
-\item{psut_release}{The release we'll use from \code{psut_releases_folder}.}
-
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
 
 \item{pipeline_caches_folder}{The path to a folder where .zip files of the targets pipeline are saved.}
@@ -30,6 +28,8 @@ Default is "all", meaning all available years should be analyzed.}
 \item{pipeline_releases_folder}{The path to a folder where releases of output targets are pinned.}
 
 \item{release}{Boolean that tells whether to do a release of the results.}
+
+\item{psut_releases}{The releases we'll use from \code{pipeline_releases_folder}.}
 }
 \value{
 A list of \code{tar_target}s to be executed in a workflow.
@@ -38,6 +38,15 @@ A list of \code{tar_target}s to be executed in a workflow.
 Arguments to this function specify the details of a targets workflow to be executed.
 }
 \details{
+Note that \code{psut_releases} is assumed to be a named list where
+names of list items give pin names in \code{pipeline_releases_folder}, and
+list items give versions of the pins.
+An example \code{psut_releases} argument is:
+
+\verb{psut_releases = c(psut = "20220519T185450Z-55e04",}
+\verb{                  psut_iea = "20220519T185448Z-07a39",}
+\verb{                  psut_mw = "20220519T185235Z-771f8").}
+
 The exemplar table is assumed to be an Excel file with the following columns:
 "Region.code" and years (as numbers).
 The body of the table should contain 3-letter codes

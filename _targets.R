@@ -24,7 +24,8 @@ countries <- "all" # Run all countries in PSUT.
 years <- 1960:2019
 
 # Set the release of PSUT to be used for input.
-psut_release <- "20220519T185450Z-55e04"
+psut_release <- c(psut = "20220519T185450Z-55e04")
+
 
 # Should we do a release of the results?
 release <- FALSE
@@ -43,8 +44,7 @@ future::plan(future.callr::callr)
 
 # Set options for all targets.
 targets::tar_option_set(
-  # Set packages to be used.
-  packages = c("PFUAggDatabase"),
+  packages = "PFUAggDatabase",
   storage = "worker",
   retrieval = "worker"
 )

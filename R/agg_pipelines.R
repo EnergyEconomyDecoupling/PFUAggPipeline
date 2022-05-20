@@ -2,6 +2,15 @@
 #'
 #' Arguments to this function specify the details of a targets workflow to be executed.
 #'
+#' Note that `psut_releases` is assumed to be a named list where
+#' names of list items give pin names in `pipeline_releases_folder`, and
+#' list items give versions of the pins.
+#' An example `psut_releases` argument is:
+#'
+#' `psut_releases = c(psut = "20220519T185450Z-55e04",`
+#' `                  psut_iea = "20220519T185448Z-07a39",`
+#' `                  psut_mw = "20220519T185235Z-771f8").`
+#'
 #' The exemplar table is assumed to be an Excel file with the following columns:
 #' "Region.code" and years (as numbers).
 #' The body of the table should contain 3-letter codes
@@ -12,7 +21,7 @@
 #'                  Default is "all", meaning all available countries should be analyzed.
 #' @param years A numeric vector of years to be analyzed.
 #'              Default is "all", meaning all available years should be analyzed.
-#' @param psut_release The release we'll use from `psut_releases_folder`.
+#' @param psut_releases The releases we'll use from `pipeline_releases_folder`.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_caches_folder The path to a folder where .zip files of the targets pipeline are saved.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
@@ -40,7 +49,23 @@ get_pipeline <- function(countries = "all",
   PSUT_Re_all_St_pfu_by_country <- NULL
   PSUT_Re_all_St_pfu <- NULL
 
+  if (length(psut_release) > 1) {
+    # Recursively call 1 at a time.
+    lapply(psut_releases, function(pr) {
+      get_pipeline(countries = countries,
+                   years = years,
+                   # Call get_pipeline() with this particular release.
+                   psut_release = pr,
+                   aggregation_maps_path = aggregation_maps_path,
+                   pipeline_caches_folder = pipeline_caches_folder,
+                   pipeline_releases_folder = pipeline_releases_folder,
+                   release = release)
+    }) %>%
+      # Combine all lists into a single list.
+      c()
+  }
 
+  # At this point, we will have only a single, named value for psut_release.
   # Create the pipeline
   list(
 
