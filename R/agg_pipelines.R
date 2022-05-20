@@ -68,6 +68,8 @@ get_pipeline <- function(countries = "all",
   # At this point, we will have only a single, named value for psut_release.
   # Get the name (the pin).
   psut_pin <- names(psut_release)
+  # Set target names
+  psut_df_target <- toupper(psut_pin)
   # Create the pipeline
   list(
 
@@ -91,9 +93,12 @@ get_pipeline <- function(countries = "all",
     # eliminating the need to set those arguments in the targets below.
 
     # Pull in the PSUT data frame
-    targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
-                                            pins::pin_read("psut", version = PSUTRelease) %>%
-                                            filter_countries_and_years(countries = Countries, years = Years))),
+    # targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
+    #                                         pins::pin_read("psut", version = PSUTRelease) %>%
+    #                                         filter_countries_and_years(countries = Countries, years = Years))),
+    targets::tar_target_raw(psut_df_target, quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
+                                                    pins::pin_read(PSUTPin, version = PSUTRelease) %>%
+                                                    filter_countries_and_years(countries = Countries, years = Years))),
 
     # Gather the aggregation maps.
     targets::tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
