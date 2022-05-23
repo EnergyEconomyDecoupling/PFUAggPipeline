@@ -4,14 +4,25 @@
 \alias{calculate_primary_ex_data}
 \title{Create a data frame containing primary aggregate energy/exergy data}
 \usage{
-calculate_primary_ex_data(.sutdata, p_industry_prefixes)
+calculate_primary_ex_data(
+  .sutdata,
+  countries,
+  years,
+  p_industry_prefixes,
+  ex = PFUAggDatabase::sea_cols$ex_colname
+)
 }
 \arguments{
 \item{.sutdata}{A data frame containing Physical Supply-Use Table (PSUT)
 matrices with associated final demand sector names}
 
+\item{countries}{The countries for which primary energy and exergy data are to be calculated.}
+
 \item{p_industry_prefixes}{A character vector of primary energy industry prefixes.
 Usually "Resources", "Imports", and "Stock changes".}
+
+\item{country}{The name of the country column.
+Default is \code{IEATools::iea_cols$country}.}
 }
 \value{
 A data frame containing primary energy/exergy values aggregated by total,

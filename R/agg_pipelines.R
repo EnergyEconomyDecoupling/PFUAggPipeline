@@ -2,9 +2,10 @@
 #'
 #' This is a target factory whose arguments
 #' specify the details of a targets workflow to be executed.
-#' The `psut_release` argument is assumed to be a named list where
-#' names of list items give pin names in `pipeline_releases_folder`, and
-#' items give versions of the pins.
+#'
+#' The `psut_releases` argument is assumed to be a named vector of strings where
+#' names are pin names in `pipeline_releases_folder`, and
+#' items give pin versions.
 #' An example `psut_releases` argument is:
 #'
 #' `psut_releases = c(psut = "20220519T185450Z-55e04",`
@@ -16,6 +17,7 @@
 #' @param years A numeric vector of years to be analyzed.
 #'              Default is "all", meaning all available years should be analyzed.
 #' @param psut_releases The releases we'll use from `pipeline_releases_folder`.
+#'                      See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_caches_folder The path to a folder where .zip files of the targets pipeline are saved.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
@@ -27,7 +29,7 @@
 #' @export
 get_pipeline <- function(countries = "all",
                          years = "all",
-                         psut_release,
+                         psut_releases,
                          aggregation_maps_path,
                          pipeline_caches_folder,
                          pipeline_releases_folder,
@@ -44,13 +46,13 @@ get_pipeline <- function(countries = "all",
   PSUT_Re_all_St_pfu_by_country <- NULL
   PSUT_Re_all_St_pfu <- NULL
 
-  if (length(psut_release) > 1) {
+  if (length(psut_releases) > 1) {
     # Recursively call 1 at a time.
     lapply(psut_releases, function(pr) {
       get_pipeline(countries = countries,
                    years = years,
                    # Call get_pipeline() with this particular release (pr).
-                   psut_release = pr,
+                   psut_releases = pr,
                    aggregation_maps_path = aggregation_maps_path,
                    pipeline_caches_folder = pipeline_caches_folder,
                    pipeline_releases_folder = pipeline_releases_folder,
@@ -62,14 +64,21 @@ get_pipeline <- function(countries = "all",
 
   # At this point, we will have only a single, named value for psut_release.
   # Get the name (the pin).
-  psut_pin <- names(psut_release)
+  psut_pin <- names(psut_releases)
+
   # Set target names based on the psut_tar_str.
+  aggregation_maps_tar_str <- "AggregationMaps"
   psut_tar_str <- toupper(psut_pin)
   psut_tar_str_with_continent_col <- paste0(psut_tar_str, "_with_continent_col")
   psut_tar_str_Re_continents <- paste0(psut_tar_str, "_Re_continents")
   psut_tar_str_Re_world <- paste0(psut_tar_str, "_Re_world")
+  psut_tar_str_Re_all <- paste0(psut_tar_str, "_Re_all")
+
   # Set symbols for targets to which we refer later in the pipeline.
+  aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
   psut_tar_sym <- as.symbol(psut_tar_str)
+  psut_tar_sym_Re_continents <- as.symbol(psut_tar_str_Re_continents)
+  psut_tar_sym_Re_world <- as.symbol(psut_tar_str_Re_world)
 
   # Create the pipeline
   list(
@@ -93,6 +102,12 @@ get_pipeline <- function(countries = "all",
     # In _targets.R, storage and retrieval parameters for all targets are set to "worker",
     # eliminating the need to set those arguments in the targets below.
 
+    # Gather the aggregation maps.
+    # targets::tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
+    targets::tar_target_raw(
+      aggregation_maps_tar_str,
+      quote(load_aggregation_maps(path = AggregationMapsPath))),
+
     # Pull in the PSUT data frame
     # targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
     #                                         pins::pin_read("psut", version = PSUTRelease) %>%
@@ -102,9 +117,6 @@ get_pipeline <- function(countries = "all",
       quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
               pins::pin_read(PSUTPin, version = PSUTRelease) %>%
               filter_countries_and_years(countries = Countries, years = Years))),
-
-    # Gather the aggregation maps.
-    targets::tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
 
 
     #########################
@@ -140,17 +152,29 @@ get_pipeline <- function(countries = "all",
     # Aggregate to world
     targets::tar_target_raw(
       psut_tar_str_Re_world,
-      quote(Recca::region_aggregates(PSUT_Re_continents %>%
-                                       dplyr::left_join(AggregationMaps$world_aggregation %>%
-                                                          matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
-                                                                                           few_colname = "World"),
-                                                        by = IEATools::iea_cols$country),
-                                     many_colname = IEATools::iea_cols$country, # Which actually holds continents
-                                     few_colname = "World"))
-    ),
+      # quote(Recca::region_aggregates(PSUT_Re_continents %>%
+      #                                  dplyr::left_join(AggregationMaps$world_aggregation %>%
+      #                                                     matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
+      #                                                                                      few_colname = "World"),
+      #                                                   by = IEATools::iea_cols$country),
+      #                                many_colname = IEATools::iea_cols$country, # Which actually holds continents
+      #                                few_colname = "World"))
+      substitute(Recca::region_aggregates(psut_tar_sym_Re_continents %>%
+                                            dplyr::left_join(aggregation_maps_tar_sym$world_aggregation %>%
+                                                               matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
+                                                                                                few_colname = "World"),
+                                                             by = IEATools::iea_cols$country),
+                                          many_colname = IEATools::iea_cols$country, # Which actually holds continents
+                                          few_colname = "World"))),
 
     # Bind all region aggregations together
-    targets::tar_target_raw("PSUT_Re_all", quote(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all",
+    #   quote(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
+    targets::tar_target_raw(
+      psut_tar_str_Re_all,
+      substitute(dplyr::bind_rows(psut_tar_sym, psut_tar_sym_Re_continents, PSUT_Re_world))),
+
 
 
     ####################
@@ -166,14 +190,18 @@ get_pipeline <- function(countries = "all",
       Country),
 
     # Establish prefixes for primary industries
-    targets::tar_target_raw("p_industry_prefixes", quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
+    targets::tar_target_raw(
+      "p_industry_prefixes",
+      quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
 
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target_raw(
       "PSUT_Re_all_St_p",
-      quote(calculate_primary_ex_data(PSUT_Re_all_by_country, p_industry_prefixes = p_industry_prefixes)),
-      pattern = quote(map(PSUT_Re_all_by_country)),
-      iteration = "group"),
+      quote(calculate_primary_ex_data(PSUT_Re_all_by_country,
+                                      countries = Countries,
+                                      years = Years,
+                                      p_industry_prefixes = p_industry_prefixes)),
+      pattern = quote(map(Countries))),
 
     # Establish final demand sectors
     targets::tar_target_raw("final_demand_sectors", quote(IEATools::fd_sectors)),
@@ -187,7 +215,9 @@ get_pipeline <- function(countries = "all",
       iteration = "group"),
 
     # Bring the aggregations together in a single data frame
-    targets::tar_target_raw("PSUT_Re_all_St_pfu", quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
+    targets::tar_target_raw(
+      "PSUT_Re_all_St_pfu",
+      quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
 
 
     ################

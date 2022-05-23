@@ -10,8 +10,11 @@
 #'
 #' @param .sutdata A data frame containing Physical Supply-Use Table (PSUT)
 #'                 matrices with associated final demand sector names
+#' @param countries The countries for which primary energy and exergy data are to be calculated.
 #' @param p_industry_prefixes A character vector of primary energy industry prefixes.
 #'                            Usually "Resources", "Imports", and "Stock changes".
+#' @param country The name of the country column.
+#'                Default is `IEATools::iea_cols$country`.
 #'
 #' @return A data frame containing primary energy/exergy values aggregated by total,
 #'         flow and product.
@@ -25,27 +28,30 @@
 #'                      values_from = matrix) %>%
 #'   dplyr::mutate(Method = "PCM") %>%
 #'   calculate_primary_ex_data(p_industry_prefixes = list(c("Resources", "Imports")))
-calculate_primary_ex_data <- function(.sutdata, p_industry_prefixes) {
+calculate_primary_ex_data <- function(.sutdata,
+                                      countries,
+                                      years,
+                                      p_industry_prefixes,
+                                      ex = PFUAggDatabase::sea_cols$ex_colname) {
+  filtered_sut_data <- .sutdata %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
 
   # Calculates total primary energy/exergy
-  p_total <- calculate_p_ex_total(.sutdata = .sutdata, p_industry_prefixes = p_industry_prefixes)
+  p_total <- calculate_p_ex_total(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
   # Calculates primary energy/exergy by flow
-  p_flow <- calculate_p_ex_flow(.sutdata = .sutdata, p_industry_prefixes = p_industry_prefixes)
+  p_flow <- calculate_p_ex_flow(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
   # Calculates primary energy/exergy by product
-  p_product <- calculate_p_ex_product(.sutdata = .sutdata, p_industry_prefixes = p_industry_prefixes)
+  p_product <- calculate_p_ex_product(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
   # Bind all data together
-  all_data <- p_total %>%
+  p_total %>%
     rbind(p_flow) %>%
-    rbind(p_product)
-
-  # Set EX column type to numeric
-  all_data$EX <- as.numeric(all_data$EX)
-
-  # Return
-  return(all_data)
+    rbind(p_product) %>%
+    dplyr::mutate(
+      "{ex}" := as.numeric(.data[[ex]])
+    )
 }
 
 
