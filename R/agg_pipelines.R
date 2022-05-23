@@ -73,6 +73,8 @@ get_pipeline <- function(countries = "all",
   psut_tar_str_Re_continents <- paste0(psut_tar_str, "_Re_continents")
   psut_tar_str_Re_world <- paste0(psut_tar_str, "_Re_world")
   psut_tar_str_Re_all <- paste0(psut_tar_str, "_Re_all")
+  psut_tar_str_Re_all_St_p <- paste0(psut_tar_str, "_Re_all_St_p")
+  psut_tar_str_Re_all_St_fu <- paste0(psut_tar_str, "_Re_all_St_fu")
 
   # Set symbols for targets to which we refer later in the pipeline.
   aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
@@ -80,6 +82,8 @@ get_pipeline <- function(countries = "all",
   psut_tar_sym_Re_continents <- as.symbol(psut_tar_str_Re_continents)
   psut_tar_sym_Re_world <- as.symbol(psut_tar_str_Re_world)
   psut_tar_sym_Re_all <- as.symbol(psut_tar_str_Re_all)
+  psut_tar_sym_Re_all_St_p <- as.symbol(psut_tar_str_Re_all_St_p)
+  psut_tar_sym_Re_all_St_fu <- as.symbol(psut_tar_str_Re_all_St_fu)
 
   # Create the pipeline
   list(
@@ -197,7 +201,7 @@ get_pipeline <- function(countries = "all",
 
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target_raw(
-      "PSUT_Re_all_St_p",
+      psut_tar_str_Re_all_St_p,
       # quote(calculate_primary_ex_data(PSUT_Re_all_by_country,
       #                                 countries = Countries,
       #                                 years = Years,
@@ -213,11 +217,16 @@ get_pipeline <- function(countries = "all",
 
     # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
     targets::tar_target_raw(
-      "PSUT_Re_all_St_fu",
-      quote(calculate_finaluseful_ex_data(PSUT_Re_all_by_country,
-                                          fd_sectors = final_demand_sectors)),
-      pattern = quote(map(PSUT_Re_all_by_country)),
-      iteration = "group"),
+      psut_tar_str_Re_all_St_fu,
+      # quote(calculate_finaluseful_ex_data(PSUT_Re_all_by_country,
+      #                                     countries = Countries,
+      #                                     years = Years,
+      #                                     fd_sectors = final_demand_sectors)),
+      substitute(calculate_finaluseful_ex_data(psut_tar_sym_Re_all,
+                                               countries = Countries,
+                                               years = Years,
+                                               fd_sectors = final_demand_sectors)),
+      pattern = quote(map(Countries))),
 
     # Bring the aggregations together in a single data frame
     targets::tar_target_raw(

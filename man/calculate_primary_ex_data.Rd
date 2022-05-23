@@ -24,6 +24,15 @@ matrices with associated final demand sector names}
 
 \item{p_industry_prefixes}{A character vector of primary energy industry prefixes.
 Usually "Resources", "Imports", and "Stock changes".}
+
+\item{country}{The name of the country column in \code{.sutdata}.
+Default is \code{IEATools::iea_cols$country}.}
+
+\item{year}{The name of the year column in \code{.sutdata}.
+Default is \code{IEATools::iea_cols$year}.}
+
+\item{ex}{The name of the energy and exergy column in \code{.sutdata}.
+Default is \code{PFUAggDatabase::sea_cols$ex_colname}.}
 }
 \value{
 A data frame containing primary energy/exergy values aggregated by total,
