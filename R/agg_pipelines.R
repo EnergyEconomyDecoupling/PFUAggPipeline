@@ -229,6 +229,18 @@ get_pipeline <- function(countries = "all",
       pattern = quote(map(Countries))),
 
     # Bring the aggregations together in a single data frame
+    #
+    #
+    #
+    #
+    #
+    # Ended here
+    #
+    #
+    #
+    #
+    #
+    #
     targets::tar_target_raw(
       "PSUT_Re_all_St_pfu",
       quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
