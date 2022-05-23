@@ -1,21 +1,15 @@
 #' Create a targets workflow
 #'
-#' Arguments to this function specify the details of a targets workflow to be executed.
-#'
-#' Note that `psut_releases` is assumed to be a named list where
+#' This is a target factory whose arguments
+#' specify the details of a targets workflow to be executed.
+#' The `psut_release` argument is assumed to be a named list where
 #' names of list items give pin names in `pipeline_releases_folder`, and
-#' list items give versions of the pins.
+#' items give versions of the pins.
 #' An example `psut_releases` argument is:
 #'
 #' `psut_releases = c(psut = "20220519T185450Z-55e04",`
 #' `                  psut_iea = "20220519T185448Z-07a39",`
 #' `                  psut_mw = "20220519T185235Z-771f8").`
-#'
-#' The exemplar table is assumed to be an Excel file with the following columns:
-#' "Region.code" and years (as numbers).
-#' The body of the table should contain 3-letter codes
-#' of countries.
-#' The exemplar table is assumed to be on the "exemplar_table" tab of the Excel file.
 #'
 #' @param countries A string vector of 3-letter country codes.
 #'                  Default is "all", meaning all available countries should be analyzed.
@@ -26,6 +20,7 @@
 #' @param pipeline_caches_folder The path to a folder where .zip files of the targets pipeline are saved.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param release Boolean that tells whether to do a release of the results.
+#'                Default is `FALSE`.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
@@ -54,22 +49,28 @@ get_pipeline <- function(countries = "all",
     lapply(psut_releases, function(pr) {
       get_pipeline(countries = countries,
                    years = years,
-                   # Call get_pipeline() with this particular release.
+                   # Call get_pipeline() with this particular release (pr).
                    psut_release = pr,
                    aggregation_maps_path = aggregation_maps_path,
                    pipeline_caches_folder = pipeline_caches_folder,
                    pipeline_releases_folder = pipeline_releases_folder,
                    release = release)
     }) %>%
-      # Combine all lists into a single list.
+      # Combine all pipelines into a single pipeline.
       c()
   }
 
   # At this point, we will have only a single, named value for psut_release.
   # Get the name (the pin).
   psut_pin <- names(psut_release)
-  # Set target names
-  psut_df_target <- toupper(psut_pin)
+  # Set target names based on the psut_tar_str.
+  psut_tar_str <- toupper(psut_pin)
+  psut_tar_str_with_continent_col <- paste0(psut_tar_str, "_with_continent_col")
+  psut_tar_str_Re_continents <- paste0(psut_tar_str, "_Re_continents")
+  psut_tar_str_Re_world <- paste0(psut_tar_str, "_Re_world")
+  # Set symbols for targets to which we refer later in the pipeline.
+  psut_tar_sym <- as.symbol(psut_tar_str)
+
   # Create the pipeline
   list(
 
@@ -82,7 +83,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("PSUTPin", psut_pin),
-    targets::tar_target_raw("PSUTRelease", psut_release),
+    targets::tar_target_raw("PSUTRelease", unname(psut_release)),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
@@ -96,9 +97,11 @@ get_pipeline <- function(countries = "all",
     # targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
     #                                         pins::pin_read("psut", version = PSUTRelease) %>%
     #                                         filter_countries_and_years(countries = Countries, years = Years))),
-    targets::tar_target_raw(psut_df_target, quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
-                                                    pins::pin_read(PSUTPin, version = PSUTRelease) %>%
-                                                    filter_countries_and_years(countries = Countries, years = Years))),
+    targets::tar_target_raw(
+      psut_tar_str,
+      quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
+              pins::pin_read(PSUTPin, version = PSUTRelease) %>%
+              filter_countries_and_years(countries = Countries, years = Years))),
 
     # Gather the aggregation maps.
     targets::tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
@@ -121,7 +124,7 @@ get_pipeline <- function(countries = "all",
 
     # Aggregate by continent
     targets::tar_target_raw(
-      "PSUT_Re_continents",
+      psut_tar_str_Re_continents,
       quote(Recca::region_aggregates(PSUT_with_continent_col,
                                      many_colname = IEATools::iea_cols$country,
                                      few_colname = "Continent") %>%
@@ -136,7 +139,7 @@ get_pipeline <- function(countries = "all",
 
     # Aggregate to world
     targets::tar_target_raw(
-      "PSUT_Re_world",
+      psut_tar_str_Re_world,
       quote(Recca::region_aggregates(PSUT_Re_continents %>%
                                        dplyr::left_join(AggregationMaps$world_aggregation %>%
                                                           matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
