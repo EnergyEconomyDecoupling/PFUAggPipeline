@@ -79,6 +79,7 @@ get_pipeline <- function(countries = "all",
   psut_tar_sym <- as.symbol(psut_tar_str)
   psut_tar_sym_Re_continents <- as.symbol(psut_tar_str_Re_continents)
   psut_tar_sym_Re_world <- as.symbol(psut_tar_str_Re_world)
+  psut_tar_sym_Re_all <- as.symbol(psut_tar_str_Re_all)
 
   # Create the pipeline
   list(
@@ -197,10 +198,14 @@ get_pipeline <- function(countries = "all",
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target_raw(
       "PSUT_Re_all_St_p",
-      quote(calculate_primary_ex_data(PSUT_Re_all_by_country,
-                                      countries = Countries,
-                                      years = Years,
-                                      p_industry_prefixes = p_industry_prefixes)),
+      # quote(calculate_primary_ex_data(PSUT_Re_all_by_country,
+      #                                 countries = Countries,
+      #                                 years = Years,
+      #                                 p_industry_prefixes = p_industry_prefixes)),
+      substitute(calculate_primary_ex_data(psut_tar_sym_Re_all,
+                                           countries = Countries,
+                                           years = Years,
+                                           p_industry_prefixes = p_industry_prefixes)),
       pattern = quote(map(Countries))),
 
     # Establish final demand sectors

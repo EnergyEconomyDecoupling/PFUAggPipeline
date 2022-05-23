@@ -11,10 +11,9 @@
 #' @param .sutdata A data frame containing Physical Supply-Use Table (PSUT)
 #'                 matrices with associated final demand sector names
 #' @param countries The countries for which primary energy and exergy data are to be calculated.
+#' @param years The years for which primary energy and exergy data are to be calculated.
 #' @param p_industry_prefixes A character vector of primary energy industry prefixes.
 #'                            Usually "Resources", "Imports", and "Stock changes".
-#' @param country The name of the country column.
-#'                Default is `IEATools::iea_cols$country`.
 #'
 #' @return A data frame containing primary energy/exergy values aggregated by total,
 #'         flow and product.
@@ -32,20 +31,23 @@ calculate_primary_ex_data <- function(.sutdata,
                                       countries,
                                       years,
                                       p_industry_prefixes,
+                                      country = IEATools::iea_cols$country,
+                                      year = IEATools::iea_cols$year,
                                       ex = PFUAggDatabase::sea_cols$ex_colname) {
   filtered_sut_data <- .sutdata %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUDatabase::filter_countries_years(countries = countries, years = years,
+                                        country = country, year = year)
 
-  # Calculates total primary energy/exergy
+  # Calculate total primary energy/exergy
   p_total <- calculate_p_ex_total(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
-  # Calculates primary energy/exergy by flow
+  # Calculate primary energy/exergy by flow
   p_flow <- calculate_p_ex_flow(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
-  # Calculates primary energy/exergy by product
+  # Calculate primary energy/exergy by product
   p_product <- calculate_p_ex_product(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
-  # Bind all data together
+  # Bind all data together and ensure numeric column for aggregates.
   p_total %>%
     rbind(p_flow) %>%
     rbind(p_product) %>%

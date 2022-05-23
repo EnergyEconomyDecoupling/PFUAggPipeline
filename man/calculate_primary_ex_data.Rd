@@ -9,6 +9,8 @@ calculate_primary_ex_data(
   countries,
   years,
   p_industry_prefixes,
+  country = IEATools::iea_cols$country,
+  year = IEATools::iea_cols$year,
   ex = PFUAggDatabase::sea_cols$ex_colname
 )
 }
@@ -18,11 +20,10 @@ matrices with associated final demand sector names}
 
 \item{countries}{The countries for which primary energy and exergy data are to be calculated.}
 
+\item{years}{The years for which primary energy and exergy data are to be calculated.}
+
 \item{p_industry_prefixes}{A character vector of primary energy industry prefixes.
 Usually "Resources", "Imports", and "Stock changes".}
-
-\item{country}{The name of the country column.
-Default is \code{IEATools::iea_cols$country}.}
 }
 \value{
 A data frame containing primary energy/exergy values aggregated by total,
