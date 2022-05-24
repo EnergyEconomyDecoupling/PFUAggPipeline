@@ -383,6 +383,19 @@ get_pipeline <- function(countries = "all",
                                              release = Release))
     ),
 
+
+    #
+    #
+    #
+    #
+    #
+    # Ended here
+    # Move up to top to capture all dependencies.
+    #
+    #
+    #
+    #
+    #
     # Save the cache for posterity.
     targets::tar_target_raw(
       "store_cache",
