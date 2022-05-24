@@ -54,4 +54,9 @@ The "\emph{" character has meaning in the names of \code{psut_releases} items.
 All characters after the "}" are used when creating the target names for
 aggregations and aggregate efficiencies.
 Best \emph{not} to send more than one \code{psut_releases} item that lacks characters after the "_" character.
+
+Note, too, that names of \code{psut_releases} items will be converted to uppercase
+for target names.
+So be sure to make the names of \code{psut_releases} items unique
+if converted to uppercase.
 }

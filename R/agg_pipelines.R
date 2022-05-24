@@ -17,6 +17,11 @@
 #' aggregations and aggregate efficiencies.
 #' Best _not_ to send more than one `psut_releases` item that lacks characters after the "_" character.
 #'
+#' Note, too, that names of `psut_releases` items will be converted to uppercase
+#' for target names.
+#' So be sure to make the names of `psut_releases` items unique
+#' if converted to uppercase.
+#'
 #' @param countries A string vector of 3-letter country codes.
 #'                  Default is "all", meaning all available countries should be analyzed.
 #' @param years A numeric vector of years to be analyzed.
@@ -76,9 +81,9 @@ get_pipeline <- function(countries = "all",
     # Didn't find anything after a "_".
     agg_eta_suff <- ""
   }
-  agg_eta_pref <- paste0("agg_eta", agg_eta_suff)
-  agg_pref <- paste0("agg", agg_eta_suff)
-  eta_pref <- paste0("eta", agg_eta_suff)
+  agg_eta_pref <- paste0("Agg_Eta", agg_eta_suff)
+  agg_pref <- paste0("Agg", agg_eta_suff)
+  eta_pref <- paste0("Eta", agg_eta_suff)
 
   # Set target names based on the psut_tar_str.
   aggregation_maps_tar_str <- "AggregationMaps"
@@ -93,6 +98,9 @@ get_pipeline <- function(countries = "all",
   agg_eta_tar_str_Re_all_St_pfu <- paste0(agg_eta_pref, "_Re_all_St_pfu")
   agg_tar_str_Re_all_St_pfu <- paste0(agg_pref, "_Re_all_St_pfu")
   eta_tar_str_Re_all_St_pfu <- paste0(eta_pref, "_Re_all_St_pfu")
+  pin_agg_eta_tar_str_Re_all_St_pfu <- paste0("Pin_", agg_eta_tar_str_Re_all_St_pfu)
+  pin_agg_tar_str_Re_all_St_pfu_csv <- paste0("Pin_", agg_tar_str_Re_all_St_pfu, "_csv")
+  pin_eta_tar_str_Re_all_St_pfu_csv <- paste0("Pin_", eta_tar_str_Re_all_St_pfu, "_csv")
 
   # Set symbols for targets to which we refer later in the pipeline.
   aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
@@ -106,6 +114,9 @@ get_pipeline <- function(countries = "all",
   agg_eta_tar_sym_Re_all_St_pfu <- as.symbol(agg_eta_tar_str_Re_all_St_pfu)
   agg_tar_sym_Re_all_St_pfu <- as.symbol(agg_tar_str_Re_all_St_pfu)
   eta_tar_sym_Re_all_St_pfu <- as.symbol(eta_tar_str_Re_all_St_pfu)
+  pin_agg_eta_tar_sym_Re_all_St_pfu <- as.symbol(pin_agg_eta_tar_str_Re_all_St_pfu)
+  pin_agg_tar_sym_Re_all_St_pfu_csv <- as.symbol(pin_agg_tar_str_Re_all_St_pfu_csv)
+  pin_eta_tar_sym_Re_all_St_pfu_csv <- as.symbol(pin_eta_tar_str_Re_all_St_pfu_csv)
 
   # Create the pipeline
   list(
@@ -319,38 +330,57 @@ get_pipeline <- function(countries = "all",
 
     # Pin the aggregates and efficiencies as an .rds file
     targets::tar_target_raw(
-      "pin_agg_eta_Re_all_St_pfu",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = agg_eta_Re_all_St_pfu,
-                                        targ_name = "agg_eta_Re_all_St_pfu",
-                                        release = Release))
-      ),
+      pin_agg_eta_tar_str_Re_all_St_pfu,
+      # quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+      #                                   targ = agg_eta_Re_all_St_pfu,
+      #                                   targ_name = "agg_eta_Re_all_St_pfu",
+      #                                   release = Release))),
+      substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = agg_eta_tar_sym_Re_all_St_pfu,
+                                             targ_name = agg_eta_tar_str_Re_all_St_pfu,
+                                             release = Release))),
 
     # Pin aggregates as a wide-by-years .csv file
     targets::tar_target_raw(
-      "pin_agg_csv",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = agg_Re_all_St_pfu%>%
-                                          pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
-                                                                                    IEATools::all_stages$final,
-                                                                                    IEATools::all_stages$useful)),
-                                        targ_name = "agg_Re_all_St_pfu",
-                                        type = "csv",
-                                        release = Release))
+      pin_agg_tar_str_Re_all_St_pfu_csv,
+      # quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+      #                                   targ = agg_Re_all_St_pfu %>%
+      #                                     pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
+      #                                                                               IEATools::all_stages$final,
+      #                                                                               IEATools::all_stages$useful)),
+      #                                   targ_name = "agg_Re_all_St_pfu",
+      #                                   type = "csv",
+      #                                   release = Release))
+      substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = agg_tar_sym_Re_all_St_pfu %>%
+                                               pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
+                                                                                         IEATools::all_stages$final,
+                                                                                         IEATools::all_stages$useful)),
+                                             targ_name = agg_tar_str_Re_all_St_pfu,
+                                             type = "csv",
+                                             release = Release))
     ),
 
 
     # Pin efficiencies as a wide-by-years .csv file
     targets::tar_target_raw(
-      "pin_eta_csv",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = eta_Re_all_St_pfu %>%
-                                          pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
-                                                                                    PFUAggDatabase::efficiency_cols$eta_fu,
-                                                                                    PFUAggDatabase::efficiency_cols$eta_pu)),
-                                        targ_name = "eta_Re_all_St_pfu",
-                                        type = "csv",
-                                        release = Release))
+      pin_eta_tar_str_Re_all_St_pfu_csv,
+      # quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+      #                                   targ = eta_Re_all_St_pfu %>%
+      #                                     pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
+      #                                                                               PFUAggDatabase::efficiency_cols$eta_fu,
+      #                                                                               PFUAggDatabase::efficiency_cols$eta_pu)),
+      #                                   targ_name = "eta_Re_all_St_pfu",
+      #                                   type = "csv",
+      #                                   release = Release))
+      substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = eta_tar_sym_Re_all_St_pfu %>%
+                                               pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
+                                                                                         PFUAggDatabase::efficiency_cols$eta_fu,
+                                                                                         PFUAggDatabase::efficiency_cols$eta_pu)),
+                                             targ_name = eta_tar_sym_Re_all_St_pfu,
+                                             type = "csv",
+                                             release = Release))
     ),
 
     # Save the cache for posterity.
