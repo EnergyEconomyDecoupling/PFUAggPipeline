@@ -90,7 +90,9 @@ get_pipeline <- function(countries = "all",
   psut_tar_str_Re_all_St_p <- paste0(psut_tar_str, "_Re_all_St_p")
   psut_tar_str_Re_all_St_fu <- paste0(psut_tar_str, "_Re_all_St_fu")
   psut_tar_str_Re_all_St_pfu <- paste0(psut_tar_str, "_Re_all_St_pfu")
-  agg_eta_str_Re_all_St_pfu <- paste0(agg_eta_pref, "_Re_all_St_pfu")
+  agg_eta_tar_str_Re_all_St_pfu <- paste0(agg_eta_pref, "_Re_all_St_pfu")
+  agg_tar_str_Re_all_St_pfu <- paste0(agg_pref, "_Re_all_St_pfu")
+  eta_tar_str_Re_all_St_pfu <- paste0(eta_pref, "_Re_all_St_pfu")
 
   # Set symbols for targets to which we refer later in the pipeline.
   aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
@@ -101,7 +103,9 @@ get_pipeline <- function(countries = "all",
   psut_tar_sym_Re_all_St_p <- as.symbol(psut_tar_str_Re_all_St_p)
   psut_tar_sym_Re_all_St_fu <- as.symbol(psut_tar_str_Re_all_St_fu)
   psut_tar_sym_Re_all_St_pfu <- as.symbol(psut_tar_str_Re_all_St_pfu)
-  agg_eta_sym_Re_all_St_pfu <- as.symbol(agg_eta_str_Re_all_St_pfu)
+  agg_eta_tar_sym_Re_all_St_pfu <- as.symbol(agg_eta_tar_str_Re_all_St_pfu)
+  agg_tar_sym_Re_all_St_pfu <- as.symbol(agg_tar_str_Re_all_St_pfu)
+  eta_tar_sym_Re_all_St_pfu <- as.symbol(eta_tar_str_Re_all_St_pfu)
 
   # Create the pipeline
   list(
@@ -256,21 +260,21 @@ get_pipeline <- function(countries = "all",
     # Efficiencies #
     ################
 
-    tarchetypes::tar_group_by(
-      name = PSUT_Re_all_St_pfu_by_country,
-      command = PSUT_Re_all_St_pfu %>%
-        dplyr::mutate(
-          tar_group = NULL
-        ),
-      # The columns to group by, as symbols.
-      Country),
+    # tarchetypes::tar_group_by(
+    #   name = PSUT_Re_all_St_pfu_by_country,
+    #   command = PSUT_Re_all_St_pfu %>%
+    #     dplyr::mutate(
+    #       tar_group = NULL
+    #     ),
+    #   # The columns to group by, as symbols.
+    #   Country),
 
     targets::tar_target_raw(
     #   "agg_eta_Re_all_St_pfu",
     #   quote(calc_agg_etas(PSUT_Re_all_St_pfu_by_country)),
     #   pattern = quote(map(PSUT_Re_all_St_pfu_by_country)),
     #   iteration = "group"),
-      agg_eta_str_Re_all_St_pfu,
+      agg_eta_tar_str_Re_all_St_pfu,
       substitute(calc_agg_etas(psut_tar_sym_Re_all_St_pfu,
                                countries = Countries,
                                years = Years)),
@@ -279,8 +283,14 @@ get_pipeline <- function(countries = "all",
     # Split the aggregations and efficiencies apart
     # to enable easier saving of separate .csv files later.
     targets::tar_target_raw(
-      "agg_Re_all_St_pfu",
-      quote(agg_eta_Re_all_St_pfu %>%
+      agg_tar_str_Re_all_St_pfu,
+      # quote(agg_eta_Re_all_St_pfu %>%
+      #         dplyr::mutate(
+      #           "{PFUAggDatabase::efficiency_cols$eta_pf}" := NULL,
+      #           "{PFUAggDatabase::efficiency_cols$eta_fu}" := NULL,
+      #           "{PFUAggDatabase::efficiency_cols$eta_pu}" := NULL,
+      #         ))),
+      substitute(agg_eta_tar_sym_Re_all_St_pfu %>%
               dplyr::mutate(
                 "{PFUAggDatabase::efficiency_cols$eta_pf}" := NULL,
                 "{PFUAggDatabase::efficiency_cols$eta_fu}" := NULL,
@@ -288,8 +298,14 @@ get_pipeline <- function(countries = "all",
               ))),
 
     targets::tar_target_raw(
-      "eta_Re_all_St_pfu",
-      quote(agg_eta_Re_all_St_pfu %>%
+      eta_tar_str_Re_all_St_pfu,
+      # quote(agg_eta_Re_all_St_pfu %>%
+      #         dplyr::mutate(
+      #           "{IEATools::all_stages$primary}" := NULL,
+      #           "{IEATools::all_stages$final}" := NULL,
+      #           "{IEATools::all_stages$useful}" := NULL,
+      #         ))),
+      substitute(agg_eta_tar_sym_Re_all_St_pfu %>%
               dplyr::mutate(
                 "{IEATools::all_stages$primary}" := NULL,
                 "{IEATools::all_stages$final}" := NULL,
