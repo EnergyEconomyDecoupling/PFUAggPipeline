@@ -87,6 +87,7 @@ get_pipeline <- function(countries = "all",
 
   # Set target names based on the psut_tar_str.
   aggregation_maps_tar_str <- "AggregationMaps"
+  continents_tar_str <- "Continents"
   psut_tar_str <- toupper(psut_pin)
   psut_tar_str_with_continent_col <- paste0(psut_tar_str, "_with_continent_col")
   psut_tar_str_Re_continents <- paste0(psut_tar_str, "_Re_continents")
@@ -104,7 +105,9 @@ get_pipeline <- function(countries = "all",
 
   # Set symbols for targets to which we refer later in the pipeline.
   aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
+  continents_tar_sym <- as.symbol(continents_tar_str)
   psut_tar_sym <- as.symbol(psut_tar_str)
+  psut_tar_sym_with_continent_col <- as.symbol(psut_tar_str_with_continent_col)
   psut_tar_sym_Re_continents <- as.symbol(psut_tar_str_Re_continents)
   psut_tar_sym_Re_world <- as.symbol(psut_tar_str_Re_world)
   psut_tar_sym_Re_all <- as.symbol(psut_tar_str_Re_all)
@@ -125,8 +128,8 @@ get_pipeline <- function(countries = "all",
     # Preliminary setup #
     #####################
 
-    # Store some incoming data as targets
-    # targets::tar_target_raw("Countries", rlang::enexpr(my_countries)),
+    # Store some incoming data as targets.
+    # These targets are invariant across incoming psut_releases.
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("PSUTPin", psut_pin),
@@ -135,6 +138,15 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
     targets::tar_target_raw("Release", release),
+
+    # Establish prefixes for primary industries
+    targets::tar_target_raw(
+      "p_industry_prefixes",
+      quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
+
+    # Establish final demand sectors
+    targets::tar_target_raw("final_demand_sectors", quote(IEATools::fd_sectors)),
+
 
     # Note:
     # In _targets.R, storage and retrieval parameters for all targets are set to "worker",
@@ -145,6 +157,18 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       aggregation_maps_tar_str,
       quote(load_aggregation_maps(path = AggregationMapsPath))),
+
+    # Identify the continents to which we'll aggregate
+    targets::tar_target_raw(
+      continents_tar_str,
+      substitute(aggregation_maps_tar_sym$world_aggregation$World)
+    ),
+
+
+
+
+
+
 
     # Pull in the PSUT data frame
     # targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
@@ -164,27 +188,27 @@ get_pipeline <- function(countries = "all",
     # Create a continents data frame, grouped by continent,
     # so subsequent operations (region aggregation)
     # will be performed in parallel, if desired.
-    tarchetypes::tar_group_by(
-      name = PSUT_with_continent_col,
-      command = join_psut_continents(PSUT = PSUT,
-                                     continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                     continent = "Continent"),
-      # The columns to group by, as symbols.
-      Continent),
+    # tarchetypes::tar_group_by(
+    #   name = PSUT_with_continent_col,
+    #   command = join_psut_continents(PSUT = PSUT,
+    #                                  continent_aggregation_map = AggregationMaps$continent_aggregation,
+    #                                  continent = "Continent"),
+    #   # The columns to group by, as symbols.
+    #   Continent),
+    targets::tar_target_raw(
+      psut_tar_str_with_continent_col,
+      substitute(join_psut_continents(PSUT = psut_tar_sym,
+                                      continent_aggregation_map = aggregation_maps_tar_sym$continent_aggregation,
+                                      continent = "Continent"))),
 
     # Aggregate by continent
     targets::tar_target_raw(
       psut_tar_str_Re_continents,
-      quote(Recca::region_aggregates(PSUT_with_continent_col,
-                                     many_colname = IEATools::iea_cols$country,
-                                     few_colname = "Continent") %>%
-              # Eliminate the targets grouping on Continent
-              # so we can group by country later.
-              dplyr::mutate(
-                tar_group = NULL
-              )),
-      pattern = quote(map(PSUT_with_continent_col)),
-      iteration = "group"),
+      substitute(continent_aggregation(psut_tar_sym_with_continent_col,
+                                       continents = continents_tar_sym,
+                                       many_colname = IEATools::iea_cols$country,
+                                       few_colname = "Continent")),
+      pattern = quote(map(Continents))),
 
 
     # Aggregate to world
@@ -211,7 +235,7 @@ get_pipeline <- function(countries = "all",
     #   quote(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
     targets::tar_target_raw(
       psut_tar_str_Re_all,
-      substitute(dplyr::bind_rows(psut_tar_sym, psut_tar_sym_Re_continents, PSUT_Re_world))),
+      substitute(dplyr::bind_rows(psut_tar_sym, psut_tar_sym_Re_continents, psut_tar_sym_Re_world))),
 
 
 
@@ -227,11 +251,6 @@ get_pipeline <- function(countries = "all",
     #   # The columns to group by, as symbols.
     #   Country),
 
-    # Establish prefixes for primary industries
-    targets::tar_target_raw(
-      "p_industry_prefixes",
-      quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
-
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target_raw(
       psut_tar_str_Re_all_St_p,
@@ -244,9 +263,6 @@ get_pipeline <- function(countries = "all",
                                            years = Years,
                                            p_industry_prefixes = p_industry_prefixes)),
       pattern = quote(map(Countries))),
-
-    # Establish final demand sectors
-    targets::tar_target_raw("final_demand_sectors", quote(IEATools::fd_sectors)),
 
     # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
     targets::tar_target_raw(
@@ -397,6 +413,9 @@ get_pipeline <- function(countries = "all",
     #
     #
     # Save the cache for posterity.
+    # This target is invariant across various psut_releases.
+    # In fact, this target should be executed only after
+    # all targets for all psut releases have been executed.
     targets::tar_target_raw(
       "store_cache",
       quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,

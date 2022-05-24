@@ -28,7 +28,7 @@ psut_release <- c(psut = "20220519T185450Z-55e04")
 
 
 # Should we do a release of the results?
-release <- TRUE
+release <- FALSE
 
 
 
