@@ -378,7 +378,7 @@ get_pipeline <- function(countries = "all",
                                                pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
                                                                                          PFUAggDatabase::efficiency_cols$eta_fu,
                                                                                          PFUAggDatabase::efficiency_cols$eta_pu)),
-                                             targ_name = eta_tar_sym_Re_all_St_pfu,
+                                             targ_name = eta_tar_str_Re_all_St_pfu,
                                              type = "csv",
                                              release = Release))
     ),
