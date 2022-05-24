@@ -12,6 +12,11 @@
 #' `                  psut_iea = "20220519T185448Z-07a39",`
 #' `                  psut_mw = "20220519T185235Z-771f8").`
 #'
+#' The "_" character has meaning in the names of `psut_releases` items.
+#' All characters after the "_" are used when creating the target names for
+#' aggregations and aggregate efficiencies.
+#' Best _not_ to send more than one `psut_releases` item that lacks characters after the "_" character.
+#'
 #' @param countries A string vector of 3-letter country codes.
 #'                  Default is "all", meaning all available countries should be analyzed.
 #' @param years A numeric vector of years to be analyzed.
@@ -65,6 +70,15 @@ get_pipeline <- function(countries = "all",
   # At this point, we will have only a single, named value for psut_release.
   # Get the name (the pin).
   psut_pin <- names(psut_releases)
+  # Split the pin name at an underscore to get the suffix
+  agg_eta_suff <- strsplit(psut_pin, split = "_", fixed = TRUE)
+  if (length(agg_eta_suff) == 1) {
+    # Didn't find anything after a "_".
+    agg_eta_suff <- ""
+  }
+  agg_eta_pref <- paste0("agg_eta", agg_eta_suff)
+  agg_pref <- paste0("agg", agg_eta_suff)
+  eta_pref <- paste0("eta", agg_eta_suff)
 
   # Set target names based on the psut_tar_str.
   aggregation_maps_tar_str <- "AggregationMaps"
@@ -75,6 +89,8 @@ get_pipeline <- function(countries = "all",
   psut_tar_str_Re_all <- paste0(psut_tar_str, "_Re_all")
   psut_tar_str_Re_all_St_p <- paste0(psut_tar_str, "_Re_all_St_p")
   psut_tar_str_Re_all_St_fu <- paste0(psut_tar_str, "_Re_all_St_fu")
+  psut_tar_str_Re_all_St_pfu <- paste0(psut_tar_str, "_Re_all_St_pfu")
+  agg_eta_str_Re_all_St_pfu <- paste0(agg_eta_pref, "_Re_all_St_pfu")
 
   # Set symbols for targets to which we refer later in the pipeline.
   aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
@@ -84,6 +100,8 @@ get_pipeline <- function(countries = "all",
   psut_tar_sym_Re_all <- as.symbol(psut_tar_str_Re_all)
   psut_tar_sym_Re_all_St_p <- as.symbol(psut_tar_str_Re_all_St_p)
   psut_tar_sym_Re_all_St_fu <- as.symbol(psut_tar_str_Re_all_St_fu)
+  psut_tar_sym_Re_all_St_pfu <- as.symbol(psut_tar_str_Re_all_St_pfu)
+  agg_eta_sym_Re_all_St_pfu <- as.symbol(agg_eta_str_Re_all_St_pfu)
 
   # Create the pipeline
   list(
@@ -188,11 +206,11 @@ get_pipeline <- function(countries = "all",
 
     # Set up a grouped-by-country data frame
     # so all future calculations are parallelized across countries.
-    tarchetypes::tar_group_by(
-      name = PSUT_Re_all_by_country,
-      command = PSUT_Re_all,
-      # The columns to group by, as symbols.
-      Country),
+    # tarchetypes::tar_group_by(
+    #   name = PSUT_Re_all_by_country,
+    #   command = PSUT_Re_all,
+    #   # The columns to group by, as symbols.
+    #   Country),
 
     # Establish prefixes for primary industries
     targets::tar_target_raw(
@@ -229,22 +247,10 @@ get_pipeline <- function(countries = "all",
       pattern = quote(map(Countries))),
 
     # Bring the aggregations together in a single data frame
-    #
-    #
-    #
-    #
-    #
-    # Ended here
-    #
-    #
-    #
-    #
-    #
-    #
     targets::tar_target_raw(
-      "PSUT_Re_all_St_pfu",
-      quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
-
+      psut_tar_str_Re_all_St_pfu,
+      # quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
+      substitute(dplyr::bind_rows(psut_tar_sym_Re_all_St_p, psut_tar_sym_Re_all_St_fu))),
 
     ################
     # Efficiencies #
@@ -260,10 +266,15 @@ get_pipeline <- function(countries = "all",
       Country),
 
     targets::tar_target_raw(
-      "agg_eta_Re_all_St_pfu",
-      quote(calc_agg_etas(PSUT_Re_all_St_pfu_by_country)),
-      pattern = quote(map(PSUT_Re_all_St_pfu_by_country)),
-      iteration = "group"),
+    #   "agg_eta_Re_all_St_pfu",
+    #   quote(calc_agg_etas(PSUT_Re_all_St_pfu_by_country)),
+    #   pattern = quote(map(PSUT_Re_all_St_pfu_by_country)),
+    #   iteration = "group"),
+      agg_eta_str_Re_all_St_pfu,
+      substitute(calc_agg_etas(psut_tar_sym_Re_all_St_pfu,
+                               countries = Countries,
+                               years = Years)),
+      pattern = quote(map(Countries))),
 
     # Split the aggregations and efficiencies apart
     # to enable easier saving of separate .csv files later.

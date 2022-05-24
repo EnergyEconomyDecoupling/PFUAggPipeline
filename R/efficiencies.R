@@ -9,6 +9,8 @@
 #'                    This data frame should be the output of the
 #'                    `PSUT_Re_all_St_pfu` or `PSUT_Re_all_St_pfu_by_country`
 #'                    targets.
+#' @param countries The countries for which primary energy and exergy data are to be calculated.
+#' @param years The years for which primary energy and exergy data are to be calculated.
 #' @param stage_colname,ex_colname,agg_by_colname,e_product_colname,gross_net_colname,sector_colname See `PFUAggDatabase::sea_cols`.
 #' @param eta_pf_colname,eta_fu_colname,eta_pu_colname See `PFUAggDatabase::efficiency_cols`.
 #' @param total_value See `PFUAggDatabase::agg_metadata`.
@@ -21,6 +23,8 @@
 #'
 #' @export
 calc_agg_etas <- function(.aggregates,
+                          countries,
+                          years,
                           stage_colname = PFUAggDatabase::sea_cols$stage_colname,
                           ex_colname = PFUAggDatabase::sea_cols$ex_colname,
                           agg_by_colname = PFUAggDatabase::sea_cols$agg_by_colname,
@@ -44,16 +48,16 @@ calc_agg_etas <- function(.aggregates,
                           year = IEATools::iea_cols$year,
                           method = IEATools::iea_cols$method,
                           energy_type = IEATools::iea_cols$energy_type,
-                          flow = IEATools::iea_cols$flow,
+                          flow = IEATools::iea_cols$flow) {
 
-                          tar_group = "tar_group") {
-
-  # Filter .aggregates to only Aggregation.by == "Total", because that's the only
-  # way it makes sense to do aggregate efficiencies.
-
-
-  # Duplicate the Primary stage information for both net and gross
-  prim <- .aggregates %>%
+  filtered_aggregates <- .aggregates %>%
+    # Filter for desired countries and years.
+    PFUDatabase::filter_countries_years(countries = countries, years = years,
+                                        country = country, year = year)
+  prim <- filtered_aggregates %>%
+    # Filter to only Aggregation.by == "Total", because that's the only
+    # way it makes sense to do aggregate efficiencies.
+    # Duplicate the Primary stage information for both net and gross
     dplyr::filter(.data[[agg_by_colname]] == total_value,
                   .data[[stage_colname]] == primary)
   prim_net <- prim %>%
@@ -70,14 +74,13 @@ calc_agg_etas <- function(.aggregates,
       "{e_product_colname}" := NULL,
       "{flow}" := NULL,
       "{agg_by_colname}" := NULL,
-      "{sector_colname}" := NULL,
-      "{tar_group}" := NULL
+      "{sector_colname}" := NULL
     ) %>%
     # Put the primary energy into a column.
     tidyr::pivot_wider(names_from = stage_colname, values_from = ex_colname)
 
   # Build the final and useful data frame.
-  wide_finaluseful <- .aggregates %>%
+  wide_finaluseful <- filtered_aggregates %>%
     dplyr::filter(.data[[agg_by_colname]] == total_value,
                   .data[[stage_colname]] %in% c(final, useful)) %>%
     dplyr::mutate(
@@ -85,8 +88,7 @@ calc_agg_etas <- function(.aggregates,
       "{e_product_colname}" := NULL,
       "{flow}" := NULL,
       "{agg_by_colname}" := NULL,
-      "{sector_colname}" := NULL,
-      "{tar_group}" := NULL
+      "{sector_colname}" := NULL
     ) %>%
     # Put the final and useful energy into a column.
     tidyr::pivot_wider(names_from = stage_colname, values_from = ex_colname)

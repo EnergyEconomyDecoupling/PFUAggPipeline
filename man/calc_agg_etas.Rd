@@ -6,6 +6,8 @@
 \usage{
 calc_agg_etas(
   .aggregates,
+  countries,
+  years,
   stage_colname = PFUAggDatabase::sea_cols$stage_colname,
   ex_colname = PFUAggDatabase::sea_cols$ex_colname,
   agg_by_colname = PFUAggDatabase::sea_cols$agg_by_colname,
@@ -25,8 +27,7 @@ calc_agg_etas(
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
-  flow = IEATools::iea_cols$flow,
-  tar_group = "tar_group"
+  flow = IEATools::iea_cols$flow
 )
 }
 \arguments{
@@ -34,6 +35,10 @@ calc_agg_etas(
 This data frame should be the output of the
 \code{PSUT_Re_all_St_pfu} or \code{PSUT_Re_all_St_pfu_by_country}
 targets.}
+
+\item{countries}{The countries for which primary energy and exergy data are to be calculated.}
+
+\item{years}{The years for which primary energy and exergy data are to be calculated.}
 
 \item{stage_colname, ex_colname, agg_by_colname, e_product_colname, gross_net_colname, sector_colname}{See \code{PFUAggDatabase::sea_cols}.}
 

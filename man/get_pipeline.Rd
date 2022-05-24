@@ -49,4 +49,9 @@ An example \code{psut_releases} argument is:
 \verb{psut_releases = c(psut = "20220519T185450Z-55e04",}
 \verb{                  psut_iea = "20220519T185448Z-07a39",}
 \verb{                  psut_mw = "20220519T185235Z-771f8").}
+
+The "\emph{" character has meaning in the names of \code{psut_releases} items.
+All characters after the "}" are used when creating the target names for
+aggregations and aggregate efficiencies.
+Best \emph{not} to send more than one \code{psut_releases} item that lacks characters after the "_" character.
 }
