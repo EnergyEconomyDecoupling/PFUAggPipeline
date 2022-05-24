@@ -67,21 +67,23 @@ get_pipeline <- function(countries = "all",
 
 
 
-  # This function should return both a list of targets and dependencies.
+  # get_one_middle_pipeline() returns both a list of targets and dependencies.
   middle_targets <- list()
+  dependencies <- list()
   for (i_pr in 1:length(psut_releases)) {
     # Preserve name of i_pr'th psut_release.
     pr <- psut_releases[i_pr]
     these_mid_targs_and_deps <- get_one_middle_pipeline(pr = pr)
-    # Unpack the targets
-
+    # Unpack the targets and add to our list
+    middle_targets <- c(middle_targets, these_mid_targs_and_deps$targets)
     # Unpack the dependencies
-    middle_targets <- c(middle_targets, these_mid_targs)
+    dependencies <- c(dependencies, these_mid_targs_and_deps$dependencies)
+
   }
 
 
 
-  final_target <- cache_target()
+  final_target <- cache_target(dependencies[[1]], dependencies[[2]])
 
   # Return all targets as a single list
   c(initial_targets, middle_targets, final_target)

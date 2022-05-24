@@ -128,7 +128,7 @@ get_one_middle_pipeline <- function(pr) {
   pin_eta_tar_sym_Re_all_St_pfu_csv <- as.symbol(pin_eta_tar_str_Re_all_St_pfu_csv)
 
   # Create the pipeline
-  list(
+  targs <- list(
 
     # Pull in the PSUT data frame
     # targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
@@ -359,6 +359,8 @@ get_one_middle_pipeline <- function(pr) {
                                              release = Release))
     )
   )
+  deps <- c(agg_tar_sym_Re_all_St_pfu, eta_tar_sym_Re_all_St_pfu)
+  list(targets = targs, dependencies = deps)
 }
 
 
@@ -370,7 +372,7 @@ get_one_middle_pipeline <- function(pr) {
 #'         If `release = FALSE`, `FALSE` is returned.
 #'
 #' @export
-cache_target <- function() {
+cache_target <- function(agg_sym_dependency, eta_sym_dependency) {
   list(
     # Save the cache for posterity.
     # This target is invariant across various psut_releases.
@@ -378,10 +380,10 @@ cache_target <- function() {
     # all targets for all psut releases have been executed.
     targets::tar_target_raw(
       "store_cache",
-      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,
-                                     cache_folder = "_targets",
-                                     file_prefix = "pfu_agg_workflow_cache_",
-                                     dependency = c(agg_Re_all_St_pfu, eta_Re_all_St_pfu)))
+      substitute(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,
+                                          cache_folder = "_targets",
+                                          file_prefix = "pfu_agg_workflow_cache_",
+                                          dependency = c(agg_sym_dependency, eta_sym_dependency)))
     )
   )
 }

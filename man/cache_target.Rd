@@ -4,7 +4,7 @@
 \alias{cache_target}
 \title{Last target in the pipeline}
 \usage{
-cache_target()
+cache_target(agg_sym_dependency, eta_sym_dependency)
 }
 \value{
 A logical saying whether the saving operation was successful.
