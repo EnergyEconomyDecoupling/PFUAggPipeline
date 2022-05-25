@@ -24,8 +24,9 @@ setup_targets <- function(countries, years, psut_releases,
                           aggregation_maps_path, pipeline_caches_folder,
                           pipeline_releases_folder, release,
                           aggregation_maps_tar_str,
-                          aggregation_maps_tar_sym,
                           continents_tar_str) {
+
+  aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
 
   list(
     #####################

@@ -13,7 +13,6 @@ setup_targets(
   pipeline_releases_folder,
   release,
   aggregation_maps_tar_str,
-  aggregation_maps_tar_sym,
   continents_tar_str
 )
 }

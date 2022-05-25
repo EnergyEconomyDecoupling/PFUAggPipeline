@@ -62,10 +62,7 @@ get_pipeline <- function(countries = "all",
                                    pipeline_releases_folder = pipeline_releases_folder,
                                    release = release,
                                    aggregation_maps_tar_str = aggregation_maps_tar_str,
-                                   aggregation_maps_tar_sym = aggregation_maps_tar_sym,
                                    continents_tar_str = continents_tar_str)
-
-
 
   # get_one_middle_pipeline() returns both a list of targets and dependencies.
   middle_targets <- list()
