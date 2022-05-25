@@ -68,7 +68,6 @@ setup_targets <- function(countries,
       substitute(aggregation_maps_tar_sym$world_aggregation$World)
     )
   )
-
 }
 
 
