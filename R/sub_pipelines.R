@@ -40,7 +40,6 @@ setup_targets <- function(countries,
     # These targets are invariant across incoming psut_releases.
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
-    # targets::tar_target_raw("PSUTReleases", psut_releases),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
@@ -57,7 +56,6 @@ setup_targets <- function(countries,
       quote(IEATools::fd_sectors)),
 
     # Gather the aggregation maps.
-    # targets::tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
     targets::tar_target_raw(
       aggregation_maps_tar_str,
       quote(load_aggregation_maps(path = AggregationMapsPath))),
@@ -78,10 +76,15 @@ setup_targets <- function(countries,
 #' This function creates a portion of a `targets` pipeline
 #' for _one_ of those releases.
 #'
+#' This function also creates a vector of cache dependencies,
+#' targets that must be completed before the cache can be saved.
+#'
 #' @param pr The `PFUDatabase` pipeline release for which this pipeline
 #'           segment will be constructed.
 #'
-#' @return A list of targets for the incoming PSUT release.
+#' @return A list of targets and cache dependencies for the incoming PSUT release (`pr`).
+#'         The list of targets is named "targets".
+#'         The list of cache dependencies is named "cache_dependencies".
 #'
 #' @export
 get_one_middle_pipeline <- function(pr,
@@ -383,7 +386,7 @@ get_one_middle_pipeline <- function(pr,
     )
   )
   deps <- c(agg_tar_sym_Re_all_St_pfu, eta_tar_sym_Re_all_St_pfu)
-  list(targets = targs, dependencies = deps)
+  list(targets = targs, cache_dependencies = deps)
 }
 
 
