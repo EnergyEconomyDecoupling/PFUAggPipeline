@@ -108,8 +108,6 @@ get_one_middle_pipeline <- function(pr,
   # Set the name for the PSUT target.
   # Most other targets are based on this name.
   psut_tar_str <- toupper(psut_pin)
-
-  # Set target names based on the psut_tar_str.
   psut_tar_str_pin <- paste0(psut_tar_str, "Pin")
   psut_tar_str_release <- paste0(psut_tar_str, "Release")
   psut_tar_str_with_continent_col <- paste0(psut_tar_str, "_with_continent_col")
@@ -119,17 +117,17 @@ get_one_middle_pipeline <- function(pr,
   psut_tar_str_Re_all_St_p <- paste0(psut_tar_str, "_Re_all_St_p")
   psut_tar_str_Re_all_St_fu <- paste0(psut_tar_str, "_Re_all_St_fu")
   psut_tar_str_Re_all_St_pfu <- paste0(psut_tar_str, "_Re_all_St_pfu")
-  agg_eta_tar_str_Re_all_St_pfu <- paste0(agg_eta_pref, "_Re_all_St_pfu")
-  agg_tar_str_Re_all_St_pfu <- paste0(agg_pref, "_Re_all_St_pfu")
-  eta_tar_str_Re_all_St_pfu <- paste0(eta_pref, "_Re_all_St_pfu")
+  agg_eta_tar_str_Re_all_St_pfu <- paste0(psut_tar_str, "_", agg_eta_pref, "_Re_all_St_pfu")
+  agg_tar_str_Re_all_St_pfu <- paste0(psut_tar_str, "_", agg_pref, "_Re_all_St_pfu")
+  eta_tar_str_Re_all_St_pfu <- paste0(psut_tar_str, "_", eta_pref, "_Re_all_St_pfu")
   pin_agg_eta_tar_str_Re_all_St_pfu <- paste0("Pin_", agg_eta_tar_str_Re_all_St_pfu)
   pin_agg_tar_str_Re_all_St_pfu_csv <- paste0("Pin_", agg_tar_str_Re_all_St_pfu, "_csv")
   pin_eta_tar_str_Re_all_St_pfu_csv <- paste0("Pin_", eta_tar_str_Re_all_St_pfu, "_csv")
 
   # Set symbols for targets to which we refer later in the pipeline.
+  psut_tar_sym <- as.symbol(psut_tar_str)
   psut_tar_sym_pin <- as.symbol(psut_tar_str_pin)
   psut_tar_sym_release <- as.symbol(psut_tar_str_release)
-  psut_tar_sym <- as.symbol(psut_tar_str)
   psut_tar_sym_with_continent_col <- as.symbol(psut_tar_str_with_continent_col)
   psut_tar_sym_Re_continents <- as.symbol(psut_tar_str_Re_continents)
   psut_tar_sym_Re_world <- as.symbol(psut_tar_str_Re_world)
