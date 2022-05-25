@@ -3,7 +3,6 @@
 export("%>%")
 export(":=")
 export(.data)
-export(cache_target)
 export(calc_agg_etas)
 export(calculate_finaluseful_ex_data)
 export(calculate_fu_ex_product)

@@ -8,7 +8,6 @@ setup_targets(
   countries,
   years,
   aggregation_maps_path,
-  pipeline_caches_folder,
   pipeline_releases_folder,
   release,
   aggregation_maps_tar_str,
@@ -23,8 +22,6 @@ Default is "all", meaning all available countries should be analyzed.}
 Default is "all", meaning all available years should be analyzed.}
 
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
-
-\item{pipeline_caches_folder}{The path to a folder where .zip files of the targets pipeline are saved.}
 
 \item{pipeline_releases_folder}{The path to a folder where releases of output targets are pinned.}
 
@@ -41,5 +38,11 @@ A list of initial targets.
 There are several initial targets that are invariant
 to the number of psut_releases that need to be analyzed
 by this workflow.
-This function creates the initial targets.
+This function creates those initial targets.
+}
+\details{
+Some targets created by this function
+have names that are known and assumed by \code{get_one_middle_pipeline()}.
+This function and \code{get_one_middle_pipeline()} should be considered
+as a pair of functions that work together.
 }

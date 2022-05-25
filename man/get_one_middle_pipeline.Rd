@@ -11,9 +11,7 @@ get_one_middle_pipeline(pr, aggregation_maps_tar_str, continents_tar_str)
 segment will be constructed.}
 }
 \value{
-A list of targets and cache dependencies for the incoming PSUT release (\code{pr}).
-The list of targets is named "targets".
-The list of cache dependencies is named "cache_dependencies".
+A list of targets for the incoming PSUT release (\code{pr}).
 }
 \description{
 \code{PFUAggDatabase} works with any number of PSUT releases from \code{PFUDatabase}.
@@ -23,4 +21,9 @@ for \emph{one} of those releases.
 \details{
 This function also creates a vector of cache dependencies,
 targets that must be completed before the cache can be saved.
+
+Some actions of this function assume target names
+created by \code{setup_targets()}.
+This function and \code{setup_targets()} should be considered
+as a pair of functions that work together.
 }

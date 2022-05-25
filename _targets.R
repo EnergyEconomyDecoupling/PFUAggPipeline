@@ -24,7 +24,7 @@ countries <- "all" # Run all countries in PSUT.
 years <- 1960:2019
 
 # Set the release of PSUT to be used for input.
-psut_release <- c(psut = "20220519T185450Z-55e04")
+psut_releases <- c(psut = "20220519T185450Z-55e04")
 
 
 # Should we do a release of the results?
@@ -45,6 +45,11 @@ future::plan(future.callr::callr)
 # Set options for all targets.
 targets::tar_option_set(
   packages = "PFUAggDatabase",
+  # Indicate that storage and retrieval of subtargets
+  # should be done by the worker thread,
+  # not the main thread.
+  # These options set defaults for all targets.
+  # Individual targets can override.
   storage = "worker",
   retrieval = "worker"
 )
@@ -52,9 +57,8 @@ targets::tar_option_set(
 # Pull in the pipeline
 PFUAggDatabase::get_pipeline(countries = countries,
                              years = years,
-                             psut_release = psut_release,
+                             psut_releases = psut_releases,
                              aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
-                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
                              release = release)
 

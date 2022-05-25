@@ -3,7 +3,12 @@
 #' There are several initial targets that are invariant
 #' to the number of psut_releases that need to be analyzed
 #' by this workflow.
-#' This function creates the initial targets.
+#' This function creates those initial targets.
+#'
+#' Some targets created by this function
+#' have names that are known and assumed by `get_one_middle_pipeline()`.
+#' This function and `get_one_middle_pipeline()` should be considered
+#' as a pair of functions that work together.
 #'
 #' @param countries A string vector of 3-letter country codes.
 #'                  Default is "all", meaning all available countries should be analyzed.
@@ -12,7 +17,6 @@
 #' @param psut_releases The releases we'll use from `pipeline_releases_folder`.
 #'                      See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
-#' @param pipeline_caches_folder The path to a folder where .zip files of the targets pipeline are saved.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param release Boolean that tells whether to do a release of the results.
 #'                Default is `FALSE`.
@@ -23,7 +27,6 @@
 setup_targets <- function(countries,
                           years,
                           aggregation_maps_path,
-                          pipeline_caches_folder,
                           pipeline_releases_folder,
                           release,
                           aggregation_maps_tar_str,
@@ -41,7 +44,6 @@ setup_targets <- function(countries,
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
-    targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
     targets::tar_target_raw("Release", release),
 
@@ -79,12 +81,15 @@ setup_targets <- function(countries,
 #' This function also creates a vector of cache dependencies,
 #' targets that must be completed before the cache can be saved.
 #'
+#' Some actions of this function assume target names
+#' created by `setup_targets()`.
+#' This function and `setup_targets()` should be considered
+#' as a pair of functions that work together.
+#'
 #' @param pr The `PFUDatabase` pipeline release for which this pipeline
 #'           segment will be constructed.
 #'
-#' @return A list of targets and cache dependencies for the incoming PSUT release (`pr`).
-#'         The list of targets is named "targets".
-#'         The list of cache dependencies is named "cache_dependencies".
+#' @return A list of targets for the incoming PSUT release (`pr`).
 #'
 #' @export
 get_one_middle_pipeline <- function(pr,
@@ -146,7 +151,7 @@ get_one_middle_pipeline <- function(pr,
   pin_eta_tar_sym_Re_all_St_pfu_csv <- as.symbol(pin_eta_tar_str_Re_all_St_pfu_csv)
 
   # Create the pipeline
-  targs <- list(
+  list(
 
     # Set the pin and release as targets
     targets::tar_target_raw(
@@ -360,8 +365,7 @@ get_one_middle_pipeline <- function(pr,
                                                                                          IEATools::all_stages$useful)),
                                              targ_name = agg_tar_str_Re_all_St_pfu,
                                              type = "csv",
-                                             release = Release))
-    ),
+                                             release = Release))),
 
 
     # Pin efficiencies as a wide-by-years .csv file
@@ -382,36 +386,6 @@ get_one_middle_pipeline <- function(pr,
                                                                                          PFUAggDatabase::efficiency_cols$eta_pu)),
                                              targ_name = eta_tar_str_Re_all_St_pfu,
                                              type = "csv",
-                                             release = Release))
-    )
-  )
-  deps <- c(agg_tar_sym_Re_all_St_pfu, eta_tar_sym_Re_all_St_pfu)
-  list(targets = targs, cache_dependencies = deps)
-}
-
-
-#' Last target in the pipeline
-#'
-#' Provides a final target to store the cache of the pipeline.
-#'
-#' @return A logical saying whether the saving operation was successful.
-#'         If `release = FALSE`, `FALSE` is returned.
-#'
-#' @export
-cache_target <- function(agg_sym_dependency, eta_sym_dependency) {
-  list(
-    # Save the cache for posterity.
-    # This target is invariant across various psut_releases.
-    # In fact, this target should be executed only after
-    # all targets for all psut releases have been executed.
-    targets::tar_target_raw(
-      "store_cache",
-      substitute(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,
-                                          cache_folder = "_targets",
-                                          file_prefix = "pfu_agg_workflow_cache_",
-                                          dependency = c(agg_sym_dependency, eta_sym_dependency)))
-    )
+                                             release = Release)))
   )
 }
-
-
