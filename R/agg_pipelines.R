@@ -47,11 +47,7 @@ get_pipeline <- function(countries = "all",
 
   # Target names
   aggregation_maps_tar_str <- "AggregationMaps"
-  aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
-
-  # Target symbols
   continents_tar_str <- "Continents"
-  continents_tar_sym <- as.symbol(continents_tar_str)
 
   # Create the initial targets
   initial_targets <- setup_targets(countries = countries,
@@ -69,7 +65,9 @@ get_pipeline <- function(countries = "all",
   for (i_pr in 1:length(psut_releases)) {
     # Preserve name of i_pr'th psut_release.
     pr <- psut_releases[i_pr]
-    these_mid_targs_and_deps <- get_one_middle_pipeline(pr = pr)
+    these_mid_targs_and_deps <- get_one_middle_pipeline(pr = pr,
+                                                        aggregation_maps_tar_str = aggregation_maps_tar_str,
+                                                        continents_tar_str = continents_tar_str)
     # Unpack the targets and add to our list
     middle_targets <- c(middle_targets, these_mid_targs_and_deps$targets)
     # Unpack the dependencies

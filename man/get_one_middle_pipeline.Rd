@@ -4,7 +4,7 @@
 \alias{get_one_middle_pipeline}
 \title{A pipeline for one PSUT release}
 \usage{
-get_one_middle_pipeline(pr)
+get_one_middle_pipeline(pr, aggregation_maps_tar_str, continents_tar_str)
 }
 \arguments{
 \item{pr}{The \code{PFUDatabase} pipeline release for which this pipeline

@@ -20,9 +20,12 @@
 #' @return A list of initial targets.
 #'
 #' @export
-setup_targets <- function(countries, years,
-                          aggregation_maps_path, pipeline_caches_folder,
-                          pipeline_releases_folder, release,
+setup_targets <- function(countries,
+                          years,
+                          aggregation_maps_path,
+                          pipeline_caches_folder,
+                          pipeline_releases_folder,
+                          release,
                           aggregation_maps_tar_str,
                           continents_tar_str) {
 
@@ -81,7 +84,13 @@ setup_targets <- function(countries, years,
 #' @return A list of targets for the incoming PSUT release.
 #'
 #' @export
-get_one_middle_pipeline <- function(pr) {
+get_one_middle_pipeline <- function(pr,
+                                    aggregation_maps_tar_str,
+                                    continents_tar_str) {
+
+  # Set some preliminary target names and target symbols.
+  aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
+  continents_tar_sym <- as.symbol(continents_tar_str)
 
   # At this point, we will have only a single, named value for pr.
   # Get the name (the pin).
@@ -96,9 +105,11 @@ get_one_middle_pipeline <- function(pr) {
   agg_pref <- paste0("Agg", agg_eta_suff)
   eta_pref <- paste0("Eta", agg_eta_suff)
 
-  # Set target names based on the psut_tar_str.
+  # Set the name for the PSUT target.
+  # Most other targets are based on this name.
   psut_tar_str <- toupper(psut_pin)
 
+  # Set target names based on the psut_tar_str.
   psut_tar_str_pin <- paste0(psut_tar_str, "Pin")
   psut_tar_str_release <- paste0(psut_tar_str, "Release")
   psut_tar_str_with_continent_col <- paste0(psut_tar_str, "_with_continent_col")
