@@ -24,7 +24,10 @@ countries <- "all" # Run all countries in PSUT.
 years <- 1960:2019
 
 # Set the release of PSUT to be used for input.
-psut_releases <- c(psut = "20220519T185450Z-55e04")
+# psut_releases <- c(psut = "20220519T185450Z-55e04")
+psut_releases = c(psut = "20220519T185450Z-55e04",
+                  psut_iea = "20220519T185448Z-07a39",
+                  psut_mw = "20220519T185235Z-771f8")
 
 
 # Should we do a release of the results?
