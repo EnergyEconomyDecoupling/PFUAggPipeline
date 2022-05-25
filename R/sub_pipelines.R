@@ -37,7 +37,7 @@ setup_targets <- function(countries, years, psut_releases,
     # These targets are invariant across incoming psut_releases.
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
-    targets::tar_target_raw("PSUTReleases", unname(psut_releases)),
+    targets::tar_target_raw("PSUTReleases", psut_releases),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
