@@ -20,7 +20,7 @@
 #' @return A list of initial targets.
 #'
 #' @export
-setup_targets <- function(countries, years, psut_releases,
+setup_targets <- function(countries, years,
                           aggregation_maps_path, pipeline_caches_folder,
                           pipeline_releases_folder, release,
                           aggregation_maps_tar_str,
@@ -37,7 +37,7 @@ setup_targets <- function(countries, years, psut_releases,
     # These targets are invariant across incoming psut_releases.
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
-    targets::tar_target_raw("PSUTReleases", psut_releases),
+    # targets::tar_target_raw("PSUTReleases", psut_releases),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
@@ -98,6 +98,9 @@ get_one_middle_pipeline <- function(pr) {
 
   # Set target names based on the psut_tar_str.
   psut_tar_str <- toupper(psut_pin)
+
+  psut_tar_str_pin <- paste0(psut_tar_str, "Pin")
+  psut_tar_str_release <- paste0(psut_tar_str, "Release")
   psut_tar_str_with_continent_col <- paste0(psut_tar_str, "_with_continent_col")
   psut_tar_str_Re_continents <- paste0(psut_tar_str, "_Re_continents")
   psut_tar_str_Re_world <- paste0(psut_tar_str, "_Re_world")
@@ -113,6 +116,8 @@ get_one_middle_pipeline <- function(pr) {
   pin_eta_tar_str_Re_all_St_pfu_csv <- paste0("Pin_", eta_tar_str_Re_all_St_pfu, "_csv")
 
   # Set symbols for targets to which we refer later in the pipeline.
+  psut_tar_sym_pin <- as.symbol(psut_tar_str_pin)
+  psut_tar_sym_release <- as.symbol(psut_tar_str_release)
   psut_tar_sym <- as.symbol(psut_tar_str)
   psut_tar_sym_with_continent_col <- as.symbol(psut_tar_str_with_continent_col)
   psut_tar_sym_Re_continents <- as.symbol(psut_tar_str_Re_continents)
@@ -130,6 +135,14 @@ get_one_middle_pipeline <- function(pr) {
 
   # Create the pipeline
   targs <- list(
+
+    # Set the pin and release as targets
+    targets::tar_target_raw(
+      psut_tar_str_pin,
+      psut_pin),
+    targets::tar_target_raw(
+      psut_tar_str_release,
+      unname(pr)),
 
     # Pull in the PSUT data frame
     # targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%

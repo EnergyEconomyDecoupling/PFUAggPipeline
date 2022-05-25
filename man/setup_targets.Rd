@@ -7,7 +7,6 @@
 setup_targets(
   countries,
   years,
-  psut_releases,
   aggregation_maps_path,
   pipeline_caches_folder,
   pipeline_releases_folder,
@@ -23,9 +22,6 @@ Default is "all", meaning all available countries should be analyzed.}
 \item{years}{A numeric vector of years to be analyzed.
 Default is "all", meaning all available years should be analyzed.}
 
-\item{psut_releases}{The releases we'll use from \code{pipeline_releases_folder}.
-See details.}
-
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
 
 \item{pipeline_caches_folder}{The path to a folder where .zip files of the targets pipeline are saved.}
@@ -34,6 +30,9 @@ See details.}
 
 \item{release}{Boolean that tells whether to do a release of the results.
 Default is \code{FALSE}.}
+
+\item{psut_releases}{The releases we'll use from \code{pipeline_releases_folder}.
+See details.}
 }
 \value{
 A list of initial targets.

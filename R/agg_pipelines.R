@@ -56,7 +56,6 @@ get_pipeline <- function(countries = "all",
   # Create the initial targets
   initial_targets <- setup_targets(countries = countries,
                                    years = years,
-                                   psut_releases = psut_releases,
                                    aggregation_maps_path = aggregation_maps_path,
                                    pipeline_caches_folder = pipeline_caches_folder,
                                    pipeline_releases_folder = pipeline_releases_folder,
