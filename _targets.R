@@ -21,7 +21,8 @@ countries <- "all" # Run all countries in PSUT.
 # years <- 1971:1972
 # years <- 1971
 # years <- "all" # might get 2020 or other partial years.
-years <- 1960:2019
+# years <- 1960:2019
+years <- 1961
 
 # Set the release of PSUT to be used for input.
 # psut_releases <- c(psut = "20220519T185450Z-55e04")
