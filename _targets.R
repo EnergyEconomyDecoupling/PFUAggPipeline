@@ -21,14 +21,13 @@ countries <- "all" # Run all countries in PSUT.
 # years <- 1971:1972
 # years <- 1971
 # years <- "all" # might get 2020 or other partial years.
-# years <- 1960:2019
-years <- 1961
+years <- 1960:2019
+# years <- 1961
 
-# Set the release of PSUT to be used for input.
-# psut_releases <- c(psut = "20220519T185450Z-55e04")
-psut_releases = c(psut =     "20220525T165559Z-24020",
-                  psut_iea = "20220525T165559Z-bf84e",
-                  psut_mw =  "20220525T165558Z-1d544")
+# Set the releases to be used for input.
+psut_releases = c(psut =     "20220526T201121Z-b5433",
+                  psut_iea = "20220526T201121Z-2face",
+                  psut_mw =  "20220526T201120Z-18f95")
 
 
 # Should we do a release of the results?
