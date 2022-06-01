@@ -25,9 +25,9 @@ years <- 1960:2019
 # years <- 1961
 
 # Set the releases to be used for input.
-psut_releases = c(psut =     "20220526T201121Z-b5433",
-                  psut_iea = "20220526T201121Z-2face",
-                  psut_mw =  "20220526T201120Z-18f95")
+psut_releases = c(psut =     "20220601T192705Z-4a413",
+                  psut_iea = "20220601T192700Z-3b429",
+                  psut_mw =  "20220601T192632Z-0b226")
 
 
 # Should we do a release of the results?
