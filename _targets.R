@@ -8,12 +8,12 @@ library(targets)
 # Set control parameters for the pipeline.
 
 # Set the countries to be analyzed.
-# countries <- c("GBR")
+countries <- c("GBR")
 # countries <- c("WMBK", "WABK", "ZAF")
 # countries <- c("WMBK", "WABK")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUDatabase::canonical_countries %>% unlist()
-countries <- "all" # Run all countries in PSUT.
+# countries <- "all" # Run all countries in PSUT.
 
 # Set the years to be analyzed.
 # years <- 1960

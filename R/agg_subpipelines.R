@@ -180,13 +180,6 @@ get_one_middle_pipeline <- function(pr,
     # Create a continents data frame, grouped by continent,
     # so subsequent operations (region aggregation)
     # will be performed in parallel, if desired.
-    # tarchetypes::tar_group_by(
-    #   name = PSUT_with_continent_col,
-    #   command = join_psut_continents(PSUT = PSUT,
-    #                                  continent_aggregation_map = AggregationMaps$continent_aggregation,
-    #                                  continent = "Continent"),
-    #   # The columns to group by, as symbols.
-    #   Continent),
     targets::tar_target_raw(
       psut_tar_str_with_continent_col,
       substitute(join_psut_continents(PSUT = psut_tar_sym,
@@ -206,13 +199,6 @@ get_one_middle_pipeline <- function(pr,
     # Aggregate to world
     targets::tar_target_raw(
       psut_tar_str_Re_world,
-      # quote(Recca::region_aggregates(PSUT_Re_continents %>%
-      #                                  dplyr::left_join(AggregationMaps$world_aggregation %>%
-      #                                                     matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
-      #                                                                                      few_colname = "World"),
-      #                                                   by = IEATools::iea_cols$country),
-      #                                many_colname = IEATools::iea_cols$country, # Which actually holds continents
-      #                                few_colname = "World"))
       substitute(Recca::region_aggregates(psut_tar_sym_Re_continents %>%
                                             dplyr::left_join(aggregation_maps_tar_sym$world_aggregation %>%
                                                                matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
@@ -222,34 +208,18 @@ get_one_middle_pipeline <- function(pr,
                                           few_colname = "World"))),
 
     # Bind all region aggregations together
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all",
-    #   quote(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
     targets::tar_target_raw(
       psut_tar_str_Re_all,
       substitute(dplyr::bind_rows(psut_tar_sym, psut_tar_sym_Re_continents, psut_tar_sym_Re_world))),
-
 
 
     ####################
     # PFU aggregations #
     ####################
 
-    # Set up a grouped-by-country data frame
-    # so all future calculations are parallelized across countries.
-    # tarchetypes::tar_group_by(
-    #   name = PSUT_Re_all_by_country,
-    #   command = PSUT_Re_all,
-    #   # The columns to group by, as symbols.
-    #   Country),
-
     # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target_raw(
       psut_tar_str_Re_all_St_p,
-      # quote(calculate_primary_ex_data(PSUT_Re_all_by_country,
-      #                                 countries = Countries,
-      #                                 years = Years,
-      #                                 p_industry_prefixes = p_industry_prefixes)),
       substitute(calculate_primary_ex_data(psut_tar_sym_Re_all,
                                            countries = Countries,
                                            years = Years,
@@ -275,24 +245,12 @@ get_one_middle_pipeline <- function(pr,
       # quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
       substitute(dplyr::bind_rows(psut_tar_sym_Re_all_St_p, psut_tar_sym_Re_all_St_fu))),
 
+
     ################
     # Efficiencies #
     ################
 
-    # tarchetypes::tar_group_by(
-    #   name = PSUT_Re_all_St_pfu_by_country,
-    #   command = PSUT_Re_all_St_pfu %>%
-    #     dplyr::mutate(
-    #       tar_group = NULL
-    #     ),
-    #   # The columns to group by, as symbols.
-    #   Country),
-
     targets::tar_target_raw(
-      #   "agg_eta_Re_all_St_pfu",
-      #   quote(calc_agg_etas(PSUT_Re_all_St_pfu_by_country)),
-      #   pattern = quote(map(PSUT_Re_all_St_pfu_by_country)),
-      #   iteration = "group"),
       agg_eta_tar_str_Re_all_St_pfu,
       substitute(calc_agg_etas(psut_tar_sym_Re_all_St_pfu,
                                countries = Countries,
@@ -303,12 +261,6 @@ get_one_middle_pipeline <- function(pr,
     # to enable easier saving of separate .csv files later.
     targets::tar_target_raw(
       agg_tar_str_Re_all_St_pfu,
-      # quote(agg_eta_Re_all_St_pfu %>%
-      #         dplyr::mutate(
-      #           "{PFUAggDatabase::efficiency_cols$eta_pf}" := NULL,
-      #           "{PFUAggDatabase::efficiency_cols$eta_fu}" := NULL,
-      #           "{PFUAggDatabase::efficiency_cols$eta_pu}" := NULL,
-      #         ))),
       substitute(agg_eta_tar_sym_Re_all_St_pfu %>%
                    dplyr::mutate(
                      "{PFUAggDatabase::efficiency_cols$eta_pf}" := NULL,
@@ -318,12 +270,6 @@ get_one_middle_pipeline <- function(pr,
 
     targets::tar_target_raw(
       eta_tar_str_Re_all_St_pfu,
-      # quote(agg_eta_Re_all_St_pfu %>%
-      #         dplyr::mutate(
-      #           "{IEATools::all_stages$primary}" := NULL,
-      #           "{IEATools::all_stages$final}" := NULL,
-      #           "{IEATools::all_stages$useful}" := NULL,
-      #         ))),
       substitute(agg_eta_tar_sym_Re_all_St_pfu %>%
                    dplyr::mutate(
                      "{IEATools::all_stages$primary}" := NULL,
@@ -339,10 +285,6 @@ get_one_middle_pipeline <- function(pr,
     # Pin the aggregates and efficiencies as an .rds file
     targets::tar_target_raw(
       pin_agg_eta_tar_str_Re_all_St_pfu,
-      # quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-      #                                   targ = agg_eta_Re_all_St_pfu,
-      #                                   targ_name = "agg_eta_Re_all_St_pfu",
-      #                                   release = Release))),
       substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                              targ = agg_eta_tar_sym_Re_all_St_pfu,
                                              targ_name = agg_eta_tar_str_Re_all_St_pfu,
@@ -351,14 +293,6 @@ get_one_middle_pipeline <- function(pr,
     # Pin aggregates as a wide-by-years .csv file
     targets::tar_target_raw(
       pin_agg_tar_str_Re_all_St_pfu_csv,
-      # quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-      #                                   targ = agg_Re_all_St_pfu %>%
-      #                                     pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
-      #                                                                               IEATools::all_stages$final,
-      #                                                                               IEATools::all_stages$useful)),
-      #                                   targ_name = "agg_Re_all_St_pfu",
-      #                                   type = "csv",
-      #                                   release = Release))
       substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                              targ = agg_tar_sym_Re_all_St_pfu %>%
                                                pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
@@ -372,14 +306,6 @@ get_one_middle_pipeline <- function(pr,
     # Pin efficiencies as a wide-by-years .csv file
     targets::tar_target_raw(
       pin_eta_tar_str_Re_all_St_pfu_csv,
-      # quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-      #                                   targ = eta_Re_all_St_pfu %>%
-      #                                     pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
-      #                                                                               PFUAggDatabase::efficiency_cols$eta_fu,
-      #                                                                               PFUAggDatabase::efficiency_cols$eta_pu)),
-      #                                   targ_name = "eta_Re_all_St_pfu",
-      #                                   type = "csv",
-      #                                   release = Release))
       substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                              targ = eta_tar_sym_Re_all_St_pfu %>%
                                                pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
