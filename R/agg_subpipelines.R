@@ -1,7 +1,7 @@
 #' Create setup targets for PFUAggDatabase
 #'
 #' There are several initial targets that are invariant
-#' to the number of psut_releases that need to be analyzed
+#' to the number of PSUT releases that need to be analyzed
 #' by this workflow.
 #' This function creates those initial targets.
 #'

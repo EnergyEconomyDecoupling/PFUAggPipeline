@@ -91,7 +91,7 @@ join_psut_continents <- function(PSUT,
 #'                    Default is the same as the value of the `continent` argument.
 #'
 #' @return A data frame in which countries are aggregated to continents according to
-#'         the aggregatio map.
+#'         the aggregation map.
 #'
 #' @export
 continent_aggregation <- function(PSUT,

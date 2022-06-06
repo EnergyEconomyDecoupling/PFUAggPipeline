@@ -32,7 +32,9 @@
 #'   tidyr::pivot_wider(names_from = matrix.name,
 #'                      values_from = matrix) %>%
 #'   dplyr::mutate(Method = "PCM") %>%
-#'   calculate_primary_ex_data(p_industry_prefixes = list(c("Resources", "Imports")))
+#'   calculate_primary_ex_data(countries = "all",
+#'                             years = "all",
+#'                             p_industry_prefixes = list(c("Resources", "Imports")))
 calculate_primary_ex_data <- function(.sutdata,
                                       countries,
                                       years,
