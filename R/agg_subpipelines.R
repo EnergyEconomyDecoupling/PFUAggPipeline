@@ -77,9 +77,6 @@ init_targets <- function(countries,
 #' This function creates a portion of a `targets` pipeline
 #' for _one_ of those releases.
 #'
-#' This function also creates a vector of cache dependencies,
-#' targets that must be completed before the cache can be saved.
-#'
 #' Some actions of this function assume target names
 #' created by `setup_targets()`.
 #' This function and `setup_targets()` should be considered
