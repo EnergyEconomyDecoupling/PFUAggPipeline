@@ -9,7 +9,6 @@ get_pipeline(
   years = "all",
   psut_releases,
   aggregation_maps_path,
-  pipeline_caches_folder,
   pipeline_releases_folder,
   release = FALSE
 )
@@ -26,8 +25,6 @@ See details.}
 
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
 
-\item{pipeline_caches_folder}{The path to a folder where .zip files of the targets pipeline are saved.}
-
 \item{pipeline_releases_folder}{The path to a folder where releases of output targets are pinned.}
 
 \item{release}{Boolean that tells whether to do a release of the results.
@@ -38,12 +35,12 @@ A list of \code{tar_target}s to be executed in a workflow.
 }
 \description{
 This is a target factory whose arguments
-specify the details of a targets workflow to be executed.
+specify the details of a targets workflow to be constructed
 }
 \details{
 The \code{psut_releases} argument is assumed to be a named vector of strings where
 names are pin names in \code{pipeline_releases_folder}, and
-items give pin versions.
+items are pin versions.
 An example \code{psut_releases} argument is:
 
 \verb{psut_releases = c(psut = "20220519T185450Z-55e04",}
@@ -53,7 +50,8 @@ An example \code{psut_releases} argument is:
 The "\emph{" character has meaning in the names of \code{psut_releases} items.
 All characters after the "}" are used when creating the target names for
 aggregations and aggregate efficiencies.
-Best \emph{not} to send more than one \code{psut_releases} item that lacks characters after the "_" character.
+Best \emph{not} to send more than one \code{psut_releases} item that
+lacks characters after the "_" character.
 
 Note, too, that names of \code{psut_releases} items will be converted to uppercase
 for target names.

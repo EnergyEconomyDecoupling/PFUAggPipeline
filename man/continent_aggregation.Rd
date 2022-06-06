@@ -28,7 +28,7 @@ Default is the same as the value of the \code{continent} argument.}
 }
 \value{
 A data frame in which countries are aggregated to continents according to
-the aggregatio map.
+the aggregation map.
 }
 \description{
 This function is a wrapper for \code{Recca::region_aggregates()}
