@@ -49,9 +49,6 @@ targets.}
 \item{total_value}{See \code{PFUAggDatabase::agg_metadata}.}
 
 \item{primary, final, useful, country, year, method, energy_type, flow}{See \code{IEATools::iea_cols}.}
-
-\item{tar_group}{The name of the targets grouping column in \code{.aggregates}.
-This column is deleted on output.}
 }
 \value{
 A data frame of aggregates and aggregate efficiencies.

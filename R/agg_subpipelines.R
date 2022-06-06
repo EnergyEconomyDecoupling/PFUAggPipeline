@@ -14,23 +14,23 @@
 #'                  Default is "all", meaning all available countries should be analyzed.
 #' @param years A numeric vector of years to be analyzed.
 #'              Default is "all", meaning all available years should be analyzed.
-#' @param psut_releases The releases we'll use from `pipeline_releases_folder`.
-#'                      See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param release Boolean that tells whether to do a release of the results.
 #'                Default is `FALSE`.
+#' @param aggregation_maps_tar_str The name of the aggregation maps target (as a string).
+#' @param continents_tar_str The name of the continents target (as a string).
 #'
 #' @return A list of initial targets.
 #'
 #' @export
-setup_targets <- function(countries,
-                          years,
-                          aggregation_maps_path,
-                          pipeline_releases_folder,
-                          release,
-                          aggregation_maps_tar_str,
-                          continents_tar_str) {
+init_targets <- function(countries,
+                         years,
+                         aggregation_maps_path,
+                         pipeline_releases_folder,
+                         release,
+                         aggregation_maps_tar_str,
+                         continents_tar_str) {
 
   aggregation_maps_tar_sym <- as.symbol(aggregation_maps_tar_str)
 
@@ -87,6 +87,8 @@ setup_targets <- function(countries,
 #'
 #' @param pr The `PFUDatabase` pipeline release for which this pipeline
 #'           segment will be constructed.
+#' @param aggregation_maps_tar_str The name of the aggregation maps target (as a string).
+#' @param continents_tar_str The name of the continents target (as a string).
 #'
 #' @return A list of targets for the incoming PSUT release (`pr`).
 #'

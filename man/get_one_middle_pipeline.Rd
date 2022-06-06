@@ -9,6 +9,10 @@ get_one_middle_pipeline(pr, aggregation_maps_tar_str, continents_tar_str)
 \arguments{
 \item{pr}{The \code{PFUDatabase} pipeline release for which this pipeline
 segment will be constructed.}
+
+\item{aggregation_maps_tar_str}{The name of the aggregation maps target (as a string).}
+
+\item{continents_tar_str}{The name of the continents target (as a string).}
 }
 \value{
 A list of targets for the incoming PSUT release (\code{pr}).

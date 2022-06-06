@@ -356,11 +356,13 @@ calculate_p_ex_product <- function(.sutdata, p_industry_prefixes,
 #'
 #' @examples
 #' library(Recca)
-#' finaluseful_data <- Recca::UKEnergy2000mats %>%
+#' Recca::UKEnergy2000mats %>%
 #'   tidyr::pivot_wider(names_from = matrix.name,
 #'                      values_from = matrix) %>%
 #'   dplyr::mutate(Method = "PCM") %>%
-#'   calculate_finaluseful_ex_data(fd_sectors = c("Residential"))
+#'   calculate_finaluseful_ex_data(countries = "all",
+#'                                 years = "all",
+#'                                 fd_sectors = c("Residential"))
 calculate_finaluseful_ex_data <- function(.sutdata,
                                           countries,
                                           years,

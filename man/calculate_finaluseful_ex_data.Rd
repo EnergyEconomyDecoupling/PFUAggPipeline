@@ -50,5 +50,7 @@ finaluseful_data <- Recca::UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = matrix.name,
                      values_from = matrix) \%>\%
   dplyr::mutate(Method = "PCM") \%>\%
-  calculate_finaluseful_ex_data(fd_sectors = c("Residential"))
+  calculate_finaluseful_ex_data(countries = "all",
+                                years = "all",
+                                fd_sectors = c("Residential"))
 }

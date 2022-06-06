@@ -16,8 +16,6 @@
 #' @param total_value See `PFUAggDatabase::agg_metadata`.
 #' @param gross,net See `PFUAggDatabase::gross_net_metadata`
 #' @param primary,final,useful,country,year,method,energy_type,flow See `IEATools::iea_cols`.
-#' @param tar_group The name of the targets grouping column in `.aggregates`.
-#'                  This column is deleted on output.
 #'
 #' @return A data frame of aggregates and aggregate efficiencies.
 #'

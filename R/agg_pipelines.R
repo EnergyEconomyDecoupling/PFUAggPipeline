@@ -49,13 +49,13 @@ get_pipeline <- function(countries = "all",
   continents_tar_str <- "Continents"
 
   # Create the initial targets
-  initial_targets <- setup_targets(countries = countries,
-                                   years = years,
-                                   aggregation_maps_path = aggregation_maps_path,
-                                   pipeline_releases_folder = pipeline_releases_folder,
-                                   release = release,
-                                   aggregation_maps_tar_str = aggregation_maps_tar_str,
-                                   continents_tar_str = continents_tar_str)
+  initial_targets <- init_targets(countries = countries,
+                                  years = years,
+                                  aggregation_maps_path = aggregation_maps_path,
+                                  pipeline_releases_folder = pipeline_releases_folder,
+                                  release = release,
+                                  aggregation_maps_tar_str = aggregation_maps_tar_str,
+                                  continents_tar_str = continents_tar_str)
 
   # get_one_middle_pipeline() returns both a list of targets and
   # a list of cache dependencies.
