@@ -8,12 +8,12 @@ library(targets)
 # Set control parameters for the pipeline.
 
 # Set the countries to be analyzed.
-# countries <- c("GBR")
+countries <- c("GBR")
 # countries <- c("WMBK", "WABK", "ZAF")
 # countries <- c("WMBK", "WABK")
 # countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
 # countries <- PFUDatabase::canonical_countries %>% unlist()
-countries <- "all" # Run all countries in PSUT.
+# countries <- "all" # Run all countries in PSUT.
 
 # Set the years to be analyzed.
 # years <- 1960
@@ -22,9 +22,13 @@ countries <- "all" # Run all countries in PSUT.
 # years <- 1971
 # years <- "all" # might get 2020 or other partial years.
 years <- 1960:2019
+# years <- 1961
 
-# Set the release of PSUT to be used for input.
-psut_release <- "20220519T185450Z-55e04"
+# Set the releases to be used for input.
+psut_releases = c(psut =     "20220601T192705Z-4a413",
+                  psut_iea = "20220601T192700Z-3b429",
+                  psut_mw =  "20220601T192632Z-0b226")
+
 
 # Should we do a release of the results?
 release <- FALSE
@@ -43,8 +47,12 @@ future::plan(future.callr::callr)
 
 # Set options for all targets.
 targets::tar_option_set(
-  # Set packages to be used.
-  packages = c("PFUAggDatabase"),
+  packages = "PFUAggDatabase",
+  # Indicate that storage and retrieval of subtargets
+  # should be done by the worker thread,
+  # not the main thread.
+  # These options set defaults for all targets.
+  # Individual targets can override.
   storage = "worker",
   retrieval = "worker"
 )
@@ -52,9 +60,8 @@ targets::tar_option_set(
 # Pull in the pipeline
 PFUAggDatabase::get_pipeline(countries = countries,
                              years = years,
-                             psut_release = psut_release,
+                             psut_releases = psut_releases,
                              aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
-                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
                              release = release)
 

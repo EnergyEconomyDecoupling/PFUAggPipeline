@@ -10,8 +10,16 @@
 #'
 #' @param .sutdata A data frame containing Physical Supply-Use Table (PSUT)
 #'                 matrices with associated final demand sector names
+#' @param countries The countries for which primary energy and exergy data are to be calculated.
+#' @param years The years for which primary energy and exergy data are to be calculated.
 #' @param p_industry_prefixes A character vector of primary energy industry prefixes.
 #'                            Usually "Resources", "Imports", and "Stock changes".
+#' @param country The name of the country column in `.sutdata`.
+#'                Default is `IEATools::iea_cols$country`.
+#' @param year The name of the year column in `.sutdata`.
+#'             Default is `IEATools::iea_cols$year`.
+#' @param ex The name of the energy and exergy column in `.sutdata`.
+#'           Default is `PFUAggDatabase::sea_cols$ex_colname`.
 #'
 #' @return A data frame containing primary energy/exergy values aggregated by total,
 #'         flow and product.
@@ -24,28 +32,34 @@
 #'   tidyr::pivot_wider(names_from = matrix.name,
 #'                      values_from = matrix) %>%
 #'   dplyr::mutate(Method = "PCM") %>%
-#'   calculate_primary_ex_data(p_industry_prefixes = list(c("Resources", "Imports")))
-calculate_primary_ex_data <- function(.sutdata, p_industry_prefixes) {
+#'   calculate_primary_ex_data(countries = "all",
+#'                             years = "all",
+#'                             p_industry_prefixes = list(c("Resources", "Imports")))
+calculate_primary_ex_data <- function(.sutdata,
+                                      countries,
+                                      years,
+                                      p_industry_prefixes,
+                                      country = IEATools::iea_cols$country,
+                                      year = IEATools::iea_cols$year,
+                                      ex = PFUAggDatabase::sea_cols$ex_colname) {
+  filtered_sut_data <- .sutdata %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years,
+                                        country = country, year = year)
 
-  # Calculates total primary energy/exergy
-  p_total <- calculate_p_ex_total(.sutdata = .sutdata, p_industry_prefixes = p_industry_prefixes)
+  # Calculate total primary energy/exergy
+  p_total <- calculate_p_ex_total(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
-  # Calculates primary energy/exergy by flow
-  p_flow <- calculate_p_ex_flow(.sutdata = .sutdata, p_industry_prefixes = p_industry_prefixes)
+  # Calculate primary energy/exergy by flow
+  p_flow <- calculate_p_ex_flow(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
-  # Calculates primary energy/exergy by product
-  p_product <- calculate_p_ex_product(.sutdata = .sutdata, p_industry_prefixes = p_industry_prefixes)
+  # Calculate primary energy/exergy by product
+  p_product <- calculate_p_ex_product(.sutdata = filtered_sut_data, p_industry_prefixes = p_industry_prefixes)
 
-  # Bind all data together
-  all_data <- p_total %>%
-    rbind(p_flow) %>%
-    rbind(p_product)
-
-  # Set EX column type to numeric
-  all_data$EX <- as.numeric(all_data$EX)
-
-  # Return
-  return(all_data)
+  # Bind all data together and ensure numeric column for aggregates.
+  dplyr::bind_rows(p_total, p_flow, p_product) %>%
+    dplyr::mutate(
+      "{ex}" := as.numeric(.data[[ex]])
+    )
 }
 
 
@@ -327,7 +341,15 @@ calculate_p_ex_product <- function(.sutdata, p_industry_prefixes,
 #'
 #' @param .sutdata A data frame containing Physical Supply-Use Table (PSUT)
 #'                 matrices with associated final demand sector names
+#' @param countries The countries for which primary energy and exergy data are to be calculated.
+#' @param years The years for which primary energy and exergy data are to be calculated.
 #' @param fd_sectors A character vector of final demand sectors.
+#' @param country The name of the country column in `.sutdata`.
+#'                Default is `IEATools::iea_cols$country`.
+#' @param year The name of the year column in `.sutdata`.
+#'             Default is `IEATools::iea_cols$year`.
+#' @param ex The name of the energy and exergy column in `.sutdata`.
+#'           Default is `PFUAggDatabase::sea_cols$ex_colname`.
 #'
 #' @return A data frame containing final and useful energy/exergy values aggregated by total,
 #'         sector and product.
@@ -336,32 +358,39 @@ calculate_p_ex_product <- function(.sutdata, p_industry_prefixes,
 #'
 #' @examples
 #' library(Recca)
-#' finaluseful_data <- Recca::UKEnergy2000mats %>%
+#' Recca::UKEnergy2000mats %>%
 #'   tidyr::pivot_wider(names_from = matrix.name,
 #'                      values_from = matrix) %>%
 #'   dplyr::mutate(Method = "PCM") %>%
-#'   calculate_finaluseful_ex_data(fd_sectors = c("Residential"))
-calculate_finaluseful_ex_data <- function(.sutdata, fd_sectors) {
+#'   calculate_finaluseful_ex_data(countries = "all",
+#'                                 years = "all",
+#'                                 fd_sectors = c("Residential"))
+calculate_finaluseful_ex_data <- function(.sutdata,
+                                          countries,
+                                          years,
+                                          fd_sectors,
+                                          country = IEATools::iea_cols$country,
+                                          year = IEATools::iea_cols$year,
+                                          ex = PFUAggDatabase::sea_cols$ex_colname) {
+
+  filtered_sut_data <- .sutdata %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years,
+                                        country = country, year = year)
 
   # Calculates total final demand of energy/exergy
-  fu_total <- calculate_fu_ex_total(.sutdata = .sutdata, fd_sectors = fd_sectors)
+  fu_total <- calculate_fu_ex_total(.sutdata = filtered_sut_data, fd_sectors = fd_sectors)
 
   # Calculates final demand of energy/exergy by sector
-  fu_sector <- calculate_fu_ex_sector(.sutdata = .sutdata, fd_sectors = fd_sectors)
+  fu_sector <- calculate_fu_ex_sector(.sutdata = filtered_sut_data, fd_sectors = fd_sectors)
 
   # Calculates final demand of energy/exergy by product
-  fu_product <- calculate_fu_ex_product(.sutdata = .sutdata, fd_sectors = fd_sectors)
+  fu_product <- calculate_fu_ex_product(.sutdata = filtered_sut_data, fd_sectors = fd_sectors)
 
   # Bind all data together
-  all_data <- fu_total %>%
-    rbind(fu_sector) %>%
-    rbind(fu_product)
-
-  # Set EX column type to numeric
-  all_data$EX <- as.numeric(all_data$EX)
-
-  # And ... return
-  return(all_data)
+  dplyr::bind_rows(fu_total, fu_sector, fu_product) %>%
+    dplyr::mutate(
+      "{ex}" := as.numeric(.data[[ex]])
+    )
 }
 
 

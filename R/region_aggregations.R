@@ -73,3 +73,35 @@ join_psut_continents <- function(PSUT,
                                              many_colname = IEATools::iea_cols$country)
   dplyr::left_join(PSUT, agg_df, by = country)
 }
+
+
+#' Calculate continent aggregation
+#'
+#' This function is a wrapper for `Recca::region_aggregates()`
+#' that also filters on `continents`,
+#' thereby enabling parallel processing across continents.
+#'
+#' @param PSUT A data frame of PSUT matrices
+#' @param continents The continents for which aggregation is desired.
+#' @param continent The name of the continent column in the `PSUT` data frame.
+#'                  Default is "Continent".
+#' @param many_colname The name of the column of many things that will be aggregated into continents.
+#'                     Default is `IEATools::iea_cols$country`.
+#' @param few_colname The name of the column of few things that will remain on output.
+#'                    Default is the same as the value of the `continent` argument.
+#'
+#' @return A data frame in which countries are aggregated to continents according to
+#'         the aggregation map.
+#'
+#' @export
+continent_aggregation <- function(PSUT,
+                                  continents,
+                                  continent = "Continent",
+                                  many_colname = IEATools::iea_cols$country,
+                                  few_colname = continent) {
+  filtered_psut <- PSUT %>%
+    dplyr::filter(.data[[few_colname]] %in% continents)
+  Recca::region_aggregates(filtered_psut,
+                           many_colname = many_colname,
+                           few_colname = few_colname)
+}

@@ -4,14 +4,35 @@
 \alias{calculate_primary_ex_data}
 \title{Create a data frame containing primary aggregate energy/exergy data}
 \usage{
-calculate_primary_ex_data(.sutdata, p_industry_prefixes)
+calculate_primary_ex_data(
+  .sutdata,
+  countries,
+  years,
+  p_industry_prefixes,
+  country = IEATools::iea_cols$country,
+  year = IEATools::iea_cols$year,
+  ex = PFUAggDatabase::sea_cols$ex_colname
+)
 }
 \arguments{
 \item{.sutdata}{A data frame containing Physical Supply-Use Table (PSUT)
 matrices with associated final demand sector names}
 
+\item{countries}{The countries for which primary energy and exergy data are to be calculated.}
+
+\item{years}{The years for which primary energy and exergy data are to be calculated.}
+
 \item{p_industry_prefixes}{A character vector of primary energy industry prefixes.
 Usually "Resources", "Imports", and "Stock changes".}
+
+\item{country}{The name of the country column in \code{.sutdata}.
+Default is \code{IEATools::iea_cols$country}.}
+
+\item{year}{The name of the year column in \code{.sutdata}.
+Default is \code{IEATools::iea_cols$year}.}
+
+\item{ex}{The name of the energy and exergy column in \code{.sutdata}.
+Default is \code{PFUAggDatabase::sea_cols$ex_colname}.}
 }
 \value{
 A data frame containing primary energy/exergy values aggregated by total,
@@ -30,5 +51,7 @@ primary_data <- Recca::UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = matrix.name,
                      values_from = matrix) \%>\%
   dplyr::mutate(Method = "PCM") \%>\%
-  calculate_primary_ex_data(p_industry_prefixes = list(c("Resources", "Imports")))
+  calculate_primary_ex_data(countries = "all",
+                            years = "all",
+                            p_industry_prefixes = list(c("Resources", "Imports")))
 }
