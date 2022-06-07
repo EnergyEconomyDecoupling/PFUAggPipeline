@@ -8,8 +8,8 @@ library(targets)
 # Set control parameters for the pipeline.
 
 # Set the countries to be analyzed.
-countries <- c("GBR")
-# countries <- "all" # Run all countries in PSUT.
+# countries <- c("GBR")
+countries <- "all" # Run all countries in PSUT.
 
 # Set the years to be analyzed.
 years <- 1960:2019
