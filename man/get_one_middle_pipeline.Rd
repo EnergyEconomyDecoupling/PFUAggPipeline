@@ -23,9 +23,6 @@ This function creates a portion of a \code{targets} pipeline
 for \emph{one} of those releases.
 }
 \details{
-This function also creates a vector of cache dependencies,
-targets that must be completed before the cache can be saved.
-
 Some actions of this function assume target names
 created by \code{setup_targets()}.
 This function and \code{setup_targets()} should be considered
