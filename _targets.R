@@ -9,20 +9,10 @@ library(targets)
 
 # Set the countries to be analyzed.
 countries <- c("GBR")
-# countries <- c("WMBK", "WABK", "ZAF")
-# countries <- c("WMBK", "WABK")
-# countries <- c("USA", "CAN", "GBR", "PRT", "ZAF", "WMB", "WAB")
-# countries <- PFUDatabase::canonical_countries %>% unlist()
 # countries <- "all" # Run all countries in PSUT.
 
 # Set the years to be analyzed.
-# years <- 1960
-# years <- 2000
-# years <- 1971:1972
-# years <- 1971
-# years <- "all" # might get 2020 or other partial years.
 years <- 1960:2019
-# years <- 1961
 
 # Set the releases to be used for input.
 psut_releases = c(psut =     "20220601T192705Z-4a413",
