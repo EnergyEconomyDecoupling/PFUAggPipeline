@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* Now creates targets for a vector of pins from the `PFUDatabase`.
+
+
 # PFUAggDatabase 0.1.0 (2022-04-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6463858.svg)](https://doi.org/10.5281/zenodo.6463858)
 
 * First fully-working version where the pipeline
