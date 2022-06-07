@@ -61,12 +61,10 @@ usethis::use_data(output_file_info, overwrite = TRUE)
 #
 
 aggregation_file_tab_names <- list(continent_aggregation = "continent_aggregation",
-                                   world_aggregation = "world_aggregation"
-                                   # exiobase_region_aggregation = "exiobase_region_aggregation",
-                                   # eu.product_aggregation = "eu.product_aggregation",
-                                   # ef.product_aggregation = "ef.product_aggregation",
-                                   # destination_aggregation = "destination_aggregation"
-                                   )
+                                   world_aggregation = "world_aggregation",
+                                   ef_product_aggregation = "ef_product_aggregation",
+                                   eu_product_aggregation = "eu_product_aggregation",
+                                   ef_sector_aggregation = "ef_sector_aggregation")
 usethis::use_data(aggregation_file_tab_names, overwrite = TRUE)
 
 
