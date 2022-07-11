@@ -228,10 +228,6 @@ get_one_middle_pipeline <- function(pr,
     # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
     targets::tar_target_raw(
       psut_tar_str_Re_all_St_fu,
-      # quote(calculate_finaluseful_ex_data(PSUT_Re_all_by_country,
-      #                                     countries = Countries,
-      #                                     years = Years,
-      #                                     fd_sectors = final_demand_sectors)),
       substitute(calculate_finaluseful_ex_data(psut_tar_sym_Re_all,
                                                countries = Countries,
                                                years = Years,
@@ -241,7 +237,6 @@ get_one_middle_pipeline <- function(pr,
     # Bring the aggregations together in a single data frame
     targets::tar_target_raw(
       psut_tar_str_Re_all_St_pfu,
-      # quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
       substitute(dplyr::bind_rows(psut_tar_sym_Re_all_St_p, psut_tar_sym_Re_all_St_fu))),
 
 
