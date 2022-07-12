@@ -3,30 +3,12 @@
 #' This is a target factory whose arguments
 #' specify the details of a targets workflow to be constructed
 #'
-#' The `psut_releases` argument is assumed to be a named vector of strings where
-#' names are pin names in `pipeline_releases_folder`, and
-#' items are pin versions.
-#' An example `psut_releases` argument is:
-#'
-#' `psut_releases = c(psut = "20220519T185450Z-55e04")`.
-#'
-#' The "_" character has meaning in the names of `psut_releases` items.
-#' All characters after the "_" are used when creating the target names for
-#' aggregations and aggregate efficiencies.
-#' Best _not_ to send more than one `psut_releases` item that
-#' lacks characters after the "_" character.
-#'
-#' Note, too, that names of `psut_releases` items will be converted to uppercase
-#' for target names.
-#' So be sure to make the names of `psut_releases` items unique
-#' if converted to uppercase.
-#'
 #' @param countries A string vector of 3-letter country codes.
 #'                  Default is "all", meaning all available countries should be analyzed.
 #' @param years A numeric vector of years to be analyzed.
 #'              Default is "all", meaning all available years should be analyzed.
-#' @param psut_releases The releases we'll use from `pipeline_releases_folder`.
-#'                      See details.
+#' @param psut_release The release we'll use from `pipeline_releases_folder`.
+#'                     See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param release Boolean that tells whether to do a release of the results.
@@ -37,40 +19,91 @@
 #' @export
 get_pipeline <- function(countries = "all",
                          years = "all",
-                         psut_releases,
+                         psut_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
                          release = FALSE) {
 
-  # Names for targets common to many parts of the pipeline.
-  aggregation_maps_tar_str <- "AggregationMaps"
-  continents_tar_str <- "Continents"
+  list(
+    #####################
+    # Preliminary setup #
+    #####################
 
-  # Create the initial targets
-  initial_targets <- init_targets(countries = countries,
-                                  years = years,
-                                  aggregation_maps_path = aggregation_maps_path,
-                                  pipeline_releases_folder = pipeline_releases_folder,
-                                  release = release,
-                                  aggregation_maps_tar_str = aggregation_maps_tar_str,
-                                  continents_tar_str = continents_tar_str)
+    # Store some incoming data as targets.
+    # These targets are invariant across incoming psut_releases.
+    targets::tar_target_raw("Countries", list(countries)),
+    targets::tar_target_raw("Years", list(years)),
+    targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
+    targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
+    targets::tar_target_raw("Release", release),
 
-  # get_one_middle_pipeline() returns both a list of targets and
-  # a list of cache dependencies.
-  # Create empty lists to gather those items.
-  middle_targets <- list()
-  # Loop over all the items in psut_releases.
-  for (i_pr in 1:length(psut_releases)) {
-    # Preserve name of i_pr'th psut_release.
-    pr <- psut_releases[i_pr]
-    these_mid_targs_and_deps <- get_one_middle_pipeline(pr = pr,
-                                                        aggregation_maps_tar_str = aggregation_maps_tar_str,
-                                                        continents_tar_str = continents_tar_str)
-    middle_targets <- c(middle_targets, these_mid_targs_and_deps)
-  }
+    # Establish prefixes for primary industries
+    targets::tar_target_raw(
+      "p_industry_prefixes",
+      quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
 
-  # Return all targets as a single list
-  c(initial_targets, middle_targets)
+    # Establish final demand sectors
+    targets::tar_target_raw(
+      "final_demand_sectors",
+      quote(IEATools::fd_sectors)),
+
+    # Gather the aggregation maps.
+    targets::tar_target_raw(
+      "AggregationMaps",
+      quote(load_aggregation_maps(path = AggregationMapsPath))),
+
+    # Identify the continents to which we'll aggregate
+    targets::tar_target_raw(
+      "Continents",
+      substitute(AggregationMaps$world_aggregation$World)
+    ),
+
+    # Set the pin and release as targets
+    targets::tar_target_raw(
+      "PSUTRelease",
+      unname(psut_release)),
+
+    # Pull in the PSUT data frame
+    targets::tar_target_raw(
+      "PSUT",
+      substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
+                   pins::pin_read("psut", version = PSUTRelease) %>%
+                   filter_countries_and_years(countries = Countries, years = Years)))
+
+
+  )
+
+
+
+  # # Names for targets common to many parts of the pipeline.
+  # aggregation_maps_tar_str <- "AggregationMaps"
+  # continents_tar_str <- "Continents"
+  #
+  # # Create the initial targets
+  # initial_targets <- init_targets(countries = countries,
+  #                                 years = years,
+  #                                 aggregation_maps_path = aggregation_maps_path,
+  #                                 pipeline_releases_folder = pipeline_releases_folder,
+  #                                 release = release,
+  #                                 aggregation_maps_tar_str = aggregation_maps_tar_str,
+  #                                 continents_tar_str = continents_tar_str)
+  #
+  # # get_one_middle_pipeline() returns both a list of targets and
+  # # a list of cache dependencies.
+  # # Create empty lists to gather those items.
+  # middle_targets <- list()
+  # # Loop over all the items in psut_releases.
+  # for (i_pr in 1:length(psut_releases)) {
+  #   # Preserve name of i_pr'th psut_release.
+  #   pr <- psut_releases[i_pr]
+  #   these_mid_targs_and_deps <- get_one_middle_pipeline(pr = pr,
+  #                                                       aggregation_maps_tar_str = aggregation_maps_tar_str,
+  #                                                       continents_tar_str = continents_tar_str)
+  #   middle_targets <- c(middle_targets, these_mid_targs_and_deps)
+  # }
+  #
+  # # Return all targets as a single list
+  # c(initial_targets, middle_targets)
 }
 
 
