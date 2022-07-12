@@ -8,9 +8,7 @@
 #' items are pin versions.
 #' An example `psut_releases` argument is:
 #'
-#' `psut_releases = c(psut = "20220519T185450Z-55e04",`
-#' `                  psut_iea = "20220519T185448Z-07a39",`
-#' `                  psut_mw = "20220519T185235Z-771f8").`
+#' `psut_releases = c(psut = "20220519T185450Z-55e04")`.
 #'
 #' The "_" character has meaning in the names of `psut_releases` items.
 #' All characters after the "_" are used when creating the target names for
