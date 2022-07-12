@@ -110,13 +110,13 @@ get_pipeline <- function(countries = "all",
       substitute(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
 
 
-    #########################
-    # Industry aggregations #
-    #########################
+    ############################
+    # Despecified aggregations #
+    ############################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_In_despecified",
-      substiture()
+      "PSUT_Re_all_In_despecified_Pr_despecified",
+      substitute()
     )
 
 
