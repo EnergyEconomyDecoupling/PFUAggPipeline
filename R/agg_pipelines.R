@@ -39,12 +39,12 @@ get_pipeline <- function(countries = "all",
 
     # Establish prefixes for primary industries
     targets::tar_target_raw(
-      "p_industry_prefixes",
+      "PIndustryPrefixes",
       quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
 
     # Establish final demand sectors
     targets::tar_target_raw(
-      "final_demand_sectors",
+      "FinalDemandSectors",
       quote(IEATools::fd_sectors)),
 
     # Gather the aggregation maps.
@@ -107,7 +107,22 @@ get_pipeline <- function(countries = "all",
     # Bind all region aggregations together
     targets::tar_target_raw(
       "PSUT_Re_all",
-      substitute(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world)))
+      substitute(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
+
+
+    #########################
+    # Industry aggregations #
+    #########################
+
+    targets::tar_target_raw(
+      "PSUT_Re_all_In_despecified",
+      substiture()
+    )
+
+
+
+
+
 
 
 
