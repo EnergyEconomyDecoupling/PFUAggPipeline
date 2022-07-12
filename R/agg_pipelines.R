@@ -68,7 +68,50 @@ get_pipeline <- function(countries = "all",
       "PSUT",
       substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
                    pins::pin_read("psut", version = PSUTRelease) %>%
-                   filter_countries_and_years(countries = Countries, years = Years)))
+                   filter_countries_and_years(countries = Countries, years = Years))),
+
+
+    #########################
+    # Regional aggregations #
+    #########################
+
+    # Create a continents data frame, grouped by continent,
+    # so subsequent operations (region aggregation)
+    # will be performed in parallel, if desired.
+    targets::tar_target_raw(
+      "PSUT_with_continent_col",
+      substitute(join_psut_continents(PSUT = PSUT,
+                                      continent_aggregation_map = AggregationMaps$continent_aggregation,
+                                      continent = "Continent"))),
+
+    # Aggregate by continent
+    targets::tar_target_raw(
+      "PSUT_Re_continents",
+      substitute(continent_aggregation(PSUT_with_continent_col,
+                                       continents = Continents,
+                                       many_colname = IEATools::iea_cols$country,
+                                       few_colname = "Continent")),
+      pattern = quote(map(Continents))),
+
+    # Aggregate to world
+    targets::tar_target_raw(
+      "PSUT_Re_world",
+      substitute(Recca::region_aggregates(PSUT_Re_continents %>%
+                                            dplyr::left_join(AggregationMaps$world_aggregation %>%
+                                                               matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
+                                                                                                few_colname = "World"),
+                                                             by = IEATools::iea_cols$country),
+                                          many_colname = IEATools::iea_cols$country, # Which actually holds continents
+                                          few_colname = "World"))),
+
+    # Bind all region aggregations together
+    targets::tar_target_raw(
+      "PSUT_Re_all",
+      substitute(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world)))
+
+
+
+
 
 
   )
