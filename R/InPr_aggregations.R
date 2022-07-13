@@ -71,3 +71,15 @@ despecify_aggregations <- function(.psut_data,
       "{S_units}" := S_units_aggregated_colname
     )
 }
+
+
+product_group_aggregations <- function(.psut_data,
+                                       countries = Countries,
+                                       years = Years,
+                                       aggregation_map) {
+  # .psut_data %>%
+  #   PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
+
+}
+
+

@@ -115,11 +115,34 @@ get_pipeline <- function(countries = "all",
     ############################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_InPr_desp",
+      "PSUT_Re_all_InPr_despec",
       substitute(PSUT_Re_all %>%
                    despecify_aggregations(countries = Countries, years = Years)),
       pattern = quote(map(Countries))
+    ),
+
+    ########################
+    # Grouped aggregations #
+    ########################
+
+    targets::tar_target_raw(
+      "PSUT_Re_all_In_group",
+      substitute(PSUT_Re_all_InPr_despec %>%
+                   product_group_aggregations(countries = Countries,
+                                              years = Years,
+                                              aggregation_map =  c(AggregationMaps[["ef_product_aggregation"]],
+                                                                   AggregationMaps[["eu_product_aggregation"]]))),
+      pattern = quote(map(Countries))
     )
+
+
+    # PSUT_Re_all_Pr_group
+
+
+    # PSUT_Re_all_In_group_Pr_group
+
+
+    # PSUT_Re_all_InPr_all
 
 
 
