@@ -126,7 +126,7 @@ get_pipeline <- function(countries = "all",
     ########################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_In_group",
+      "PSUT_Re_all_Pr_group",
       substitute(PSUT_Re_all_InPr_despec %>%
                    product_group_aggregations(countries = Countries,
                                               years = Years,
