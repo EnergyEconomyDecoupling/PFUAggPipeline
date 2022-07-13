@@ -115,8 +115,10 @@ get_pipeline <- function(countries = "all",
     ############################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_In_despecified_Pr_despecified",
-      substitute()
+      "PSUT_Re_all_InPr_desp",
+      substitute(PSUT_Re_all %>%
+                   despecify_aggregations(countries = Countries, years = Years)),
+      pattern = quote(map(Countries))
     )
 
 
