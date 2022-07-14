@@ -168,9 +168,9 @@ get_pipeline <- function(countries = "all",
     )
 
 
-    ############################################
-    # Grouped product and industryaggregations #
-    ############################################
+    #############################################
+    # Grouped product and industry aggregations #
+    #############################################
 
 
 
