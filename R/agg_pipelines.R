@@ -180,20 +180,21 @@ get_pipeline <- function(countries = "all",
                                         aggregation_map = c(ProductAggMap, IndustryAggMap),
                                         margin = c("Product", "Industry"))),
       pattern = quote(map(Countries))
+    ),
+
+
+    #########################################
+    # All product and industry aggregations #
+    #########################################
+
+    targets::tar_target_raw(
+      "PSUT_Re_all_PrIn_all",
+      substitute(stack_PrIn_aggregations(PSUT_Re_all = PSUT_Re_all,
+                                         PSUT_Re_all_Pr_despec_In_despec = PSUT_Re_all_Pr_despec_In_despec,
+                                         PSUT_Re_all_Pr_group = PSUT_Re_all_Pr_group,
+                                         PSUT_Re_all_In_group = PSUT_Re_all_In_group,
+                                         PSUT_Re_all_Pr_group_In_group = PSUT_Re_all_Pr_group_In_group))
     )
-
-
-    # PSUT_Re_all_InPr_all
-
-
-
-
-
-
-
-
-
-
 
   )
 

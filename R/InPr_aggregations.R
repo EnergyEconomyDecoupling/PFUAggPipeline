@@ -129,8 +129,57 @@ grouped_aggregations <- function(.psut_data,
 }
 
 
+#' Stack all product and industry aggregations
+#'
+#' All product and industry aggregations need to be present in the same data frame.
+#' This function stacks them (with `dplyr::bind_rows`)
+#' and adds columns to identify the levels of product and industry aggregation.
+#'
+#' @param PSUT_Re_all,PSUT_Re_all_Pr_despec_In_despec,PSUT_Re_all_Pr_group,PSUT_Re_all_In_group,PSUT_Re_all_Pr_group_In_group Data frames to be stacked.
+#' @param product_aggregation,industry_aggregation,specified,despecified,grouped See `PFUAggDatabase::aggregation_df_cols`.
+#'
+#' @return A stacked data frame containing new metadata columns for product and industry aggregations.
+#'
+#' @export
+stack_PrIn_aggregations <- function(PSUT_Re_all,
+                                    PSUT_Re_all_Pr_despec_In_despec,
+                                    PSUT_Re_all_Pr_group,
+                                    PSUT_Re_all_In_group,
+                                    PSUT_Re_all_Pr_group_In_group,
+                                    product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+                                    industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+                                    specified = PFUAggDatabase::aggregation_df_cols$specified,
+                                    despecified = PFUAggDatabase::aggregation_df_cols$despecified,
+                                    grouped = PFUAggDatabase::aggregation_df_cols$grouped) {
 
-
+  # Build a combined data frame.
+  dplyr::bind_rows(PSUT_Re_all %>%
+                     dplyr::mutate(
+                       "{product_aggregation}" := specified,
+                       "{industry_aggregation}" := specified
+                     ),
+                   PSUT_Re_all_Pr_despec_In_despec %>%
+                     dplyr::mutate(
+                       "{product_aggregation}" := despecified,
+                       "{industry_aggregation}" := despecified
+                     ),
+                   PSUT_Re_all_Pr_group %>%
+                     dplyr::mutate(
+                       "{product_aggregation}" := grouped,
+                       "{industry_aggregation}" := despecified
+                     ),
+                   PSUT_Re_all_In_group %>%
+                     dplyr::mutate(
+                       "{product_aggregation}" := despecified,
+                       "{industry_aggregation}" := grouped
+                     ),
+                   PSUT_Re_all_Pr_group_In_group %>%
+                     dplyr::mutate(
+                       "{product_aggregation}" := grouped,
+                       "{industry_aggregation}" := grouped
+                     )
+  )
+}
 
 
 #' Delete original and rename aggregated columns
