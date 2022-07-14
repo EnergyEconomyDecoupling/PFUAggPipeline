@@ -5,7 +5,8 @@
 #' @param .psut_data A data frame of PSUT matrices.
 #' @param countries The countries to be analyzed.
 #' @param years The years to be analyzed.
-#' @param R,U,V,Y,r_eiou,U_eiou,U_feed The names of columns in `.psut_data` containing matrices.
+#' @param R,U,V,Y,r_EIOU,U_EIOU,U_feed,S_units The names of input columns in `.psut_data`.
+#' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_EIOU_aggregated_colname,U_EIOU_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname The names of output aggregated columns.
 #' @param aggregated_suffix The suffix for columns of aggregated matrices.
 #'                          Default is `Recca::aggregate_cols$aggregated_suffix`.
 #'
@@ -13,8 +14,8 @@
 #'
 #' @export
 despecify_aggregations <- function(.psut_data,
-                                   countries = Countries,
-                                   years = Years,
+                                   countries,
+                                   years,
                                    # Names of original matrices in .psut_data
                                    R = Recca::psut_cols$R,
                                    U = Recca::psut_cols$U,
@@ -74,8 +75,8 @@ despecify_aggregations <- function(.psut_data,
 
 
 product_group_aggregations <- function(.psut_data,
-                                       countries = Countries,
-                                       years = Years,
+                                       countries,
+                                       years,
                                        aggregation_map) {
   # .psut_data %>%
   #   PFUDatabase::filter_countries_years(countries = countries, years = years) %>%

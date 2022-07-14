@@ -6,8 +6,8 @@
 \usage{
 despecify_aggregations(
   .psut_data,
-  countries = Countries,
-  years = Years,
+  countries,
+  years,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -34,7 +34,9 @@ despecify_aggregations(
 
 \item{years}{The years to be analyzed.}
 
-\item{R, U, V, Y, r_eiou, U_eiou, U_feed}{The names of columns in \code{.psut_data} containing matrices.}
+\item{R, U, V, Y, r_EIOU, U_EIOU, U_feed, S_units}{The names of input columns in \code{.psut_data}.}
+
+\item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_EIOU_aggregated_colname, U_EIOU_aggregated_colname, U_feed_aggregated_colname, S_units_aggregated_colname}{The names of output aggregated columns.}
 
 \item{aggregated_suffix}{The suffix for columns of aggregated matrices.
 Default is \code{Recca::aggregate_cols$aggregated_suffix}.}
