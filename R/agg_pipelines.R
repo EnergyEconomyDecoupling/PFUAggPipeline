@@ -118,7 +118,10 @@ get_pipeline <- function(countries = "all",
       "PSUT_Re_all_Pr_despec_In_despec",
       substitute(PSUT_Re_all %>%
                    despecified_aggregations(countries = Countries, years = Years,
-                                            # We use arrow, from, and of notations
+                                            # We use arrow, from, and of notations.
+                                            # Restricting to only these notations makes the code faster.
+                                            # Also, need to wrap in a list to ensure the notations_list is
+                                            # correctly propagated to all rows in the PSUT_Re_all data frame.
                                             notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
       pattern = quote(map(Countries))
     ),
