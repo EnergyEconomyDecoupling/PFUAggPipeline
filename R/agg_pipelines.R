@@ -121,9 +121,9 @@ get_pipeline <- function(countries = "all",
       pattern = quote(map(Countries))
     ),
 
-    ########################
-    # Grouped aggregations #
-    ########################
+    ################################
+    # Grouped product aggregations #
+    ################################
 
     targets::tar_target_raw(
       "PSUT_Re_all_Pr_group",
@@ -134,6 +134,18 @@ get_pipeline <- function(countries = "all",
                                                                    AggregationMaps[["eu_product_aggregation"]]))),
       pattern = quote(map(Countries))
     )
+
+
+    #################################
+    # Grouped industry aggregations #
+    #################################
+
+
+
+    ############################################
+    # Grouped product and industryaggregations #
+    ############################################
+
 
 
     # PSUT_Re_all_Pr_group
