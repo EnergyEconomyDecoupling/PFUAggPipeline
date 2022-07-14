@@ -165,19 +165,22 @@ get_pipeline <- function(countries = "all",
                                         aggregation_map = IndustryAggMap,
                                         margin = "Industry")),
       pattern = quote(map(Countries))
-    )
+    ),
 
 
     #############################################
     # Grouped product and industry aggregations #
     #############################################
 
-
-
-    # PSUT_Re_all_Pr_group
-
-
-    # PSUT_Re_all_In_group_Pr_group
+    targets::tar_target_raw(
+      "PSUT_Re_all_Pr_group_In_group",
+      substitute(PSUT_Re_all_Pr_despec_In_despec %>%
+                   grouped_aggregations(countries = Countries,
+                                        years = Years,
+                                        aggregation_map = c(ProductAggMap, IndustryAggMap),
+                                        margin = c("Product", "Industry"))),
+      pattern = quote(map(Countries))
+    )
 
 
     # PSUT_Re_all_InPr_all

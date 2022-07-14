@@ -4,6 +4,7 @@ output: html_document
 ---
 
 
+* Now includes targets for product and industry aggregations.
 * Now creates targets for a vector of pins from the `PFUDatabase`.
 
 
