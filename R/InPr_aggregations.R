@@ -89,7 +89,7 @@ grouped_aggregations <- function(.psut_data,
                                  countries,
                                  years,
                                  aggregation_map,
-                                 margin = c(1, 2),
+                                 margin = list(c(1, 2)),
                                  pattern_type = "exact",
                                  # Names of original matrices in .psut_data
                                  R = Recca::psut_cols$R,

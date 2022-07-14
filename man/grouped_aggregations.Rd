@@ -9,7 +9,7 @@ grouped_aggregations(
   countries,
   years,
   aggregation_map,
-  margin = c(1, 2),
+  margin = list(c(1, 2)),
   pattern_type = "exact",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
