@@ -117,21 +117,30 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_Pr_despec_In_despec",
       substitute(PSUT_Re_all %>%
-                   despecify_aggregations(countries = Countries, years = Years)),
+                   despecified_aggregations(countries = Countries, years = Years,
+                                            # We use arrow, from, and of notations
+                                            notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
       pattern = quote(map(Countries))
     ),
+
 
     ################################
     # Grouped product aggregations #
     ################################
 
     targets::tar_target_raw(
+      "ProductAggMap",
+      substitute(c(AggregationMaps[["ef_product_aggregation"]],
+                   AggregationMaps[["eu_product_aggregation"]]))
+    ),
+
+    targets::tar_target_raw(
       "PSUT_Re_all_Pr_group",
       substitute(PSUT_Re_all_Pr_despec_In_despec %>%
-                   product_group_aggregations(countries = Countries,
-                                              years = Years,
-                                              aggregation_map =  c(AggregationMaps[["ef_product_aggregation"]],
-                                                                   AggregationMaps[["eu_product_aggregation"]]))),
+                   grouped_aggregations(countries = Countries,
+                                        years = Years,
+                                        aggregation_map =  ProductAggMap,
+                                        margin = "Product")),
       pattern = quote(map(Countries))
     )
 
