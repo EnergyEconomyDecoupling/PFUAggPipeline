@@ -14,13 +14,16 @@ stack_PrIn_aggregations(
   industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
   specified = PFUAggDatabase::aggregation_df_cols$specified,
   despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-  grouped = PFUAggDatabase::aggregation_df_cols$grouped
+  grouped = PFUAggDatabase::aggregation_df_cols$grouped,
+  ieamw = PFUDatabase::ieamw_cols$ieamw
 )
 }
 \arguments{
 \item{PSUT_Re_all, PSUT_Re_all_Pr_despec_In_despec, PSUT_Re_all_Pr_group, PSUT_Re_all_In_group, PSUT_Re_all_Pr_group_In_group}{Data frames to be stacked.}
 
 \item{product_aggregation, industry_aggregation, specified, despecified, grouped}{See \code{PFUAggDatabase::aggregation_df_cols}.}
+
+\item{ieamw}{See \code{PFUDatabase::ieamw_cols}.}
 }
 \value{
 A stacked data frame containing new metadata columns for product and industry aggregations.

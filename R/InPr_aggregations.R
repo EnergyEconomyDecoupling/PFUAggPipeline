@@ -137,6 +137,7 @@ grouped_aggregations <- function(.psut_data,
 #'
 #' @param PSUT_Re_all,PSUT_Re_all_Pr_despec_In_despec,PSUT_Re_all_Pr_group,PSUT_Re_all_In_group,PSUT_Re_all_Pr_group_In_group Data frames to be stacked.
 #' @param product_aggregation,industry_aggregation,specified,despecified,grouped See `PFUAggDatabase::aggregation_df_cols`.
+#' @param ieamw See `PFUDatabase::ieamw_cols`.
 #'
 #' @return A stacked data frame containing new metadata columns for product and industry aggregations.
 #'
@@ -150,7 +151,8 @@ stack_PrIn_aggregations <- function(PSUT_Re_all,
                                     industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
                                     specified = PFUAggDatabase::aggregation_df_cols$specified,
                                     despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-                                    grouped = PFUAggDatabase::aggregation_df_cols$grouped) {
+                                    grouped = PFUAggDatabase::aggregation_df_cols$grouped,
+                                    ieamw = PFUDatabase::ieamw_cols$ieamw) {
 
   # Build a combined data frame.
   dplyr::bind_rows(PSUT_Re_all %>%
@@ -178,7 +180,9 @@ stack_PrIn_aggregations <- function(PSUT_Re_all,
                        "{product_aggregation}" := grouped,
                        "{industry_aggregation}" := grouped
                      )
-  )
+  ) %>%
+    dplyr::relocate(.data[[product_aggregation]], .after = ieamw) %>%
+    dplyr::relocate(.data[[industry_aggregation]], .after = product_aggregation)
 }
 
 
