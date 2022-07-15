@@ -72,3 +72,14 @@ aggregation_file_cols <- list(many_colname = "Many",
                               few_colname = "Few")
 usethis::use_data(aggregation_file_cols, overwrite = TRUE)
 
+
+#
+# Aggregation data frame columns
+#
+
+aggregation_df_cols <- list(product_aggregation = "Product.Aggregation",
+                            industry_aggregation = "Industry.Aggregation",
+                            specified = "Specified",
+                            despecified = "Despecified",
+                            grouped = "Grouped")
+usethis::use_data(aggregation_df_cols, overwrite = TRUE)
