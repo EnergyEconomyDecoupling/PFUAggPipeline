@@ -183,9 +183,9 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    #########################################
-    # All product and industry aggregations #
-    #########################################
+    ###########################################
+    # Stack product and industry aggregations #
+    ###########################################
 
     targets::tar_target_raw(
       "PSUT_Re_all_PrIn_all",
@@ -197,6 +197,14 @@ get_pipeline <- function(countries = "all",
     )
 
   )
+
+
+  ##############################
+  # Calculate PFU aggregations #
+  ##############################
+
+
+
 
 
 
