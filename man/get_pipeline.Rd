@@ -7,7 +7,7 @@
 get_pipeline(
   countries = "all",
   years = "all",
-  psut_releases,
+  psut_release,
   aggregation_maps_path,
   pipeline_releases_folder,
   release = FALSE
@@ -20,7 +20,7 @@ Default is "all", meaning all available countries should be analyzed.}
 \item{years}{A numeric vector of years to be analyzed.
 Default is "all", meaning all available years should be analyzed.}
 
-\item{psut_releases}{The releases we'll use from \code{pipeline_releases_folder}.
+\item{psut_release}{The release we'll use from \code{pipeline_releases_folder}.
 See details.}
 
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
@@ -36,25 +36,4 @@ A list of \code{tar_target}s to be executed in a workflow.
 \description{
 This is a target factory whose arguments
 specify the details of a targets workflow to be constructed
-}
-\details{
-The \code{psut_releases} argument is assumed to be a named vector of strings where
-names are pin names in \code{pipeline_releases_folder}, and
-items are pin versions.
-An example \code{psut_releases} argument is:
-
-\verb{psut_releases = c(psut = "20220519T185450Z-55e04",}
-\verb{                  psut_iea = "20220519T185448Z-07a39",}
-\verb{                  psut_mw = "20220519T185235Z-771f8").}
-
-The "\emph{" character has meaning in the names of \code{psut_releases} items.
-All characters after the "}" are used when creating the target names for
-aggregations and aggregate efficiencies.
-Best \emph{not} to send more than one \code{psut_releases} item that
-lacks characters after the "_" character.
-
-Note, too, that names of \code{psut_releases} items will be converted to uppercase
-for target names.
-So be sure to make the names of \code{psut_releases} items unique
-if converted to uppercase.
 }

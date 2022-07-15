@@ -160,11 +160,6 @@ get_one_middle_pipeline <- function(pr,
       unname(pr)),
 
     # Pull in the PSUT data frame
-    # targets::tar_target_raw(
-    #   "PSUT",
-    #   quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
-    #           pins::pin_read("psut", version = PSUTRelease) %>%
-    #           filter_countries_and_years(countries = Countries, years = Years))),
     targets::tar_target_raw(
       psut_tar_str,
       substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
