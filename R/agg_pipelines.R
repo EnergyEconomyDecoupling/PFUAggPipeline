@@ -91,7 +91,8 @@ get_pipeline <- function(countries = "all",
                                        continents = Continents,
                                        many_colname = IEATools::iea_cols$country,
                                        few_colname = "Continent")),
-      pattern = quote(map(Continents))),
+      pattern = quote(map(Continents))
+    ),
 
     # Aggregate to world
     targets::tar_target_raw(
@@ -194,15 +195,44 @@ get_pipeline <- function(countries = "all",
                                          PSUT_Re_all_Pr_group = PSUT_Re_all_Pr_group,
                                          PSUT_Re_all_In_group = PSUT_Re_all_In_group,
                                          PSUT_Re_all_Pr_group_In_group = PSUT_Re_all_Pr_group_In_group))
+    ),
+
+
+
+
+    ##############################
+    # Calculate PFU aggregations #
+    ##############################
+
+    # Primary aggregates
+    targets::tar_target_raw(
+      "PSUT_Re_all_PrIn_all_Fp_all_St_p",
+      substitute(PSUT_Re_all_PrIn_all %>%
+                   calculate_primary_aggregates(countries = Countries,
+                                                years = Years,
+                                                p_industries = unlist(PIndustryPrefixes),
+                                                pattern_type = "leading")),
+      pattern = quote(map(Countries))
+    ),
+
+    # Net and gross final demand aggregates
+    targets::tar_target_raw(
+      "PSUT_Re_all_PrIn_all_Fp_all_St_pfd",
+      substitute(PSUT_Re_all_PrIn_all_Fp_all_St_p %>%
+                   calculate_finaldemand_aggregates(countries = Countries,
+                                                    years = Years,
+                                                    fd_sectors = unlist(FinalDemandSectors),
+                                                    pattern_type = "leading")),
+      pattern = quote(map(Countries))
     )
 
+
+
+
+
+
+
   )
-
-
-  ##############################
-  # Calculate PFU aggregations #
-  ##############################
-
 
 
 
