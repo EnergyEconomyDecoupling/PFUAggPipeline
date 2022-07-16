@@ -198,6 +198,13 @@ get_pipeline <- function(countries = "all",
     ),
 
 
+    ########################
+    # Footprint aggregates #
+    ########################
+
+
+
+
 
 
     ##############################
