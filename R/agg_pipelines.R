@@ -202,6 +202,15 @@ get_pipeline <- function(countries = "all",
     # Footprint aggregates #
     ########################
 
+    targets::tar_target_raw(
+      "PSUT_Re_all_PrIn_all_Fp_all",
+      substitute(PSUT_Re_all_PrIn_all %>%
+                   footprint_aggregations(countries = Countries,
+                                          years = Years,
+                                          p_industries = PIndustryPrefixes,
+                                          fd_sectors = FinalDemandSectors)),
+      pattern = quote(map(Countries))
+    ),
 
 
 
