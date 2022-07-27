@@ -707,14 +707,6 @@ create_fd_sectors_list <- function(fd_sectors, .sutdata) {
 }
 
 
-
-
-
-
-
-
-
-
 #' Calculate primary aggregates for PSUT data
 #'
 #' This function routes to `Recca::primary_aggregates`.
@@ -746,7 +738,6 @@ calculate_primary_aggregates <- function(.psut_data,
       .p_industries = NULL
     )
 }
-
 
 
 #' Calculate final demand aggregates for PSUT data
