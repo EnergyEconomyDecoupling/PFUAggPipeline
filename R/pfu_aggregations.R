@@ -707,6 +707,26 @@ create_fd_sectors_list <- function(fd_sectors, .sutdata) {
 }
 
 
+
+
+
+
+
+# Everything above this line can probably be deleted at a later date.
+# Best to comment first, just to make sure we're no longer using the
+# functions above.
+# ---MKH, 27 July 2022
+
+
+
+
+
+
+
+
+
+
+
 #' Calculate primary aggregates for PSUT data
 #'
 #' This function routes to `Recca::primary_aggregates`.
@@ -729,14 +749,8 @@ calculate_primary_aggregates <- function(.psut_data,
 
   .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
-    dplyr::mutate(
-      .p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = ".p_industries",
-                              pattern_type = pattern_type) %>%
-    dplyr::mutate(
-      .p_industries = NULL
-    )
+    Recca::primary_aggregates(p_industries = p_industries,
+                              pattern_type = pattern_type)
 }
 
 
@@ -762,14 +776,8 @@ calculate_finaldemand_aggregates <- function(.psut_data,
 
   .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
-    dplyr::mutate(
-      .fd_sectors = rep(list(fd_sectors), times = nrow(.))
-    ) %>%
-    Recca::finaldemand_aggregates(fd_sectors = ".fd_sectors",
-                              pattern_type = pattern_type) %>%
-    dplyr::mutate(
-      .fd_sectors = NULL
-    )
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors,
+                                  pattern_type = pattern_type)
 }
 
 

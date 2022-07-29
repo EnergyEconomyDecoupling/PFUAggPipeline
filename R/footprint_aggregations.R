@@ -9,14 +9,13 @@
 #' @param fd_sectors
 #'
 #' @return
-#' @export
 #'
-#' @examples
-footprint_aggregations <- function(.psut_data,
-                                   countries,
-                                   years,
-                                   p_industries,
-                                   fd_sectors) {
+#' @export
+calculate_footprint_aggregations <- function(.psut_data,
+                                             countries,
+                                             years,
+                                             p_industries,
+                                             fd_sectors) {
   .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
     Recca::footprint_aggregates(p_industries = p_industries,
