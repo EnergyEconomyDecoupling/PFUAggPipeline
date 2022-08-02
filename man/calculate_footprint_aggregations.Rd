@@ -13,8 +13,20 @@ calculate_footprint_aggregations(
 )
 }
 \arguments{
-\item{fd_sectors}{}
+\item{.psut_data}{A data frame of PSUT matrices. It should be wide by matrices.}
+
+\item{countries}{The countries to analyze.}
+
+\item{years}{The years to analyze.}
+
+\item{p_industries}{Industries that count for primary energy aggregates.}
+
+\item{fd_sectors}{Final demand sectors that count for final demand aggregates.}
+}
+\value{
+A data frame of footprint aggregates.
 }
 \description{
-This function uses \code{Recca::footprint_aggregates()} internally.
+This function uses \code{Recca::footprint_aggregates()} internally
+to calculate footprint aggregates.
 }

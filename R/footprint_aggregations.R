@@ -1,14 +1,15 @@
 #' Calculate footprint aggregates
 #'
-#' This function uses `Recca::footprint_aggregates()` internally.
+#' This function uses `Recca::footprint_aggregates()` internally
+#' to calculate footprint aggregates.
 #'
-#' @param .psut_data
-#' @param countries
-#' @param years
-#' @param p_industries
-#' @param fd_sectors
+#' @param .psut_data A data frame of PSUT matrices. It should be wide by matrices.
+#' @param countries The countries to analyze.
+#' @param years The years to analyze.
+#' @param p_industries Industries that count for primary energy aggregates.
+#' @param fd_sectors Final demand sectors that count for final demand aggregates.
 #'
-#' @return
+#' @return A data frame of footprint aggregates.
 #'
 #' @export
 calculate_footprint_aggregations <- function(.psut_data,
