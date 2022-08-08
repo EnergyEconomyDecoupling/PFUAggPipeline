@@ -208,7 +208,8 @@ get_pipeline <- function(countries = "all",
                    calculate_footprint_aggregations(countries = Countries,
                                                     years = Years,
                                                     p_industries = unlist(PIndustryPrefixes),
-                                                    fd_sectors = unlist(FinalDemandSectors))),
+                                                    fd_sectors = unlist(FinalDemandSectors),
+                                                    method = "SVD")),
       pattern = quote(map(Countries))
     ),
 

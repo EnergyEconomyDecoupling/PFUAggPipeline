@@ -9,7 +9,9 @@ calculate_footprint_aggregations(
   countries,
   years,
   p_industries,
-  fd_sectors
+  fd_sectors,
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps
 )
 }
 \arguments{
@@ -22,6 +24,11 @@ calculate_footprint_aggregations(
 \item{p_industries}{Industries that count for primary energy aggregates.}
 
 \item{fd_sectors}{Final demand sectors that count for final demand aggregates.}
+
+\item{method}{Tells how to invert matrices. See details.}
+
+\item{tol}{The tolerance for detecting linear dependencies in the columns of matrices to be inverted.
+Default is \code{.Machine$double.eps}.}
 }
 \value{
 A data frame of footprint aggregates.
@@ -29,4 +36,12 @@ A data frame of footprint aggregates.
 \description{
 This function uses \code{Recca::footprint_aggregates()} internally
 to calculate footprint aggregates.
+}
+\details{
+Footprint aggregations involve a matrix inversion step.
+The \code{method} argument specifies which method should be used for
+calculating the inverse.
+See \code{matsbyname::invert_byname()}.
+
+Both \code{tol} and \code{method} should be a single values and apply to all matrices being inverted.
 }
