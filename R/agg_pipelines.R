@@ -202,18 +202,47 @@ get_pipeline <- function(countries = "all",
     # Footprint aggregates #
     ########################
 
+
+    # For debugging purposes
     targets::tar_target_raw(
       "PSUT_Re_all_PrIn_all_Fp_all",
-      substitute(PSUT_Re_all_PrIn_all %>%
+      substitute(PSUT_Re_all %>%
                    calculate_footprint_aggregations(countries = Countries,
                                                     years = Years,
                                                     p_industries = unlist(PIndustryPrefixes),
                                                     fd_sectors = unlist(FinalDemandSectors),
                                                     method = "SVD")),
       pattern = quote(map(Countries))
-    ),
+    ) #,
 
 
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_PrIn_all_Fp_all",
+    #   substitute(PSUT_Re_all_PrIn_all %>%
+    #                calculate_footprint_aggregations(countries = Countries,
+    #                                                 years = Years,
+    #                                                 p_industries = unlist(PIndustryPrefixes),
+    #                                                 fd_sectors = unlist(FinalDemandSectors),
+    #                                                 method = "SVD")),
+    #   pattern = quote(map(Countries))
+    # ),
+
+
+    ######################
+    # Effects aggregates #
+    ######################
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_PrIn_all_Eff_all",
+    #   substitute(PSUT_Re_all_PrIn_all %>%
+    #                calculate_effects_aggregations(countries = Countries,
+    #                                               years = Years,
+    #                                               p_industries = unlist(PIndustryPrefixes),
+    #                                               fd_sectors = unlist(FinalDemandSectors),
+    #                                               method = "SVD")),
+    #   pattern = quote(map(Countries))
+    # ),
 
 
 
@@ -221,25 +250,25 @@ get_pipeline <- function(countries = "all",
     # Calculate PFU aggregations #
     ##############################
 
-    # Primary aggregates
-    targets::tar_target_raw(
-      "PSUT_Re_all_PrIn_all_Fp_all_St_p",
-      substitute(PSUT_Re_all_PrIn_all %>%
-                   calculate_primary_aggregates(countries = Countries,
-                                                years = Years,
-                                                p_industries = unlist(PIndustryPrefixes))),
-      pattern = quote(map(Countries))
-    ),
-
-    # Net and gross final demand aggregates
-    targets::tar_target_raw(
-      "PSUT_Re_all_PrIn_all_Fp_all_St_pfd",
-      substitute(PSUT_Re_all_PrIn_all_Fp_all_St_p %>%
-                   calculate_finaldemand_aggregates(countries = Countries,
-                                                    years = Years,
-                                                    fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(map(Countries))
-    )
+    # # Primary aggregates
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_PrIn_all_Fp_all_St_p",
+    #   substitute(PSUT_Re_all_PrIn_all %>%
+    #                calculate_primary_aggregates(countries = Countries,
+    #                                             years = Years,
+    #                                             p_industries = unlist(PIndustryPrefixes))),
+    #   pattern = quote(map(Countries))
+    # ),
+    #
+    # # Net and gross final demand aggregates
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_PrIn_all_Fp_all_St_pfd",
+    #   substitute(PSUT_Re_all_PrIn_all_Fp_all_St_p %>%
+    #                calculate_finaldemand_aggregates(countries = Countries,
+    #                                                 years = Years,
+    #                                                 fd_sectors = unlist(FinalDemandSectors))),
+    #   pattern = quote(map(Countries))
+    # )
 
 
 

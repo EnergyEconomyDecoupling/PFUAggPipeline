@@ -17,7 +17,7 @@ countries <- "USA"
 years <- 1971
 
 # Set the releases to be used for input.
-psut_release = "20220808T235331Z-9f898"
+psut_release = "20220808T235647Z-a7b44"
 
 # Should we do a release of the results?
 release <- FALSE
