@@ -145,7 +145,7 @@ get_pipeline <- function(countries = "all",
     ),
 
     targets::tar_target_raw(
-      "PSUT_Re_all_Pr_group",
+      "PSUT_Re_all_Gr_Pr",
       substitute(PSUT_Re_all_Pr_despec_In_despec %>%
                    grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
@@ -165,7 +165,7 @@ get_pipeline <- function(countries = "all",
     ),
 
     targets::tar_target_raw(
-      "PSUT_Re_all_In_group",
+      "PSUT_Re_all_Gr_In",
       substitute(PSUT_Re_all_Pr_despec_In_despec %>%
                    grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
@@ -180,7 +180,7 @@ get_pipeline <- function(countries = "all",
     #############################################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_Pr_group_In_group",
+      "PSUT_Re_all_Gr_PrIn",
       substitute(PSUT_Re_all_Pr_despec_In_despec %>%
                    grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
@@ -195,60 +195,52 @@ get_pipeline <- function(countries = "all",
     ###########################################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_PrIn_all",
+      "PSUT_Re_all_Gr_all",
       substitute(stack_PrIn_aggregations(PSUT_Re_all = PSUT_Re_all,
                                          PSUT_Re_all_Pr_despec_In_despec = PSUT_Re_all_Pr_despec_In_despec,
-                                         PSUT_Re_all_Pr_group = PSUT_Re_all_Pr_group,
-                                         PSUT_Re_all_In_group = PSUT_Re_all_In_group,
-                                         PSUT_Re_all_Pr_group_In_group = PSUT_Re_all_Pr_group_In_group))
+                                         PSUT_Re_all_Gr_Pr = PSUT_Re_all_Gr_Pr,
+                                         PSUT_Re_all_Gr_In = PSUT_Re_all_Gr_In,
+                                         PSUT_Re_all_Gr_PrIn = PSUT_Re_all_Gr_PrIn))
     ),
 
 
-    ########################
-    # Footprint aggregates #
-    ########################
+    ##########
+    # Chop Y #
+    ##########
 
-
-    # For debugging purposes
     targets::tar_target_raw(
-      "PSUT_Re_all_PrIn_all_Fp_all",
-      substitute(PSUT_Re_all_PrIn_all %>%
-                   calculate_footprint_aggregations(countries = CountriesContinentsWorld,
-                                                    years = Years,
-                                                    p_industries = unlist(PIndustryPrefixes),
-                                                    fd_sectors = unlist(FinalDemandSectors),
-                                                    method = "SVD")),
+      "PSUT_Re_all_Gr_all_Chop_Y",
+      substitute(PSUT_Re_all_Gr_all %>%
+                   chop_Y_eccs(countries = CountriesContinentsWorld,
+                               years = Years,
+                               method = "SVD")),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
+
+
+
+    ##########
+    # Chop R #
+    ##########
+
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_R",
+      substitute(PSUT_Re_all_Gr_all %>%
+                   chop_R_eccs(countries = CountriesContinentsWorld,
+                               years = Years,
+                               method = "SVD")),
       pattern = quote(map(CountriesContinentsWorld))
     ) #,
 
 
-
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_PrIn_all_Fp_all",
-    #   substitute(PSUT_Re_all_PrIn_all %>%
-    #                calculate_footprint_aggregations(countries = Countries,
-    #                                                 years = Years,
-    #                                                 p_industries = unlist(PIndustryPrefixes),
-    #                                                 fd_sectors = unlist(FinalDemandSectors),
-    #                                                 method = "SVD")),
-    #   pattern = quote(map(Countries))
-    # ),
-
-
     ######################
-    # Effects aggregates #
+    # Stack chopped ECCs #
     ######################
 
     # targets::tar_target_raw(
-    #   "PSUT_Re_all_PrIn_all_Eff_all",
-    #   substitute(PSUT_Re_all_PrIn_all %>%
-    #                calculate_effects_aggregations(countries = Countries,
-    #                                               years = Years,
-    #                                               p_industries = unlist(PIndustryPrefixes),
-    #                                               fd_sectors = unlist(FinalDemandSectors),
-    #                                               method = "SVD")),
-    #   pattern = quote(map(Countries))
-    # ),
+    #   ""
+    # )
+
 
 
 

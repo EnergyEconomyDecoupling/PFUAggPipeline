@@ -156,9 +156,9 @@ grouped_aggregations <- function(.psut_data,
 #' @export
 stack_PrIn_aggregations <- function(PSUT_Re_all,
                                     PSUT_Re_all_Pr_despec_In_despec,
-                                    PSUT_Re_all_Pr_group,
-                                    PSUT_Re_all_In_group,
-                                    PSUT_Re_all_Pr_group_In_group,
+                                    PSUT_Re_all_Gr_Pr,
+                                    PSUT_Re_all_Gr_In,
+                                    PSUT_Re_all_Gr_PrIn,
                                     product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
                                     industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
                                     specified = PFUAggDatabase::aggregation_df_cols$specified,
@@ -177,17 +177,17 @@ stack_PrIn_aggregations <- function(PSUT_Re_all,
                        "{product_aggregation}" := despecified,
                        "{industry_aggregation}" := despecified
                      ),
-                   PSUT_Re_all_Pr_group %>%
+                   PSUT_Re_all_Gr_Pr %>%
                      dplyr::mutate(
                        "{product_aggregation}" := grouped,
                        "{industry_aggregation}" := despecified
                      ),
-                   PSUT_Re_all_In_group %>%
+                   PSUT_Re_all_Gr_In %>%
                      dplyr::mutate(
                        "{product_aggregation}" := despecified,
                        "{industry_aggregation}" := grouped
                      ),
-                   PSUT_Re_all_Pr_group_In_group %>%
+                   PSUT_Re_all_Gr_PrIn %>%
                      dplyr::mutate(
                        "{product_aggregation}" := grouped,
                        "{industry_aggregation}" := grouped
