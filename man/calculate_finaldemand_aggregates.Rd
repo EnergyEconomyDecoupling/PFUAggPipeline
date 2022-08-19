@@ -28,5 +28,5 @@ Default is "leading".}
 A version of \code{.psut_data} with additional column for final demand aggregate data.
 }
 \description{
-This function routes to \code{Recca::finaldemand_aggregates}.
+This function routes to \code{Recca::finaldemand_aggregates()}.
 }
