@@ -58,6 +58,11 @@ get_pipeline <- function(countries = "all",
       substitute(AggregationMaps$world_aggregation$World)
     ),
 
+    targets::tar_target_raw(
+      "CountriesContinentsWorld",
+      substitute(c(Countries, Continents, "World"))
+    ),
+
     # Set the pin and release as targets
     targets::tar_target_raw(
       "PSUTRelease",
@@ -118,13 +123,14 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_Pr_despec_In_despec",
       substitute(PSUT_Re_all %>%
-                   despecified_aggregations(countries = Countries, years = Years,
+                   despecified_aggregations(countries = CountriesContinentsWorld,
+                                            years = Years,
                                             # We use arrow, from, and of notations.
                                             # Restricting to only these notations makes the code faster.
                                             # Also, need to wrap in a list to ensure the notations_list is
                                             # correctly propagated to all rows in the PSUT_Re_all data frame.
                                             notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
@@ -141,11 +147,11 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_Pr_group",
       substitute(PSUT_Re_all_Pr_despec_In_despec %>%
-                   grouped_aggregations(countries = Countries,
+                   grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = ProductAggMap,
                                         margin = "Product")),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
@@ -161,11 +167,11 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_In_group",
       substitute(PSUT_Re_all_Pr_despec_In_despec %>%
-                   grouped_aggregations(countries = Countries,
+                   grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = IndustryAggMap,
                                         margin = "Industry")),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
@@ -176,11 +182,11 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_Pr_group_In_group",
       substitute(PSUT_Re_all_Pr_despec_In_despec %>%
-                   grouped_aggregations(countries = Countries,
+                   grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = c(ProductAggMap, IndustryAggMap),
                                         margin = c("Product", "Industry"))),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
@@ -206,13 +212,13 @@ get_pipeline <- function(countries = "all",
     # For debugging purposes
     targets::tar_target_raw(
       "PSUT_Re_all_PrIn_all_Fp_all",
-      substitute(PSUT_Re_all %>%
-                   calculate_footprint_aggregations(countries = Countries,
+      substitute(PSUT_Re_all_PrIn_all %>%
+                   calculate_footprint_aggregations(countries = CountriesContinentsWorld,
                                                     years = Years,
                                                     p_industries = unlist(PIndustryPrefixes),
                                                     fd_sectors = unlist(FinalDemandSectors),
                                                     method = "SVD")),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ) #,
 
 

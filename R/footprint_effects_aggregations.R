@@ -29,8 +29,14 @@ calculate_footprint_aggregations <- function(.psut_data,
                                              fd_sectors,
                                              method = "SVD",
                                              tol = .Machine$double.eps) {
-  .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
+  filtered_data <- .psut_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
+  # Check for the case where we have no data for that country and year.
+  # In that event, we simply want to return the data frame.
+  if (nrow(filtered_data) == 0) {
+    return(filtered_data)
+  }
+  filtered_data %>%
     Recca::footprint_aggregates(p_industries = p_industries,
                                 fd_sectors = fd_sectors,
                                 pattern_type = "leading",

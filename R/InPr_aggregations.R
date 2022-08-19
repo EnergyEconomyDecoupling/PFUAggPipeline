@@ -40,8 +40,14 @@ despecified_aggregations <- function(.psut_data,
                                      # The suffix added to the name of the columns of aggregated matrices.
                                      aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
 
-  .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
+  filtered_data <- .psut_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
+  # Check for the case where we have no data for that country and year.
+  # In that event, we simply want to return the data frame.
+  if (nrow(filtered_data) == 0) {
+    return(filtered_data)
+  }
+  filtered_data %>%
     Recca::despecified_aggregates(notation = notation,
                                   R = R, U = U, V = V, Y = Y,
                                   r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed,
@@ -111,8 +117,14 @@ grouped_aggregations <- function(.psut_data,
                                  S_units_aggregated_colname = paste0(Recca::psut_cols$S_units, aggregated_suffix),
                                  # The suffix added to the name of the columns of aggregated matrices.
                                  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
-  .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
+  filtered_data <- .psut_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
+  # Check for the case where we have no data for that country and year.
+  # In that event, we simply want to return the data frame.
+  if (nrow(filtered_data) == 0) {
+    return(filtered_data)
+  }
+  filtered_data %>%
     Recca::grouped_aggregates(aggregation_map = aggregation_map, margin = margin, pattern_type = pattern_type,
                               R = R, U = U, V = V, Y = Y, r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units,
                               R_aggregated_colname = R_aggregated_colname,
