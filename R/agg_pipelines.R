@@ -230,16 +230,20 @@ get_pipeline <- function(countries = "all",
                                years = Years,
                                method = "SVD")),
       pattern = quote(map(CountriesContinentsWorld))
-    ) #,
+    ),
 
 
     ######################
     # Stack chopped ECCs #
     ######################
 
-    # targets::tar_target_raw(
-    #   ""
-    # )
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_all",
+      substitute(stack_chop_ECCs(PSUT_Re_all_Gr_all,
+                                 PSUT_Re_all_Gr_all_Chop_Y,
+                                 PSUT_Re_all_Gr_all_Chop_R)),
+      pattern = quote(map(CountriesContinentsWorld))
+    )
 
 
 
