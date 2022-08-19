@@ -147,7 +147,7 @@ grouped_aggregations <- function(.psut_data,
 #' This function stacks them (with `dplyr::bind_rows`)
 #' and adds columns to identify the levels of product and industry aggregation.
 #'
-#' @param PSUT_Re_all,PSUT_Re_all_Pr_despec_In_despec,PSUT_Re_all_Pr_group,PSUT_Re_all_In_group,PSUT_Re_all_Pr_group_In_group Data frames to be stacked.
+#' @param PSUT_Re_all,PSUT_Re_all_Ds_PrIn,PSUT_Re_all_Gr_Pr,PSUT_Re_all_Gr_In,PSUT_Re_all_Gr_PrIn Data frames to be stacked.
 #' @param product_aggregation,industry_aggregation,specified,despecified,grouped See `PFUAggDatabase::aggregation_df_cols`.
 #' @param ieamw See `PFUDatabase::ieamw_cols`.
 #'
@@ -155,7 +155,7 @@ grouped_aggregations <- function(.psut_data,
 #'
 #' @export
 stack_PrIn_aggregations <- function(PSUT_Re_all,
-                                    PSUT_Re_all_Pr_despec_In_despec,
+                                    PSUT_Re_all_Ds_PrIn,
                                     PSUT_Re_all_Gr_Pr,
                                     PSUT_Re_all_Gr_In,
                                     PSUT_Re_all_Gr_PrIn,
@@ -172,7 +172,7 @@ stack_PrIn_aggregations <- function(PSUT_Re_all,
                        "{product_aggregation}" := specified,
                        "{industry_aggregation}" := specified
                      ),
-                   PSUT_Re_all_Pr_despec_In_despec %>%
+                   PSUT_Re_all_Ds_PrIn %>%
                      dplyr::mutate(
                        "{product_aggregation}" := despecified,
                        "{industry_aggregation}" := despecified

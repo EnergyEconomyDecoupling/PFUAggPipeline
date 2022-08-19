@@ -121,7 +121,7 @@ get_pipeline <- function(countries = "all",
     ############################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_Pr_despec_In_despec",
+      "PSUT_Re_all_Ds_PrIn",
       substitute(PSUT_Re_all %>%
                    despecified_aggregations(countries = CountriesContinentsWorld,
                                             years = Years,
@@ -146,7 +146,7 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_Pr",
-      substitute(PSUT_Re_all_Pr_despec_In_despec %>%
+      substitute(PSUT_Re_all_Ds_PrIn %>%
                    grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = ProductAggMap,
@@ -166,7 +166,7 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_In",
-      substitute(PSUT_Re_all_Pr_despec_In_despec %>%
+      substitute(PSUT_Re_all_Ds_PrIn %>%
                    grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = IndustryAggMap,
@@ -181,7 +181,7 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_PrIn",
-      substitute(PSUT_Re_all_Pr_despec_In_despec %>%
+      substitute(PSUT_Re_all_Ds_PrIn %>%
                    grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = c(ProductAggMap, IndustryAggMap),
@@ -197,7 +197,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_all",
       substitute(stack_PrIn_aggregations(PSUT_Re_all = PSUT_Re_all,
-                                         PSUT_Re_all_Pr_despec_In_despec = PSUT_Re_all_Pr_despec_In_despec,
+                                         PSUT_Re_all_Ds_PrIn = PSUT_Re_all_Ds_PrIn,
                                          PSUT_Re_all_Gr_Pr = PSUT_Re_all_Gr_Pr,
                                          PSUT_Re_all_Gr_In = PSUT_Re_all_Gr_In,
                                          PSUT_Re_all_Gr_PrIn = PSUT_Re_all_Gr_PrIn))
