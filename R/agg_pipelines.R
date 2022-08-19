@@ -190,9 +190,9 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    ###########################################
-    # Stack product and industry aggregations #
-    ###########################################
+    ########################################
+    # Stack product and industry groupings #
+    ########################################
 
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_all",
@@ -204,29 +204,25 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    ##########
-    # Chop Y #
-    ##########
+    ################
+    # Chop R and Y #
+    ################
 
+    # Chop R
     targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_Y",
+      "PSUT_Re_all_Gr_all_Chop_R",
       substitute(PSUT_Re_all_Gr_all %>%
-                   chop_Y_eccs(countries = CountriesContinentsWorld,
+                   chop_R_eccs(countries = CountriesContinentsWorld,
                                years = Years,
                                method = "SVD")),
       pattern = quote(map(CountriesContinentsWorld))
     ),
 
-
-
-    ##########
-    # Chop R #
-    ##########
-
+    # Chop Y
     targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_R",
+      "PSUT_Re_all_Gr_all_Chop_Y",
       substitute(PSUT_Re_all_Gr_all %>%
-                   chop_R_eccs(countries = CountriesContinentsWorld,
+                   chop_Y_eccs(countries = CountriesContinentsWorld,
                                years = Years,
                                method = "SVD")),
       pattern = quote(map(CountriesContinentsWorld))
@@ -243,41 +239,32 @@ get_pipeline <- function(countries = "all",
                                  PSUT_Re_all_Gr_all_Chop_Y,
                                  PSUT_Re_all_Gr_all_Chop_R)),
       pattern = quote(map(CountriesContinentsWorld))
-    )
-
-
+    ),
 
 
     ##############################
     # Calculate PFU aggregations #
     ##############################
 
-    # # Primary aggregates
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_PrIn_all_Fp_all_St_p",
-    #   substitute(PSUT_Re_all_PrIn_all %>%
-    #                calculate_primary_aggregates(countries = Countries,
-    #                                             years = Years,
-    #                                             p_industries = unlist(PIndustryPrefixes))),
-    #   pattern = quote(map(Countries))
-    # ),
-    #
-    # # Net and gross final demand aggregates
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_PrIn_all_Fp_all_St_pfd",
-    #   substitute(PSUT_Re_all_PrIn_all_Fp_all_St_p %>%
-    #                calculate_finaldemand_aggregates(countries = Countries,
-    #                                                 years = Years,
-    #                                                 fd_sectors = unlist(FinalDemandSectors))),
-    #   pattern = quote(map(Countries))
-    # )
+    # Primary aggregates
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_all_St_p",
+      substitute(PSUT_Re_all_Gr_all_Chop_all %>%
+                   calculate_primary_aggregates(countries = CountriesContinentsWorld,
+                                                years = Years,
+                                                p_industries = unlist(PIndustryPrefixes))),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
 
-
-
-
-
-
-
+    # Net and gross final demand aggregates
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_all_St_pfd",
+      substitute(PSUT_Re_all_Gr_all_Chop_all_St_p %>%
+                   calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
+                                                    years = Years,
+                                                    fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(map(CountriesContinentsWorld))
+    )
   )
 
 
