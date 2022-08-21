@@ -264,42 +264,27 @@ get_pipeline <- function(countries = "all",
                                                     years = Years,
                                                     fd_sectors = unlist(FinalDemandSectors))),
       pattern = quote(map(CountriesContinentsWorld))
+    ),
+
+
+    ####################
+    # PFD efficiencies #
+    ####################
+
+    targets::tar_target_raw(
+      "ETA_pfd",
+      substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
+                   calculate_pfd_efficiencies(countries = CountriesContinentsWorld,
+                                              years = Years)),
+      pattern = quote(map(CountriesContinentsWorld))
     )
+
   )
 
 
 
 
 
-  # # Names for targets common to many parts of the pipeline.
-  # aggregation_maps_tar_str <- "AggregationMaps"
-  # continents_tar_str <- "Continents"
-  #
-  # # Create the initial targets
-  # initial_targets <- init_targets(countries = countries,
-  #                                 years = years,
-  #                                 aggregation_maps_path = aggregation_maps_path,
-  #                                 pipeline_releases_folder = pipeline_releases_folder,
-  #                                 release = release,
-  #                                 aggregation_maps_tar_str = aggregation_maps_tar_str,
-  #                                 continents_tar_str = continents_tar_str)
-  #
-  # # get_one_middle_pipeline() returns both a list of targets and
-  # # a list of cache dependencies.
-  # # Create empty lists to gather those items.
-  # middle_targets <- list()
-  # # Loop over all the items in psut_releases.
-  # for (i_pr in 1:length(psut_releases)) {
-  #   # Preserve name of i_pr'th psut_release.
-  #   pr <- psut_releases[i_pr]
-  #   these_mid_targs_and_deps <- get_one_middle_pipeline(pr = pr,
-  #                                                       aggregation_maps_tar_str = aggregation_maps_tar_str,
-  #                                                       continents_tar_str = continents_tar_str)
-  #   middle_targets <- c(middle_targets, these_mid_targs_and_deps)
-  # }
-  #
-  # # Return all targets as a single list
-  # c(initial_targets, middle_targets)
 }
 
 

@@ -9,16 +9,29 @@ stack_chop_ECCs(
   PSUT_Re_all_Gr_all_Chop_Y,
   PSUT_Re_all_Gr_all_Chop_R,
   chop_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+  chop_var = PFUAggDatabase::aggregation_df_cols$chop_var,
   Y_matname = "Y",
   R_matname = "R",
-  chop_var = PFUAggDatabase::aggregation_df_cols$chop_var,
   product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
   none = "None"
 )
 }
 \arguments{
-\item{none}{}
+\item{PSUT_Re_all_Gr_all, PSUT_Re_all_Gr_all_Chop_Y, PSUT_Re_all_Gr_all_Chop_R}{Data frames to be stacked.}
+
+\item{chop_mat, chop_var}{Names of columns that tell the matrix that has been chopped (\code{chop_mat}) and
+the column that contains the the row or column name used for this chop.}
+
+\item{R_matname, Y_matname}{The names of \strong{R} and \strong{Y} matrices to be added to the \code{chop_var} column of the data frame.
+Defaults are "R" and "Y".}
+
+\item{product_sector}{The name of the data frame column that contains the variable that has been chopped.}
+
+\item{none}{The string for no chopping. Used with \code{PSUT_Re_all_Gr_all}.}
+}
+\value{
+A row-bound version of \code{PSUT_Re_all_Gr_all}, \code{PSUT_Re_all_Gr_all_Chop_Y}, and \code{PSUT_Re_all_Gr_all_Chop_R}.
 }
 \description{
-Stack chopped ECC data frames
+This function stacks chopped data frames with \code{dplyr::bind_rows()}.
 }

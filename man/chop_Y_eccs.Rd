@@ -9,7 +9,7 @@ chop_Y_eccs(
   countries,
   years,
   method = "SVD",
-  tol = .Machine$double.eps
+  tol_invert = .Machine$double.eps
 )
 }
 \arguments{
@@ -21,12 +21,12 @@ chop_Y_eccs(
 
 \item{method}{Tells how to invert matrices. Default is "SVD". See details.}
 
-\item{tol}{The tolerance for detecting linear dependencies in the columns of matrices to be inverted.
-Default is \code{.Machine$double.eps}.}
-
 \item{p_industries}{Industries that count for primary energy aggregates.}
 
 \item{fd_sectors}{Final demand sectors that count for final demand aggregates.}
+
+\item{tol}{The tolerance for detecting linear dependencies in the columns of matrices to be inverted.
+Default is \code{.Machine$double.eps}.}
 }
 \value{
 A data frame of chopped final demand matrix ECCs.

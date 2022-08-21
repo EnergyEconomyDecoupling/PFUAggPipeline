@@ -27,7 +27,7 @@ chop_Y_eccs <- function(.psut_data,
                         countries,
                         years,
                         method = "SVD",
-                        tol = .Machine$double.eps) {
+                        tol_invert = .Machine$double.eps) {
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
   # Check for the case where we have no data for that country and year.
@@ -40,7 +40,7 @@ chop_Y_eccs <- function(.psut_data,
                   pattern_type = "leading",
                   unnest = TRUE,
                   method = method,
-                  tol_invert = tol)
+                  tol_invert = tol_invert)
 }
 
 
@@ -86,33 +86,32 @@ chop_R_eccs <- function(.psut_data,
                   pattern_type = "leading",
                   unnest = TRUE,
                   method = method,
-                  tol_invert = tol)
+                  tol_invert = tol_invert)
 }
 
 
 #' Stack chopped ECC data frames
 #'
-#' @param PSUT_Re_all_Gr_all
-#' @param PSUT_Re_all_Gr_all_Chop_Y
-#' @param PSUT_Re_all_Gr_all_Chop_R
-#' @param chop_mat
-#' @param Y
-#' @param R
-#' @param chop_var
-#' @param product_sector
-#' @param none
+#' This function stacks chopped data frames with `dplyr::bind_rows()`.
 #'
-#' @return
+#' @param PSUT_Re_all_Gr_all,PSUT_Re_all_Gr_all_Chop_Y,PSUT_Re_all_Gr_all_Chop_R Data frames to be stacked.
+#' @param chop_mat,chop_var Names of columns that tell the matrix that has been chopped (`chop_mat`) and
+#'                          the column that contains the the row or column name used for this chop.
+#' @param R_matname,Y_matname The names of **R** and **Y** matrices to be added to the `chop_var` column of the data frame.
+#'                            Defaults are "R" and "Y".
+#' @param product_sector The name of the data frame column that contains the variable that has been chopped.
+#' @param none The string for no chopping. Used with `PSUT_Re_all_Gr_all`.
+#'
+#' @return A row-bound version of `PSUT_Re_all_Gr_all`, `PSUT_Re_all_Gr_all_Chop_Y`, and `PSUT_Re_all_Gr_all_Chop_R`.
+#'
 #' @export
-#'
-#' @examples
 stack_chop_ECCs <- function(PSUT_Re_all_Gr_all,
                             PSUT_Re_all_Gr_all_Chop_Y,
                             PSUT_Re_all_Gr_all_Chop_R,
                             chop_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+                            chop_var = PFUAggDatabase::aggregation_df_cols$chop_var,
                             Y_matname = "Y",
                             R_matname = "R",
-                            chop_var = PFUAggDatabase::aggregation_df_cols$chop_var,
                             product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
                             none = "None") {
 

@@ -1,3 +1,82 @@
+#' Calculate primary to final demand efficiency
+#'
+#' This function calculates primary to final demand efficiencies in a data frame of
+#' primary and final demand aggregates (`.pfd_data`).
+#' Columns of energy conversion chain matrices are removed.
+#'
+#' @param .pfd_data A data frame of primary and final demand aggregates.
+#' @param countries The countries for which primary aggregates are to be calculated.
+#' @param years The years for which primary aggregates are to be calculated.
+#' @param eta_pfd_net The name of the primary to net final demand efficiency column on output.
+#' @param eta_pfd_gross The name of the primary to gross final demand efficiency column on output.
+#' @param R,U,U_feed,U_eiou,r_eioul,V,Y,S_units Columns of matrices to be removed from .pdf_data.
+#'
+#' @return A data frame of primary-to-final-demand efficiencies, both net and gross.
+#'
+#' @export
+calculate_pfd_efficiencies <- function(.agg_pfd_data,
+                                       countries,
+                                       years,
+                                       eta_pfd_net = "eta_pfd.net",
+                                       eta_pfd_gross = "eta_pfd.gross",
+                                       EX_p = "EX.p",
+                                       EX_fd_net = "EX.fd_net",
+                                       EX_fd_gross = "EX.fd_gross",
+                                       R = "R",
+                                       U = "U",
+                                       U_feed = "U_feed",
+                                       U_eiou = "U_EIOU",
+                                       r_eiou = "r_EIOU",
+                                       V = "V",
+                                       Y = "Y",
+                                       S_units = "S_units") {
+
+  filtered_data <- .agg_pfd_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
+
+  if (nrow(filtered_data) == 0) {
+    return(.agg_pfd_data)
+  }
+  filtered_data %>%
+    dplyr::mutate(
+      "{R}" := NULL,
+      "{U}" := NULL,
+      "{U_feed}" := NULL,
+      "{U_eiou}" := NULL,
+      "{r_eiou}" := NULL,
+      "{V}" := NULL,
+      "{Y}" := NULL,
+      "{S_units}" := NULL
+    ) %>%
+    Recca::calc_eta_pfd()
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+# The functions below this point can probably be deleted after the efficiencies are working
+# They are old, and I'm doing the efficiencies differently now.
+# ---MKH, 21 Aug 2022
+#
+
+
+
 #' Calculate efficiencies from an aggregates data frame
 #'
 #' This function calculates efficiencies (etas) from the aggregates data frame.
