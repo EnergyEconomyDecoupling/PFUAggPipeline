@@ -35,7 +35,7 @@ calculate_pfd_efficiencies <- function(.agg_pfd_data,
     PFUDatabase::filter_countries_years(countries = countries, years = years)
 
   if (nrow(filtered_data) == 0) {
-    return(.agg_pfd_data)
+    return(filtered_data)
   }
   filtered_data %>%
     dplyr::mutate(

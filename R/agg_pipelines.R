@@ -237,8 +237,7 @@ get_pipeline <- function(countries = "all",
       "PSUT_Re_all_Gr_all_Chop_all",
       substitute(stack_chop_ECCs(PSUT_Re_all_Gr_all,
                                  PSUT_Re_all_Gr_all_Chop_Y,
-                                 PSUT_Re_all_Gr_all_Chop_R)),
-      pattern = quote(map(CountriesContinentsWorld))
+                                 PSUT_Re_all_Gr_all_Chop_R))
     ),
 
 
