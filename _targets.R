@@ -52,5 +52,6 @@ PFUAggDatabase::get_pipeline(countries = countries,
                              psut_release = psut_release,
                              aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
+                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
                              release = release)
 

@@ -84,6 +84,7 @@ calculate_pfu_efficiencies <- function(.eta_pfd_data,
     dplyr::mutate(
       "{eta_fu}" := .data[[eta_pu]] / .data[[eta_pf]]
     ) %>%
+    # Move it so the left-ro-right order is eta_pf, eta_fu, eta_pu
     dplyr::relocate(.data[[eta_fu]], .before = .data[[eta_pu]])
 }
 

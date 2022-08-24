@@ -11,6 +11,7 @@
 #'                     See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
+#' @param pipeline_caches_folder The path to a folder where releases of pipeline caches are stored.
 #' @param release Boolean that tells whether to do a release of the results.
 #'                Default is `FALSE`.
 #'
@@ -22,6 +23,7 @@ get_pipeline <- function(countries = "all",
                          psut_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
+                         pipeline_caches_folder,
                          release = FALSE) {
 
   list(
@@ -35,6 +37,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
+    targets::tar_target_raw("PipelineCachesFolder", pipeline_caches_folder),
     targets::tar_target_raw("Release", release),
 
     # Establish prefixes for primary industries
@@ -299,15 +302,26 @@ get_pipeline <- function(countries = "all",
                                               years = Years)),
       pattern = quote(map(CountriesContinentsWorld))
 
-    )
+    ),
 
 
+    ################
+    # Save results #
+    ################
+
+    # Pin the ETA_pfu data frame
+    targets::tar_target_raw("ReleaseETA_pfu", quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                                                                targ = ETA_pfu,
+                                                                                targ_name = "eta_pfu",
+                                                                                release = Release))),
+
+    # Zip the targets cache and store it in the pipeline_caches_folder
+    targets::tar_target_raw("StoreCache", quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
+                                                                         cache_folder = "_targets",
+                                                                         file_prefix = "pfu_agg_pipeline_cache_",
+                                                                         dependency = ETA_pfu,
+                                                                         release = Release)))
   )
-
-
-
-
-
 }
 
 
