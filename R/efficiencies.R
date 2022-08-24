@@ -17,42 +17,75 @@
 calculate_pfd_efficiencies <- function(.agg_pfd_data,
                                        countries,
                                        years,
-                                       eta_pfd_net = "eta_pfd.net",
-                                       eta_pfd_gross = "eta_pfd.gross",
-                                       EX_p = "EX.p",
-                                       EX_fd_net = "EX.fd_net",
-                                       EX_fd_gross = "EX.fd_gross",
-                                       R = "R",
-                                       U = "U",
-                                       U_feed = "U_feed",
-                                       U_eiou = "U_EIOU",
-                                       r_eiou = "r_EIOU",
-                                       V = "V",
-                                       Y = "Y",
-                                       S_units = "S_units") {
+                                       EX_p = Recca::aggregate_cols$aggregate_primary,
+                                       EX_fd = Recca::aggregate_cols$aggregate_demand,
+                                       eta_pfd = "eta_pfd") {
 
   filtered_data <- .agg_pfd_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
-    dplyr::mutate(
-      "{R}" := NULL,
-      "{U}" := NULL,
-      "{U_feed}" := NULL,
-      "{U_eiou}" := NULL,
-      "{r_eiou}" := NULL,
-      "{V}" := NULL,
-      "{Y}" := NULL,
-      "{S_units}" := NULL
-    )
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
 
   if (nrow(filtered_data) == 0) {
-    return(filtered_data)
+    return(NULL)
   }
+
   filtered_data %>%
-    Recca::calc_eta_pfd()
+    dplyr::mutate(
+      "{eta_pfd}" := as.numeric(.data[[EX_fd]]) / as.numeric(.data[[EX_p]])
+    )
 }
 
 
+#' Pivot data frame to calculate PFU efficiencies
+#'
+#' This function pivots the data frame produced by `calculate_pfd_efficiencies()`
+#' to obtain primary-final, final-useful, and primary-useful efficiencies.
+#'
+#' @param .eta_pfd_data A data frame produced by `calculate_pfd_efficiencies()`.
+#'
+#' @return A data frame with ECC stage efficiencies.
+#'
+#' @export
+calculate_pfu_efficiencies <- function(.eta_pfd_data,
+                                       countries,
+                                       years,
+                                       ex_p = Recca::aggregate_cols$aggregate_primary,
+                                       ex_fd = Recca::aggregate_cols$aggregate_demand,
+                                       last_stage = Recca::psut_cols$last_stage,
+                                       eta_pf = Recca::efficiency_cols$eta_pf,
+                                       eta_pu = Recca::efficiency_cols$eta_pu,
+                                       eta_fu = Recca::efficiency_cols$eta_fu,
+                                       eta_pfd = Recca::efficiency_cols$eta_pfd,
+                                       final = "Final",
+                                       useful = "Useful"
 
+                                       ) {
+
+  filtered_data <- .eta_pfd_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
+
+  if (nrow(filtered_data) == 0) {
+    return(NULL)
+  }
+
+  filtered_data %>%
+    # Eliminate the aggregate values, because they aren't unique.
+    dplyr::mutate(
+      "{ex_p}" := NULL,
+      "{ex_fd}" := NULL
+    ) %>%
+    # Spread across stages
+    tidyr::pivot_wider(names_from = last_stage, values_from = eta_pfd) %>%
+    # Rename efficiency types
+    dplyr::rename(
+      "{eta_pf}" := final,
+      "{eta_pu}" := useful
+    ) %>%
+    # Calculate eta_fu where possible
+    dplyr::mutate(
+      "{eta_fu}" := .data[[eta_pu]] / .data[[eta_pf]]
+    ) %>%
+    dplyr::relocate(.data[[eta_fu]], .before = .data[[eta_pu]])
+}
 
 
 

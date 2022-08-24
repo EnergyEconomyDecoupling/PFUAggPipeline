@@ -271,12 +271,36 @@ get_pipeline <- function(countries = "all",
     ####################
 
     targets::tar_target_raw(
-      "ETA_pfd",
+      "ETA_prep",
       substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
+                   add_grossnet_column(countries = CountriesContinentsWorld,
+                                       years = Years)),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
+
+
+    targets::tar_target_raw(
+      "ETA_pfd",
+      substitute(ETA_prep %>%
                    calculate_pfd_efficiencies(countries = CountriesContinentsWorld,
                                               years = Years)),
       pattern = quote(map(CountriesContinentsWorld))
+    ),
+
+
+    ####################
+    # PFU efficiencies #
+    ####################
+
+    targets::tar_target_raw(
+      "ETA_pfu",
+      substitute(ETA_pfd %>%
+                   calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
+                                              years = Years)),
+      pattern = quote(map(CountriesContinentsWorld))
+
     )
+
 
   )
 
