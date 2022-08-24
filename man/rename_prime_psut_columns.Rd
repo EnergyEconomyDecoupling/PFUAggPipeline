@@ -28,5 +28,8 @@ Default is "_prime".}
 A version of \code{.psut_data} with original PSUT columns deleted and suffixed columns renamed to original names.
 }
 \description{
-Deletes the original (un-prime) columns and renames the prime columns to those names
+Deletes the original (un-prime) columns and renames the prime columns to those names.
+}
+\details{
+This is an internal helper function and not intended for broader use.
 }

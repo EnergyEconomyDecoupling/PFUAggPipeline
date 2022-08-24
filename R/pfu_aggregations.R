@@ -39,7 +39,7 @@ calculate_primary_aggregates <- function(.psut_data,
 #' @param .psut_data The data for which final demand aggregates are to be calculated.
 #' @param countries The countries for which final demand aggregates are to be calculated.
 #' @param years The years for which final demand aggregates are to be calculated.
-#' @param fd_industries A string vector of sectors that count as "final demand".
+#' @param fd_sectors A string vector of sectors that count as "final demand".
 #' @param pattern_type The type of matching to be used for final demand sectors names.
 #'                     Default is "leading".
 #'
@@ -75,8 +75,8 @@ calculate_finaldemand_aggregates <- function(.psut_data,
 #' @param .agg_data Input data containing gross and net final demand aggregate columns.
 #' @param countries The countries to work on.
 #' @param years The years to work on.
-#' @param grossnet The name of the column that identifies gross or net final demand aggregates.
-#'                 Default is `Recca::efficiency_cols$gross_net`.
+#' @param gross_net The name of the column that identifies gross or net final demand aggregates.
+#'                  Default is `Recca::efficiency_cols$gross_net`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Columns of matrices to be deleted.
 #' @param gross,net Strings inserted into the `grossnet` column. See `Recca::efficiency_cols`.
 #' @param ex_fd_gross,ex_fd_net,ex_fd Names for columns in `.agg_data` for gross and net final demand aggregations.
@@ -116,14 +116,6 @@ add_grossnet_column <- function(.agg_data,
 
   if (nrow(filtered_data) == 0) {
     return(NULL)
-    # out <- filtered_data %>%
-    #   dplyr::mutate(
-    #     "{ex_fd_gross}" := NULL,
-    #     "{ex_fd_net}" := NULL,
-    #     "{gross_net}" := character(),
-    #     "{ex_fd}" := double()
-    #   )
-    # return(out)
   }
 
   filtered_data %>%

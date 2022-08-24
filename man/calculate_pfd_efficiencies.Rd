@@ -8,23 +8,23 @@ calculate_pfd_efficiencies(
   .agg_pfd_data,
   countries,
   years,
-  EX_p = Recca::aggregate_cols$aggregate_primary,
-  EX_fd = Recca::aggregate_cols$aggregate_demand,
-  eta_pfd = "eta_pfd"
+  ex_p = Recca::aggregate_cols$aggregate_primary,
+  ex_fd = Recca::aggregate_cols$aggregate_demand,
+  eta_pfd = Recca::efficiency_cols$eta_pfd
 )
 }
 \arguments{
+\item{.agg_pfd_data}{A data frame of primary and final demand aggregates.}
+
 \item{countries}{The countries for which primary aggregates are to be calculated.}
 
 \item{years}{The years for which primary aggregates are to be calculated.}
 
-\item{.pfd_data}{A data frame of primary and final demand aggregates.}
+\item{ex_p, ex_fd}{The names of columns containing primary and final demand (respectively) aggregates.
+See \code{Recca::aggregate_cols} for defaults.}
 
-\item{eta_pfd_net}{The name of the primary to net final demand efficiency column on output.}
-
-\item{eta_pfd_gross}{The name of the primary to gross final demand efficiency column on output.}
-
-\item{R, U, U_feed, U_eiou, r_eioul, V, Y, S_units}{Columns of matrices to be removed from .pdf_data.}
+\item{eta_pfd}{The name of the primary-to-final demand efficiency column.
+Default is \code{Recca::efficiency_cols$eta_pfd}.}
 }
 \value{
 A data frame of primary-to-final-demand efficiencies, both net and gross.

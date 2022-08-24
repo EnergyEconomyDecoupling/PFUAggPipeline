@@ -31,14 +31,14 @@ add_grossnet_column(
 
 \item{years}{The years to work on.}
 
+\item{gross_net}{The name of the column that identifies gross or net final demand aggregates.
+Default is \code{Recca::efficiency_cols$gross_net}.}
+
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Columns of matrices to be deleted.}
 
 \item{gross, net}{Strings inserted into the \code{grossnet} column. See \code{Recca::efficiency_cols}.}
 
 \item{ex_fd_gross, ex_fd_net, ex_fd}{Names for columns in \code{.agg_data} for gross and net final demand aggregations.}
-
-\item{grossnet}{The name of the column that identifies gross or net final demand aggregates.
-Default is \code{Recca::efficiency_cols$gross_net}.}
 }
 \value{
 A data frame with matrices removed and a new \code{GrossNet} column.

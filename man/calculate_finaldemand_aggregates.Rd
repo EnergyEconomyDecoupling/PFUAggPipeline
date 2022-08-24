@@ -19,10 +19,10 @@ calculate_finaldemand_aggregates(
 
 \item{years}{The years for which final demand aggregates are to be calculated.}
 
+\item{fd_sectors}{A string vector of sectors that count as "final demand".}
+
 \item{pattern_type}{The type of matching to be used for final demand sectors names.
 Default is "leading".}
-
-\item{fd_industries}{A string vector of sectors that count as "final demand".}
 }
 \value{
 A version of \code{.psut_data} with additional column for final demand aggregate data.
