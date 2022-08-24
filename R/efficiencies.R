@@ -32,12 +32,7 @@ calculate_pfd_efficiencies <- function(.agg_pfd_data,
                                        S_units = "S_units") {
 
   filtered_data <- .agg_pfd_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
-
-  if (nrow(filtered_data) == 0) {
-    return(filtered_data)
-  }
-  filtered_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
     dplyr::mutate(
       "{R}" := NULL,
       "{U}" := NULL,
@@ -47,9 +42,13 @@ calculate_pfd_efficiencies <- function(.agg_pfd_data,
       "{V}" := NULL,
       "{Y}" := NULL,
       "{S_units}" := NULL
-    ) %>%
-    Recca::calc_eta_pfd()
+    )
 
+  if (nrow(filtered_data) == 0) {
+    return(filtered_data)
+  }
+  filtered_data %>%
+    Recca::calc_eta_pfd()
 }
 
 
