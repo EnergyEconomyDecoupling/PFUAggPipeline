@@ -38,6 +38,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
     targets::tar_target_raw("PipelineCachesFolder", pipeline_caches_folder),
+    targets::tar_target_raw("ExcelOutputFolder", file.path(pipeline_releases_folder, "eta_pfu_excel")),
     targets::tar_target_raw("Release", release),
 
     # Establish prefixes for primary industries
@@ -311,17 +312,31 @@ get_pipeline <- function(countries = "all",
     ################
 
     # Pin the ETA_pfu data frame
-    targets::tar_target_raw("ReleaseETA_pfu", quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                                                                targ = ETA_pfu,
-                                                                                targ_name = "eta_pfu",
-                                                                                release = Release))),
+    targets::tar_target_raw(
+      "ReleaseETApfu",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = ETA_pfu,
+                                        targ_name = "eta_pfu",
+                                        release = Release))),
 
     # Zip the targets cache and store it in the pipeline_caches_folder
-    targets::tar_target_raw("StoreCache", quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
-                                                                         cache_folder = "_targets",
-                                                                         file_prefix = "pfu_agg_pipeline_cache_",
-                                                                         dependency = ETA_pfu,
-                                                                         release = Release)))
+    targets::tar_target_raw(
+      "StoreCache",
+      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
+                                     cache_folder = "_targets",
+                                     file_prefix = "pfu_agg_pipeline_cache_",
+                                     dependency = ETA_pfu,
+                                     release = Release))),
+
+    # Write a excel file of efficiencies
+    targets::tar_target_raw(
+      "WriteEfficiencyExcel",
+      format = "file",
+      quote(ETA_pfu %>%
+              write_eta_pfu_xlsx(# release = Release,
+                                 release = TRUE,
+                                 path = ExcelOutputFolder,
+                                 overwrite = FALSE)))
   )
 }
 

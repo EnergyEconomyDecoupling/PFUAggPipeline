@@ -97,3 +97,45 @@ calculate_pfu_efficiencies <- function(.eta_pfd_data,
     # Move it so the left-ro-right order is eta_pf, eta_fu, eta_pu
     dplyr::relocate(.data[[eta_fu]], .before = .data[[eta_pu]])
 }
+
+
+#' Write an Excel file of efficiency results
+#'
+#' Writes an Excel file of efficiency results.
+#'
+#' @param .eta_pfu A data frame of pf, fu, and pu efficiencies.
+#' @param release A boolean that tells whether to write the file. Default is `FALSE`.
+#' @param directory A folder for the output.
+#'                  A subfolder and file name are calculated automatically,
+#'                  following the pins naming convention.
+#' @param overwrite A boolean that tells whether to overwrite an existing file at `path`. Default is `FALSE`.
+#'
+#' @return If a file is written, the value of `path`.
+#'         If no file is written
+#'         (e.g., because `overwrite = FALSE` and the file already exists),
+#'         `character(0)`.
+#'
+#' @export
+write_eta_pfu_xlsx <- function(.eta_pfu,
+                               release = FALSE,
+                               path = NULL,
+                               overwrite = FALSE) {
+  if (!release) {
+    return(character(0))
+  }
+  # Calculate the path, following the pins model
+  # Subfolders have names like "20220824T182259Z-f4b77"
+  zulu_date_time <- parsedate::format_iso_8601(Sys.time())
+  hash_string <- 0
+
+
+  if (!overwrite & file.exists(path)) {
+    stop(paste("File", path, "already exists. Call write_eta_pfu_xlsx(overwrite = TRUE) to overwrite."))
+  }
+  folder <- dirname(path)
+  if (!file.exists(folder)) {
+    dir.create(folder)
+  }
+  writexl::write_xlsx(.eta_pfu, path = path)
+  return(path)
+}
