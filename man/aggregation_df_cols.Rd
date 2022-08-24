@@ -13,8 +13,8 @@ A string list with 8 entries.
 \item{despecified}{The value that indicates products or industries have been despecified and aggregated. "Despecified"}
 \item{grouped}{The value that indicates products or industries have been grouped. "Grouped"}
 \item{chopped_mat}{The value that indicates which matrix has been chopped. "Chopped.Mat"}
-\item{chop_var}{The value that indicates the chopping product or industry. "Chop.Var"}
-\item{product_sector}{The column containing values for chop_var. Default is \code{Recca::aggregate_cols$product_sector}.}
+\item{chopped_var}{The value that indicates the chopping product or industry. "Chop.Var"}
+\item{product_sector}{The column containing values for chopped_var. Default is \code{Recca::aggregate_cols$product_sector}.}
 }
 }
 \usage{

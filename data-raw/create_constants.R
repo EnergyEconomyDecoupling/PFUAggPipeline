@@ -83,6 +83,6 @@ aggregation_df_cols <- list(product_aggregation = "Product.Aggregation",
                             despecified = "Despecified",
                             grouped = "Grouped",
                             chopped_mat = "Chopped.Mat",
-                            chop_var = "Chop.Var",
+                            chopped_var = "Chopped.Var",
                             product_sector = Recca::aggregate_cols$product_sector)
 usethis::use_data(aggregation_df_cols, overwrite = TRUE)

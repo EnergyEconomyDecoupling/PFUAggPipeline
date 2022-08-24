@@ -76,7 +76,8 @@ get_pipeline <- function(countries = "all",
       "PSUT",
       substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
                    pins::pin_read("psut", version = PSUTRelease) %>%
-                   filter_countries_and_years(countries = Countries, years = Years))),
+                   # filter_countries_and_years(countries = Countries, years = Years))),
+                   PFUDatabase::filter_countries_years(countries = Countries, years = Years))),
 
 
     #########################

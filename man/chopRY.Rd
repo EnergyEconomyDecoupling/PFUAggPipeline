@@ -4,7 +4,7 @@
 \alias{chopRY}
 \alias{chop_R_eccs}
 \alias{chop_Y_eccs}
-\title{Chop the ECC for \strong{R} and \strong{Y} matrices}
+\title{Chop the \strong{R} and \strong{Y} matrices}
 \usage{
 chop_R_eccs(
   .psut_data,
@@ -38,7 +38,7 @@ Default is \code{.Machine$double.eps}.}
 A data frame of chopped \strong{R} or \strong{Y} matrix ECCs.
 }
 \description{
-These functions use \code{Recca::chop_R()} and \code{Recca::chop_R()} internally
+These functions use \code{Recca::chop_R()} and \code{Recca::chop_Y()} internally
 to calculate new ECCs for each column in the \strong{R} matrix
 and for each row and column for the \strong{Y} matrix.
 }

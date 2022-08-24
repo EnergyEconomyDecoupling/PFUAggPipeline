@@ -1,6 +1,6 @@
-#' Chop the ECC for **R** and **Y** matrices
+#' Chop the **R** and **Y** matrices
 #'
-#' These functions use `Recca::chop_R()` and `Recca::chop_R()` internally
+#' These functions use `Recca::chop_R()` and `Recca::chop_Y()` internally
 #' to calculate new ECCs for each column in the **R** matrix
 #' and for each row and column for the **Y** matrix.
 #'
@@ -75,9 +75,9 @@ chop_Y_eccs <- function(.psut_data,
 #' This function stacks chopped data frames with `dplyr::bind_rows()`.
 #'
 #' @param PSUT_Re_all_Gr_all,PSUT_Re_all_Gr_all_Chop_Y,PSUT_Re_all_Gr_all_Chop_R Data frames to be stacked.
-#' @param chop_mat,chop_var Names of columns that tell the matrix that has been chopped (`chop_mat`) and
+#' @param chopped_mat,chopped_var Names of columns that tell the matrix that has been chopped (`chop_mat`) and
 #'                          the column that contains the the row or column name used for this chop.
-#' @param R_matname,Y_matname The names of **R** and **Y** matrices to be added to the `chop_var` column of the data frame.
+#' @param R_matname,Y_matname The names of **R** and **Y** matrices to be added to the `chopped_var` column of the data frame.
 #'                            Defaults are taken from `Recca::psut_cols`.
 #' @param product_sector The name of the data frame column that contains the variable that has been chopped.
 #' @param none The string for no chopping. Used with `PSUT_Re_all_Gr_all`.
@@ -88,8 +88,8 @@ chop_Y_eccs <- function(.psut_data,
 stack_choped_ECCs <- function(PSUT_Re_all_Gr_all,
                               PSUT_Re_all_Gr_all_Chop_Y,
                               PSUT_Re_all_Gr_all_Chop_R,
-                              chop_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-                              chop_var = PFUAggDatabase::aggregation_df_cols$chop_var,
+                              chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+                              chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
                               Y_matname = Recca::psut_cols$Y,
                               R_matname = Recca::psut_cols$R,
                               product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
@@ -98,24 +98,24 @@ stack_choped_ECCs <- function(PSUT_Re_all_Gr_all,
   # Build a combined data frame.
   dplyr::bind_rows(PSUT_Re_all_Gr_all %>%
                      dplyr::mutate(
-                       "{chop_mat}" := none,
-                       "{chop_var}" := none
+                       "{chopped_mat}" := none,
+                       "{chopped_var}" := none
                      ),
                    PSUT_Re_all_Gr_all_Chop_R %>%
                      rename_prime_psut_columns() %>%
                      dplyr::mutate(
-                       "{chop_mat}" := R_matname
+                       "{chopped_mat}" := R_matname
                      ) %>%
                      dplyr::rename(
-                       "{chop_var}" := .data[[product_sector]]
+                       "{chopped_var}" := .data[[product_sector]]
                      ),
                    PSUT_Re_all_Gr_all_Chop_Y %>%
                      rename_prime_psut_columns() %>%
                      dplyr::mutate(
-                       "{chop_mat}" := Y_matname
+                       "{chopped_mat}" := Y_matname
                      ) %>%
                      dplyr::rename(
-                       "{chop_var}" := .data[[product_sector]]
+                       "{chopped_var}" := .data[[product_sector]]
                      )
   )
 }

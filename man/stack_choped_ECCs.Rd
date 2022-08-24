@@ -8,8 +8,8 @@ stack_choped_ECCs(
   PSUT_Re_all_Gr_all,
   PSUT_Re_all_Gr_all_Chop_Y,
   PSUT_Re_all_Gr_all_Chop_R,
-  chop_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-  chop_var = PFUAggDatabase::aggregation_df_cols$chop_var,
+  chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+  chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
   Y_matname = Recca::psut_cols$Y,
   R_matname = Recca::psut_cols$R,
   product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
@@ -19,10 +19,10 @@ stack_choped_ECCs(
 \arguments{
 \item{PSUT_Re_all_Gr_all, PSUT_Re_all_Gr_all_Chop_Y, PSUT_Re_all_Gr_all_Chop_R}{Data frames to be stacked.}
 
-\item{chop_mat, chop_var}{Names of columns that tell the matrix that has been chopped (\code{chop_mat}) and
+\item{chopped_mat, chopped_var}{Names of columns that tell the matrix that has been chopped (\code{chop_mat}) and
 the column that contains the the row or column name used for this chop.}
 
-\item{R_matname, Y_matname}{The names of \strong{R} and \strong{Y} matrices to be added to the \code{chop_var} column of the data frame.
+\item{R_matname, Y_matname}{The names of \strong{R} and \strong{Y} matrices to be added to the \code{chopped_var} column of the data frame.
 Defaults are taken from \code{Recca::psut_cols}.}
 
 \item{product_sector}{The name of the data frame column that contains the variable that has been chopped.}
