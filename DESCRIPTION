@@ -24,15 +24,13 @@ Imports:
     magrittr,
     matsbyname,
     PFUDatabase,
-    parsedate,
     pins,
     RCLabels,
     readxl,
     Recca, 
     rlang,
     targets,
-    tidyr, 
-    writexl
+    tidyr
 Suggests: 
     spelling,
     testthat (>= 3.0.0), 
