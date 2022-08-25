@@ -125,17 +125,23 @@ write_eta_pfu_xlsx <- function(.eta_pfu,
   }
   # Calculate the path, following the pins model
   # Subfolders have names like "20220824T182259Z-f4b77"
-  zulu_date_time <- parsedate::format_iso_8601(Sys.time())
-  hash_string <- 0
+  # iso_date_time <- parsedate::format_iso_8601(Sys.time())
+  # without_tz <- gsub(pattern = "\\+00:00", replacement = "", x = iso_date_time)
+  # without_dash <- gsub(pattern = "-", replacement = "", x = without_tz)
+  # zulu_date_time <- gsub(pattern = ":", replacement = "", x = without_dash)
+  #
+  # hash_string <- 0
+
 
 
   if (!overwrite & file.exists(path)) {
     stop(paste("File", path, "already exists. Call write_eta_pfu_xlsx(overwrite = TRUE) to overwrite."))
   }
-  folder <- dirname(path)
-  if (!file.exists(folder)) {
-    dir.create(folder)
-  }
-  writexl::write_xlsx(.eta_pfu, path = path)
+  # folder <- dirname(path)
+  # if (!file.exists(folder)) {
+  #   dir.create(folder)
+  # }
+  # writexl::write_xlsx(.eta_pfu, path = path)
+
   return(path)
 }

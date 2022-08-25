@@ -79,7 +79,7 @@ calculate_finaldemand_aggregates <- function(.psut_data,
 #'                  Default is `Recca::efficiency_cols$gross_net`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Columns of matrices to be deleted.
 #' @param gross,net Strings inserted into the `grossnet` column. See `Recca::efficiency_cols`.
-#' @param ex_fd_gross,ex_fd_net,ex_fd Names for columns in `.agg_data` for gross and net final demand aggregations.
+#' @param ex_p,ex_fd_gross,ex_fd_net,ex_fd Names for columns in `.agg_data` for primary and  gross and net final demand aggregations.
 #'
 #' @return A data frame with matrices removed and a new `GrossNet` column.
 #'
@@ -98,6 +98,7 @@ add_grossnet_column <- function(.agg_data,
                                 S_units = "S_units",
                                 gross = Recca::efficiency_cols$gross,
                                 net = Recca::efficiency_cols$net,
+                                ex_p = Recca::aggregate_cols$aggregate_primary,
                                 ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
                                 ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
                                 ex_fd = Recca::aggregate_cols$aggregate_demand) {
@@ -124,6 +125,10 @@ add_grossnet_column <- function(.agg_data,
       "{gross}" := ex_fd_gross,
       "{net}" := ex_fd_net
     ) %>%
-    tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd)
+    tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd) %>%
+    dplyr::mutate(
+      "{ex_p}" := as.numeric(.data[[ex_p]]),
+      "{ex_fd}" := as.numeric(.data[[ex_fd]])
+    )
 }
 

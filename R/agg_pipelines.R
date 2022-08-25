@@ -328,15 +328,14 @@ get_pipeline <- function(countries = "all",
                                      dependency = ETA_pfu,
                                      release = Release))),
 
-    # Write a excel file of efficiencies
+    # Write a csv file of efficiencies
     targets::tar_target_raw(
-      "WriteEfficiencyExcel",
-      format = "file",
-      quote(ETA_pfu %>%
-              write_eta_pfu_xlsx(# release = Release,
-                                 release = TRUE,
-                                 path = ExcelOutputFolder,
-                                 overwrite = FALSE)))
+      "ReleaseETApfuCSV",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = ETA_pfu,
+                                        targ_name = "eta_pfu_csv",
+                                        type = "csv",
+                                        release = Release)))
   )
 }
 

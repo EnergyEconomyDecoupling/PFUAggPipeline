@@ -19,6 +19,7 @@ add_grossnet_column(
   S_units = "S_units",
   gross = Recca::efficiency_cols$gross,
   net = Recca::efficiency_cols$net,
+  ex_p = Recca::aggregate_cols$aggregate_primary,
   ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
   ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
   ex_fd = Recca::aggregate_cols$aggregate_demand
@@ -38,7 +39,7 @@ Default is \code{Recca::efficiency_cols$gross_net}.}
 
 \item{gross, net}{Strings inserted into the \code{grossnet} column. See \code{Recca::efficiency_cols}.}
 
-\item{ex_fd_gross, ex_fd_net, ex_fd}{Names for columns in \code{.agg_data} for gross and net final demand aggregations.}
+\item{ex_p, ex_fd_gross, ex_fd_net, ex_fd}{Names for columns in \code{.agg_data} for primary and  gross and net final demand aggregations.}
 }
 \value{
 A data frame with matrices removed and a new \code{GrossNet} column.
