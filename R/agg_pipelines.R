@@ -11,6 +11,7 @@
 #'                     See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
+#' @param pipeline_caches_folder The path to a folder where releases of pipeline caches are stored.
 #' @param release Boolean that tells whether to do a release of the results.
 #'                Default is `FALSE`.
 #'
@@ -22,6 +23,7 @@ get_pipeline <- function(countries = "all",
                          psut_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
+                         pipeline_caches_folder,
                          release = FALSE) {
 
   list(
@@ -35,6 +37,8 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
+    targets::tar_target_raw("PipelineCachesFolder", pipeline_caches_folder),
+    targets::tar_target_raw("ExcelOutputFolder", file.path(pipeline_releases_folder, "eta_pfu_excel")),
     targets::tar_target_raw("Release", release),
 
     # Establish prefixes for primary industries
@@ -58,6 +62,11 @@ get_pipeline <- function(countries = "all",
       substitute(AggregationMaps$world_aggregation$World)
     ),
 
+    targets::tar_target_raw(
+      "CountriesContinentsWorld",
+      substitute(c(Countries, Continents, "World"))
+    ),
+
     # Set the pin and release as targets
     targets::tar_target_raw(
       "PSUTRelease",
@@ -68,7 +77,8 @@ get_pipeline <- function(countries = "all",
       "PSUT",
       substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
                    pins::pin_read("psut", version = PSUTRelease) %>%
-                   filter_countries_and_years(countries = Countries, years = Years))),
+                   # filter_countries_and_years(countries = Countries, years = Years))),
+                   PFUDatabase::filter_countries_years(countries = Countries, years = Years))),
 
 
     #########################
@@ -116,15 +126,16 @@ get_pipeline <- function(countries = "all",
     ############################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_Pr_despec_In_despec",
+      "PSUT_Re_all_Ds_PrIn",
       substitute(PSUT_Re_all %>%
-                   despecified_aggregations(countries = Countries, years = Years,
+                   despecified_aggregations(countries = CountriesContinentsWorld,
+                                            years = Years,
                                             # We use arrow, from, and of notations.
                                             # Restricting to only these notations makes the code faster.
                                             # Also, need to wrap in a list to ensure the notations_list is
                                             # correctly propagated to all rows in the PSUT_Re_all data frame.
                                             notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
@@ -139,13 +150,13 @@ get_pipeline <- function(countries = "all",
     ),
 
     targets::tar_target_raw(
-      "PSUT_Re_all_Pr_group",
-      substitute(PSUT_Re_all_Pr_despec_In_despec %>%
-                   grouped_aggregations(countries = Countries,
+      "PSUT_Re_all_Gr_Pr",
+      substitute(PSUT_Re_all_Ds_PrIn %>%
+                   grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = ProductAggMap,
                                         margin = "Product")),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
@@ -159,13 +170,13 @@ get_pipeline <- function(countries = "all",
     ),
 
     targets::tar_target_raw(
-      "PSUT_Re_all_In_group",
-      substitute(PSUT_Re_all_Pr_despec_In_despec %>%
-                   grouped_aggregations(countries = Countries,
+      "PSUT_Re_all_Gr_In",
+      substitute(PSUT_Re_all_Ds_PrIn %>%
+                   grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = IndustryAggMap,
                                         margin = "Industry")),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
@@ -174,37 +185,65 @@ get_pipeline <- function(countries = "all",
     #############################################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_Pr_group_In_group",
-      substitute(PSUT_Re_all_Pr_despec_In_despec %>%
-                   grouped_aggregations(countries = Countries,
+      "PSUT_Re_all_Gr_PrIn",
+      substitute(PSUT_Re_all_Ds_PrIn %>%
+                   grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = c(ProductAggMap, IndustryAggMap),
                                         margin = c("Product", "Industry"))),
-      pattern = quote(map(Countries))
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
 
-    ###########################################
-    # Stack product and industry aggregations #
-    ###########################################
+    ########################################
+    # Stack product and industry groupings #
+    ########################################
 
     targets::tar_target_raw(
-      "PSUT_Re_all_PrIn_all",
+      "PSUT_Re_all_Gr_all",
       substitute(stack_PrIn_aggregations(PSUT_Re_all = PSUT_Re_all,
-                                         PSUT_Re_all_Pr_despec_In_despec = PSUT_Re_all_Pr_despec_In_despec,
-                                         PSUT_Re_all_Pr_group = PSUT_Re_all_Pr_group,
-                                         PSUT_Re_all_In_group = PSUT_Re_all_In_group,
-                                         PSUT_Re_all_Pr_group_In_group = PSUT_Re_all_Pr_group_In_group))
+                                         PSUT_Re_all_Ds_PrIn = PSUT_Re_all_Ds_PrIn,
+                                         PSUT_Re_all_Gr_Pr = PSUT_Re_all_Gr_Pr,
+                                         PSUT_Re_all_Gr_In = PSUT_Re_all_Gr_In,
+                                         PSUT_Re_all_Gr_PrIn = PSUT_Re_all_Gr_PrIn))
     ),
 
 
-    ########################
-    # Footprint aggregates #
-    ########################
+    ################
+    # Chop R and Y #
+    ################
+
+    # Chop R
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_R",
+      substitute(PSUT_Re_all_Gr_all %>%
+                   chop_R_eccs(countries = CountriesContinentsWorld,
+                               years = Years,
+                               method = "SVD")),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
+
+    # Chop Y
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_Y",
+      substitute(PSUT_Re_all_Gr_all %>%
+                   chop_Y_eccs(countries = CountriesContinentsWorld,
+                               years = Years,
+                               method = "SVD")),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
 
 
+    ######################
+    # Stack chopped ECCs #
+    ######################
 
-
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_all",
+      substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all,
+                                 PSUT_Re_all_Gr_all_Chop_Y,
+                                 PSUT_Re_all_Gr_all_Chop_R))
+    ),
 
 
     ##############################
@@ -213,67 +252,91 @@ get_pipeline <- function(countries = "all",
 
     # Primary aggregates
     targets::tar_target_raw(
-      "PSUT_Re_all_PrIn_all_Fp_all_St_p",
-      substitute(PSUT_Re_all_PrIn_all %>%
-                   calculate_primary_aggregates(countries = Countries,
+      "PSUT_Re_all_Gr_all_Chop_all_St_p",
+      substitute(PSUT_Re_all_Gr_all_Chop_all %>%
+                   calculate_primary_aggregates(countries = CountriesContinentsWorld,
                                                 years = Years,
-                                                p_industries = unlist(PIndustryPrefixes),
-                                                pattern_type = "leading")),
-      pattern = quote(map(Countries))
+                                                p_industries = unlist(PIndustryPrefixes))),
+      pattern = quote(map(CountriesContinentsWorld))
     ),
 
     # Net and gross final demand aggregates
     targets::tar_target_raw(
-      "PSUT_Re_all_PrIn_all_Fp_all_St_pfd",
-      substitute(PSUT_Re_all_PrIn_all_Fp_all_St_p %>%
-                   calculate_finaldemand_aggregates(countries = Countries,
+      "PSUT_Re_all_Gr_all_Chop_all_St_pfd",
+      substitute(PSUT_Re_all_Gr_all_Chop_all_St_p %>%
+                   calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
                                                     years = Years,
-                                                    fd_sectors = unlist(FinalDemandSectors),
-                                                    pattern_type = "leading")),
-      pattern = quote(map(Countries))
-    )
+                                                    fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
 
 
+    ####################
+    # PFD efficiencies #
+    ####################
+
+    targets::tar_target_raw(
+      "ETA_prep",
+      substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
+                   add_grossnet_column(countries = CountriesContinentsWorld,
+                                       years = Years)),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
 
 
+    targets::tar_target_raw(
+      "ETA_pfd",
+      substitute(ETA_prep %>%
+                   calculate_pfd_efficiencies(countries = CountriesContinentsWorld,
+                                              years = Years)),
+      pattern = quote(map(CountriesContinentsWorld))
+    ),
 
 
+    ####################
+    # PFU efficiencies #
+    ####################
 
+    targets::tar_target_raw(
+      "ETA_pfu",
+      substitute(ETA_pfd %>%
+                   calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
+                                              years = Years)),
+      pattern = quote(map(CountriesContinentsWorld))
+
+    ),
+
+
+    ################
+    # Save results #
+    ################
+
+    # Pin the ETA_pfu data frame
+    targets::tar_target_raw(
+      "ReleaseETApfu",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = ETA_pfu,
+                                        targ_name = "eta_pfu",
+                                        release = Release))),
+
+    # Zip the targets cache and store it in the pipeline_caches_folder
+    targets::tar_target_raw(
+      "StoreCache",
+      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
+                                     cache_folder = "_targets",
+                                     file_prefix = "pfu_agg_pipeline_cache_",
+                                     dependency = ETA_pfu,
+                                     release = Release))),
+
+    # Write a csv file of efficiencies
+    targets::tar_target_raw(
+      "ReleaseETApfuCSV",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = ETA_pfu,
+                                        targ_name = "eta_pfu_csv",
+                                        type = "csv",
+                                        release = Release)))
   )
-
-
-
-
-
-  # # Names for targets common to many parts of the pipeline.
-  # aggregation_maps_tar_str <- "AggregationMaps"
-  # continents_tar_str <- "Continents"
-  #
-  # # Create the initial targets
-  # initial_targets <- init_targets(countries = countries,
-  #                                 years = years,
-  #                                 aggregation_maps_path = aggregation_maps_path,
-  #                                 pipeline_releases_folder = pipeline_releases_folder,
-  #                                 release = release,
-  #                                 aggregation_maps_tar_str = aggregation_maps_tar_str,
-  #                                 continents_tar_str = continents_tar_str)
-  #
-  # # get_one_middle_pipeline() returns both a list of targets and
-  # # a list of cache dependencies.
-  # # Create empty lists to gather those items.
-  # middle_targets <- list()
-  # # Loop over all the items in psut_releases.
-  # for (i_pr in 1:length(psut_releases)) {
-  #   # Preserve name of i_pr'th psut_release.
-  #   pr <- psut_releases[i_pr]
-  #   these_mid_targs_and_deps <- get_one_middle_pipeline(pr = pr,
-  #                                                       aggregation_maps_tar_str = aggregation_maps_tar_str,
-  #                                                       continents_tar_str = continents_tar_str)
-  #   middle_targets <- c(middle_targets, these_mid_targs_and_deps)
-  # }
-  #
-  # # Return all targets as a single list
-  # c(initial_targets, middle_targets)
 }
 
 

@@ -40,8 +40,14 @@ despecified_aggregations <- function(.psut_data,
                                      # The suffix added to the name of the columns of aggregated matrices.
                                      aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
 
-  .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
+  filtered_data <- .psut_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
+  # Check for the case where we have no data for that country and year.
+  # In that event, we simply want to return the data frame.
+  if (nrow(filtered_data) == 0) {
+    return(filtered_data)
+  }
+  filtered_data %>%
     Recca::despecified_aggregates(notation = notation,
                                   R = R, U = U, V = V, Y = Y,
                                   r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed,
@@ -111,8 +117,14 @@ grouped_aggregations <- function(.psut_data,
                                  S_units_aggregated_colname = paste0(Recca::psut_cols$S_units, aggregated_suffix),
                                  # The suffix added to the name of the columns of aggregated matrices.
                                  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
-  .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
+  filtered_data <- .psut_data %>%
+    PFUDatabase::filter_countries_years(countries = countries, years = years)
+  # Check for the case where we have no data for that country and year.
+  # In that event, we simply want to return the data frame.
+  if (nrow(filtered_data) == 0) {
+    return(filtered_data)
+  }
+  filtered_data %>%
     Recca::grouped_aggregates(aggregation_map = aggregation_map, margin = margin, pattern_type = pattern_type,
                               R = R, U = U, V = V, Y = Y, r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units,
                               R_aggregated_colname = R_aggregated_colname,
@@ -135,7 +147,7 @@ grouped_aggregations <- function(.psut_data,
 #' This function stacks them (with `dplyr::bind_rows`)
 #' and adds columns to identify the levels of product and industry aggregation.
 #'
-#' @param PSUT_Re_all,PSUT_Re_all_Pr_despec_In_despec,PSUT_Re_all_Pr_group,PSUT_Re_all_In_group,PSUT_Re_all_Pr_group_In_group Data frames to be stacked.
+#' @param PSUT_Re_all,PSUT_Re_all_Ds_PrIn,PSUT_Re_all_Gr_Pr,PSUT_Re_all_Gr_In,PSUT_Re_all_Gr_PrIn Data frames to be stacked.
 #' @param product_aggregation,industry_aggregation,specified,despecified,grouped See `PFUAggDatabase::aggregation_df_cols`.
 #' @param ieamw See `PFUDatabase::ieamw_cols`.
 #'
@@ -143,10 +155,10 @@ grouped_aggregations <- function(.psut_data,
 #'
 #' @export
 stack_PrIn_aggregations <- function(PSUT_Re_all,
-                                    PSUT_Re_all_Pr_despec_In_despec,
-                                    PSUT_Re_all_Pr_group,
-                                    PSUT_Re_all_In_group,
-                                    PSUT_Re_all_Pr_group_In_group,
+                                    PSUT_Re_all_Ds_PrIn,
+                                    PSUT_Re_all_Gr_Pr,
+                                    PSUT_Re_all_Gr_In,
+                                    PSUT_Re_all_Gr_PrIn,
                                     product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
                                     industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
                                     specified = PFUAggDatabase::aggregation_df_cols$specified,
@@ -160,22 +172,22 @@ stack_PrIn_aggregations <- function(PSUT_Re_all,
                        "{product_aggregation}" := specified,
                        "{industry_aggregation}" := specified
                      ),
-                   PSUT_Re_all_Pr_despec_In_despec %>%
+                   PSUT_Re_all_Ds_PrIn %>%
                      dplyr::mutate(
                        "{product_aggregation}" := despecified,
                        "{industry_aggregation}" := despecified
                      ),
-                   PSUT_Re_all_Pr_group %>%
+                   PSUT_Re_all_Gr_Pr %>%
                      dplyr::mutate(
                        "{product_aggregation}" := grouped,
                        "{industry_aggregation}" := despecified
                      ),
-                   PSUT_Re_all_In_group %>%
+                   PSUT_Re_all_Gr_In %>%
                      dplyr::mutate(
                        "{product_aggregation}" := despecified,
                        "{industry_aggregation}" := grouped
                      ),
-                   PSUT_Re_all_Pr_group_In_group %>%
+                   PSUT_Re_all_Gr_PrIn %>%
                      dplyr::mutate(
                        "{product_aggregation}" := grouped,
                        "{industry_aggregation}" := grouped

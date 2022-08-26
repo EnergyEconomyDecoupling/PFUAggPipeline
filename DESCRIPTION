@@ -19,22 +19,18 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports:
-    assertthat,
     dplyr,
     IEATools, 
     magrittr,
     matsbyname,
-    matsindf,
     PFUDatabase,
     pins,
     RCLabels,
     readxl,
     Recca, 
     rlang,
-    stringr,
     targets,
-    tidyr, 
-    writexl
+    tidyr
 Suggests: 
     spelling,
     testthat (>= 3.0.0), 

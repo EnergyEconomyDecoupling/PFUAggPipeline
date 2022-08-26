@@ -13,11 +13,11 @@ countries <- "USA"
 # countries <- "all" # Run all countries in the PSUT target.
 
 # Set the years to be analyzed.
-years <- 1960:2019
+# years <- 1960:2019
+years <- 1971
 
 # Set the releases to be used for input.
-psut_release = "20220712T175406Z-51274"
-
+psut_release = "20220808T235331Z-9f898"
 
 # Should we do a release of the results?
 release <- FALSE
@@ -52,5 +52,6 @@ PFUAggDatabase::get_pipeline(countries = countries,
                              psut_release = psut_release,
                              aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
+                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
                              release = release)
 

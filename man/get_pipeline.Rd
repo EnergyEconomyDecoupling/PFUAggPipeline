@@ -10,6 +10,7 @@ get_pipeline(
   psut_release,
   aggregation_maps_path,
   pipeline_releases_folder,
+  pipeline_caches_folder,
   release = FALSE
 )
 }
@@ -26,6 +27,8 @@ See details.}
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
 
 \item{pipeline_releases_folder}{The path to a folder where releases of output targets are pinned.}
+
+\item{pipeline_caches_folder}{The path to a folder where releases of pipeline caches are stored.}
 
 \item{release}{Boolean that tells whether to do a release of the results.
 Default is \code{FALSE}.}
