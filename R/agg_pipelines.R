@@ -213,36 +213,40 @@ get_pipeline <- function(countries = "all",
     # Chop R and Y #
     ################
 
-    # Chop R
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_R",
-      substitute(PSUT_Re_all_Gr_all %>%
-                   chop_R_eccs(countries = CountriesContinentsWorld,
-                               years = Years,
-                               method = "SVD")),
-      pattern = quote(map(CountriesContinentsWorld))
-    ),
-
-    # Chop Y
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_Y",
-      substitute(PSUT_Re_all_Gr_all %>%
-                   chop_Y_eccs(countries = CountriesContinentsWorld,
-                               years = Years,
-                               method = "SVD")),
-      pattern = quote(map(CountriesContinentsWorld))
-    ),
+    # # Chop R
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_all_Chop_R",
+    #   substitute(PSUT_Re_all_Gr_all %>%
+    #                chop_R_eccs(countries = CountriesContinentsWorld,
+    #                            years = Years,
+    #                            method = "SVD")),
+    #   pattern = quote(map(CountriesContinentsWorld))
+    # ),
+    #
+    # # Chop Y
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_all_Chop_Y",
+    #   substitute(PSUT_Re_all_Gr_all %>%
+    #                chop_Y_eccs(countries = CountriesContinentsWorld,
+    #                            years = Years,
+    #                            method = "SVD")),
+    #   pattern = quote(map(CountriesContinentsWorld))
+    # ),
 
 
     ######################
     # Stack chopped ECCs #
     ######################
 
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_all_Chop_all",
+    #   substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all,
+    #                                PSUT_Re_all_Gr_all_Chop_Y,
+    #                                PSUT_Re_all_Gr_all_Chop_R))
+    # ),
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_all_Chop_all",
-      substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all,
-                                 PSUT_Re_all_Gr_all_Chop_Y,
-                                 PSUT_Re_all_Gr_all_Chop_R))
+      substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all))
     ),
 
 

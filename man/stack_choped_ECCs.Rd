@@ -6,8 +6,8 @@
 \usage{
 stack_choped_ECCs(
   PSUT_Re_all_Gr_all,
-  PSUT_Re_all_Gr_all_Chop_Y,
-  PSUT_Re_all_Gr_all_Chop_R,
+  PSUT_Re_all_Gr_all_Chop_R = NULL,
+  PSUT_Re_all_Gr_all_Chop_Y = NULL,
   chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
   chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
   Y_matname = Recca::psut_cols$Y,

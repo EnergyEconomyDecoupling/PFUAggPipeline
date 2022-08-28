@@ -9,15 +9,15 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
-countries <- "USA"
-# countries <- "all" # Run all countries in the PSUT target.
+# countries <- "USA"
+countries <- "all" # Run all countries in the PSUT target.
 
 # Set the years to be analyzed.
-# years <- 1960:2019
-years <- 1971
+years <- 1960:2019
+# years <- 1971
 
 # Set the releases to be used for input.
-psut_release = "20220808T235331Z-9f898"
+psut_release = "20220828T174526Z-60a07"
 
 # Should we do a release of the results?
 release <- FALSE

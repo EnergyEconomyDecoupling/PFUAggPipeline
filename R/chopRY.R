@@ -86,8 +86,8 @@ chop_Y_eccs <- function(.psut_data,
 #'
 #' @export
 stack_choped_ECCs <- function(PSUT_Re_all_Gr_all,
-                              PSUT_Re_all_Gr_all_Chop_Y,
-                              PSUT_Re_all_Gr_all_Chop_R,
+                              PSUT_Re_all_Gr_all_Chop_R = NULL,
+                              PSUT_Re_all_Gr_all_Chop_Y = NULL,
                               chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
                               chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
                               Y_matname = Recca::psut_cols$Y,
@@ -96,28 +96,56 @@ stack_choped_ECCs <- function(PSUT_Re_all_Gr_all,
                               none = "None") {
 
   # Build a combined data frame.
-  dplyr::bind_rows(PSUT_Re_all_Gr_all %>%
-                     dplyr::mutate(
-                       "{chopped_mat}" := none,
-                       "{chopped_var}" := none
-                     ),
-                   PSUT_Re_all_Gr_all_Chop_R %>%
-                     rename_prime_psut_columns() %>%
-                     dplyr::mutate(
-                       "{chopped_mat}" := R_matname
-                     ) %>%
-                     dplyr::rename(
-                       "{chopped_var}" := .data[[product_sector]]
-                     ),
-                   PSUT_Re_all_Gr_all_Chop_Y %>%
-                     rename_prime_psut_columns() %>%
-                     dplyr::mutate(
-                       "{chopped_mat}" := Y_matname
-                     ) %>%
-                     dplyr::rename(
-                       "{chopped_var}" := .data[[product_sector]]
-                     )
-  )
+  out <- PSUT_Re_all_Gr_all %>%
+    dplyr::mutate(
+      "{chopped_mat}" := none,
+      "{chopped_var}" := none
+    )
+  if (!is.null(PSUT_Re_all_Gr_all_Chop_R)) {
+    out <- dplyr::bind_rows(out,
+                            PSUT_Re_all_Gr_all_Chop_R %>%
+                              rename_prime_psut_columns() %>%
+                              dplyr::mutate(
+                                "{chopped_mat}" := R_matname
+                              ) %>%
+                              dplyr::rename(
+                                "{chopped_var}" := .data[[product_sector]]
+                              ))
+  }
+  if (!is.null(PSUT_Re_all_Gr_all_Chop_Y)) {
+    out <- dplyr::bind_rows(out,
+                            PSUT_Re_all_Gr_all_Chop_Y %>%
+                              rename_prime_psut_columns() %>%
+                              dplyr::mutate(
+                                "{chopped_mat}" := Y_matname
+                              ) %>%
+                              dplyr::rename(
+                                "{chopped_var}" := .data[[product_sector]]
+                              ))
+  }
+  return(out)
+  # dplyr::bind_rows(PSUT_Re_all_Gr_all %>%
+  #                    dplyr::mutate(
+  #                      "{chopped_mat}" := none,
+  #                      "{chopped_var}" := none
+  #                    ),
+  #                  PSUT_Re_all_Gr_all_Chop_R %>%
+  #                    rename_prime_psut_columns() %>%
+  #                    dplyr::mutate(
+  #                      "{chopped_mat}" := R_matname
+  #                    ) %>%
+  #                    dplyr::rename(
+  #                      "{chopped_var}" := .data[[product_sector]]
+  #                    ),
+  #                  PSUT_Re_all_Gr_all_Chop_Y %>%
+  #                    rename_prime_psut_columns() %>%
+  #                    dplyr::mutate(
+  #                      "{chopped_mat}" := Y_matname
+  #                    ) %>%
+  #                    dplyr::rename(
+  #                      "{chopped_var}" := .data[[product_sector]]
+  #                    )
+  # )
 }
 
 
