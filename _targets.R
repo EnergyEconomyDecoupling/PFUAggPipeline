@@ -27,7 +27,7 @@ years <- 1960:2019
 psut_release = "20220828T174526Z-60a07"
 
 # Should we do a release of the results?
-release <- TRUE
+release <- FALSE
 
 
 
