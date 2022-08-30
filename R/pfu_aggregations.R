@@ -64,13 +64,10 @@ calculate_finaldemand_aggregates <- function(.psut_data,
 }
 
 
-#' Add a Gross.Net column and delete matrices
+#' Calculate primary, final, and useful aggregates
 #'
-#' Between calculating the gross and net final demand aggregates
-#' and calculating efficiencies,
-#' it is helpful to add a step wherein
-#' delete the matrices (lots of data!) and add a `GrossNet` column.
-#' This function performs those tasks.
+#' In addition to calculating primary, final, and useful aggregates,
+#' this function removes matrix columns and adds a `GrossNet` column to the data frame.
 #'
 #' @param .agg_data Input data containing gross and net final demand aggregate columns.
 #' @param countries The countries to work on.
@@ -79,29 +76,39 @@ calculate_finaldemand_aggregates <- function(.psut_data,
 #'                  Default is `Recca::efficiency_cols$gross_net`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Columns of matrices to be deleted.
 #' @param gross,net Strings inserted into the `grossnet` column. See `Recca::efficiency_cols`.
-#' @param ex_p,ex_fd_gross,ex_fd_net,ex_fd Names for columns in `.agg_data` for primary and  gross and net final demand aggregations.
+#' @param last_stage The string name of a column containing last stages of energy conversion chains.
+#'                   Default is `Recca::psut_cols$last_stage`.
+#' @param final,useful String names of last stages. Defaults from `IEATools::all_stages`.
+#' @param ex_p,ex_f,ex_u Names for columns in `.agg_data` for primary, final, and useful aggregations.
+#' @param ex_fd,ex_fd_gross,ex_fd_net Names for columns of total, gross, and net final demand aggregates.
+#'                                    Defaults from `Recca::aggregate_cols`.
 #'
 #' @return A data frame with matrices removed and a new `GrossNet` column.
 #'
 #' @export
-add_grossnet_column <- function(.agg_data,
-                                countries,
-                                years,
-                                gross_net = Recca::efficiency_cols$gross_net,
-                                R = "R",
-                                U = "U",
-                                U_feed = "U_feed",
-                                U_eiou = "U_EIOU",
-                                r_eiou = "r_EIOU",
-                                V = "V",
-                                Y = "Y",
-                                S_units = "S_units",
-                                gross = Recca::efficiency_cols$gross,
-                                net = Recca::efficiency_cols$net,
-                                ex_p = Recca::aggregate_cols$aggregate_primary,
-                                ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
-                                ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
-                                ex_fd = Recca::aggregate_cols$aggregate_demand) {
+calculate_pfu_aggregates <- function(.agg_data,
+                                     countries,
+                                     years,
+                                     gross_net = Recca::efficiency_cols$gross_net,
+                                     R = "R",
+                                     U = "U",
+                                     U_feed = "U_feed",
+                                     U_eiou = "U_EIOU",
+                                     r_eiou = "r_EIOU",
+                                     V = "V",
+                                     Y = "Y",
+                                     S_units = "S_units",
+                                     gross = Recca::efficiency_cols$gross,
+                                     net = Recca::efficiency_cols$net,
+                                     last_stage = Recca::psut_cols$last_stage,
+                                     final = IEATools::all_stages$final,
+                                     useful = IEATools::all_stages$useful,
+                                     ex_p = Recca::aggregate_cols$aggregate_primary,
+                                     ex_f = IEATools::aggregate_cols$aggregate_final,
+                                     ex_u = IEATools::aggregate_cols$aggregate_useful,
+                                     ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
+                                     ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
+                                     ex_fd = Recca::aggregate_cols$aggregate_demand) {
   filtered_data <- .agg_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
     dplyr::mutate(
@@ -129,6 +136,11 @@ add_grossnet_column <- function(.agg_data,
     dplyr::mutate(
       "{ex_p}" := as.numeric(.data[[ex_p]]),
       "{ex_fd}" := as.numeric(.data[[ex_fd]])
+    ) %>%
+    tidyr::pivot_wider(names_from = last_stage, values_from = ex_fd) %>%
+    dplyr::rename(
+      "{ex_f}" := .data[[final]],
+      "{ex_u}" := .data[[useful]]
     )
 }
 

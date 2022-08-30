@@ -4,6 +4,7 @@ output: html_document
 ---
 
 
+* Simplified calculation of primary, final, and useful aggregates.
 * Now parallelizing across all combinations of countries and years.
   Previously only parallelized across countries.
   Hopefully this fixes some memory issues.
