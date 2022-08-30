@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* Now parallelizing across all combinations of countries and years.
+  Previously only parallelized across countries.
+  Hopefully this fixes some memory issues.
 * Now includes targets for product and industry aggregations.
 * Now creates targets for a vector of pins from the `PFUDatabase`.
 
