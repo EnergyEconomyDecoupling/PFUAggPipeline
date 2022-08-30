@@ -7,7 +7,9 @@
 continent_aggregation(
   PSUT,
   continents,
+  years,
   continent = "Continent",
+  year = IEATools::iea_cols$year,
   many_colname = IEATools::iea_cols$country,
   few_colname = continent
 )
@@ -17,8 +19,13 @@ continent_aggregation(
 
 \item{continents}{The continents for which aggregation is desired.}
 
+\item{years}{The years for which aggregatino is desired.}
+
 \item{continent}{The name of the continent column in the \code{PSUT} data frame.
 Default is "Continent".}
+
+\item{year}{The name of the year column in the \code{PSUT} data frame.
+Default is \code{IEATools::iea_cols$year}.}
 
 \item{many_colname}{The name of the column of many things that will be aggregated into continents.
 Default is \code{IEATools::iea_cols$country}.}

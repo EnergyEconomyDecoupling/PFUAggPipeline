@@ -10,18 +10,18 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
-# countries <- "USA"
+countries <- "USA"
 # countries <- "all" # Run all countries in the PSUT target.
 # countries <- PFUDatabase::canonical_countries %>% as.character()
 # Countries with unique allocation data.
-countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
-               "GRC", "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX",
-               "NOR", "PRT", "RUS", "USA", "WABK", "WMBK", "ZAF")
+# countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
+#                "GRC", "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX",
+#                "NOR", "PRT", "RUS", "USA", "WABK", "WMBK", "ZAF")
 
 
 # Set the years to be analyzed.
-years <- 1960:2019
-# years <- 1971
+# years <- 1960:2019
+years <- 1971:1972
 
 # Set the releases to be used for input.
 psut_release = "20220828T174526Z-60a07"
