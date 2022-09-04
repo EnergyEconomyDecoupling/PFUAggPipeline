@@ -248,7 +248,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_all_Chop_all",
       substitute(stack_chopped_ECCs(PSUT_Re_all_Gr_all,
-                                    PSUT_Re_all_Gr_all_Chop_R))
+                                    PSUT_Re_all_Gr_all_Chop_Y))
     ),
 
 
