@@ -24,7 +24,7 @@ countries <- "USA"
 years <- 1960:2019
 # years <- 1971:1972
 
-# Set the releases to be used for input.
+# Set the release to be used for input.
 psut_release = "20220828T174526Z-60a07"
 
 # Should we do a release of the results?
