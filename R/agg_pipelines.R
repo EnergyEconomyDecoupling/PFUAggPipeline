@@ -41,6 +41,11 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("ExcelOutputFolder", file.path(pipeline_releases_folder, "eta_pfu_excel")),
     targets::tar_target_raw("Release", release),
 
+    # Gather the aggregation maps.
+    targets::tar_target_raw(
+      "AggregationMaps",
+      quote(load_aggregation_maps(path = AggregationMapsPath))),
+
     # Establish prefixes for primary industries
     targets::tar_target_raw(
       "PIndustryPrefixes",
@@ -49,12 +54,7 @@ get_pipeline <- function(countries = "all",
     # Establish final demand sectors
     targets::tar_target_raw(
       "FinalDemandSectors",
-      quote(IEATools::fd_sectors)),
-
-    # Gather the aggregation maps.
-    targets::tar_target_raw(
-      "AggregationMaps",
-      quote(load_aggregation_maps(path = AggregationMapsPath))),
+      quote(create_fd_sectors_list(IEATools::fd_sectors, AggregationMaps$ef_sector_aggregation))),
 
     # Identify the continents to which we'll aggregate
     targets::tar_target_raw(
@@ -300,15 +300,6 @@ get_pipeline <- function(countries = "all",
                                             years = Years)),
       pattern = quote(cross(CountriesContinentsWorld))
     ),
-
-
-    # targets::tar_target_raw(
-    #   "ETA_pfd",
-    #   substitute(AggPFU %>%
-    #                calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
-    #                                           years = Years)),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
 
 
     ####################

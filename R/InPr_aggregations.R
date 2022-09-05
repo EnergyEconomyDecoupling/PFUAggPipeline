@@ -122,7 +122,7 @@ grouped_aggregations <- function(.psut_data,
   # Check for the case where we have no data for that country and year.
   # In that event, we simply want to return the data frame.
   if (nrow(filtered_data) == 0) {
-    return(filtered_data)
+    return(NULL)
   }
   filtered_data %>%
     Recca::grouped_aggregates(aggregation_map = aggregation_map, margin = margin, pattern_type = pattern_type,
