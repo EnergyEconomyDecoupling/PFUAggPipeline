@@ -77,7 +77,6 @@ get_pipeline <- function(countries = "all",
       "PSUT",
       substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
                    pins::pin_read("psut", version = PSUTRelease) %>%
-                   # filter_countries_and_years(countries = Countries, years = Years))),
                    PFUDatabase::filter_countries_years(countries = Countries, years = Years))),
 
 
@@ -102,7 +101,7 @@ get_pipeline <- function(countries = "all",
                                        years = Years,
                                        many_colname = IEATools::iea_cols$country,
                                        few_colname = "Continent")),
-      pattern = quote(cross(Continents, Years))
+      pattern = quote(cross(Continents))
     ),
 
     # Aggregate to world
@@ -136,7 +135,7 @@ get_pipeline <- function(countries = "all",
                                             # Also, need to wrap in a list to ensure the notations_list is
                                             # correctly propagated to all rows in the PSUT_Re_all data frame.
                                             notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -157,7 +156,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = ProductAggMap,
                                         margin = "Product")),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -177,7 +176,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = IndustryAggMap,
                                         margin = "Industry")),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -192,7 +191,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = c(ProductAggMap, IndustryAggMap),
                                         margin = c("Product", "Industry"))),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -221,7 +220,7 @@ get_pipeline <- function(countries = "all",
     #                chop_R_eccs(countries = CountriesContinentsWorld,
     #                            years = Years,
     #                            method = "SVD")),
-    #   pattern = quote(map(CountriesContinentsWorld))
+    #   pattern = quote(cross(CountriesContinentsWorld))
     # ),
     #
     # # Chop Y
@@ -231,7 +230,7 @@ get_pipeline <- function(countries = "all",
     #                chop_Y_eccs(countries = CountriesContinentsWorld,
     #                            years = Years,
     #                            method = "SVD")),
-    #   pattern = quote(map(CountriesContinentsWorld))
+    #   pattern = quote(cross(CountriesContinentsWorld))
     # ),
 
 
@@ -262,7 +261,7 @@ get_pipeline <- function(countries = "all",
                    calculate_primary_aggregates(countries = CountriesContinentsWorld,
                                                 years = Years,
                                                 p_industries = unlist(PIndustryPrefixes))),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
     # Net and gross final demand aggregates
@@ -272,7 +271,21 @@ get_pipeline <- function(countries = "all",
                    calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
                                                     years = Years,
                                                     fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+    ##############################################
+    # Calculate final demand sector aggregations #
+    ##############################################
+
+    targets::tar_target_raw(
+      "SectorAggregations",
+      substitute(PSUT_Re_all_Gr_all_Chop_all %>%
+                   calculate_sector_aggregates(countries = CountriesContinentsWorld,
+                                               years = Years,
+                                               fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -285,7 +298,7 @@ get_pipeline <- function(countries = "all",
       substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
                    add_grossnet_column(countries = CountriesContinentsWorld,
                                        years = Years)),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -294,7 +307,7 @@ get_pipeline <- function(countries = "all",
       substitute(ETA_prep %>%
                    calculate_pfd_efficiencies(countries = CountriesContinentsWorld,
                                               years = Years)),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -307,8 +320,7 @@ get_pipeline <- function(countries = "all",
       substitute(ETA_pfd %>%
                    calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
                                               years = Years)),
-      # pattern = quote(map(CountriesContinentsWorld))
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 

@@ -24,7 +24,8 @@ calculate_primary_aggregates <- function(.psut_data,
     PFUDatabase::filter_countries_years(countries = countries, years = years)
 
   if (nrow(filtered_data) == 0) {
-    return(filtered_data)
+    # return(filtered_data)
+    return(NULL)
   }
   filtered_data %>%
     Recca::primary_aggregates(p_industries = p_industries,
