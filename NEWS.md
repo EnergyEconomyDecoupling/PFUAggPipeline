@@ -4,6 +4,12 @@ output: html_document
 ---
 
 
+* Added a target and .csv pin final-to-useful efficiencies
+  for final demand sectors.
+* Simplified calculation of primary, final, and useful aggregates.
+* Now parallelizing across all combinations of countries and years.
+  Previously only parallelized across countries.
+  Hopefully this fixes some memory issues.
 * Now includes targets for product and industry aggregations.
 * Now creates targets for a vector of pins from the `PFUDatabase`.
 

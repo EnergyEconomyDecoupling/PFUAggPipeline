@@ -85,7 +85,7 @@ chop_Y_eccs <- function(.psut_data,
 #' @return A row-bound version of `PSUT_Re_all_Gr_all`, `PSUT_Re_all_Gr_all_Chop_Y`, and `PSUT_Re_all_Gr_all_Chop_R`.
 #'
 #' @export
-stack_choped_ECCs <- function(PSUT_Re_all_Gr_all,
+stack_chopped_ECCs <- function(PSUT_Re_all_Gr_all,
                               PSUT_Re_all_Gr_all_Chop_R = NULL,
                               PSUT_Re_all_Gr_all_Chop_Y = NULL,
                               chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
@@ -124,28 +124,6 @@ stack_choped_ECCs <- function(PSUT_Re_all_Gr_all,
                               ))
   }
   return(out)
-  # dplyr::bind_rows(PSUT_Re_all_Gr_all %>%
-  #                    dplyr::mutate(
-  #                      "{chopped_mat}" := none,
-  #                      "{chopped_var}" := none
-  #                    ),
-  #                  PSUT_Re_all_Gr_all_Chop_R %>%
-  #                    rename_prime_psut_columns() %>%
-  #                    dplyr::mutate(
-  #                      "{chopped_mat}" := R_matname
-  #                    ) %>%
-  #                    dplyr::rename(
-  #                      "{chopped_var}" := .data[[product_sector]]
-  #                    ),
-  #                  PSUT_Re_all_Gr_all_Chop_Y %>%
-  #                    rename_prime_psut_columns() %>%
-  #                    dplyr::mutate(
-  #                      "{chopped_mat}" := Y_matname
-  #                    ) %>%
-  #                    dplyr::rename(
-  #                      "{chopped_var}" := .data[[product_sector]]
-  #                    )
-  # )
 }
 
 

@@ -1,9 +1,10 @@
 library(magrittr)
 library(targets)
 # targets::tar_make() to run the pipeline in a single thread.
-# targets::tar_make(callr_function = NULL) to debug.
 # targets::tar_make_future(workers = 8) to execute across multiple cores.
+# targets::tar_make(callr_function = NULL) to debug.
 # targets::tar_read(<<target_name>>) to view the results.
+# targets::tar_invalidate(<<target_name>>) to re-compute <<target_name>> and its dependents.
 # targets::tar_destroy() to start over with everything,
 
 # Set control parameters for the pipeline.
@@ -11,19 +12,20 @@ library(targets)
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
 # countries <- "USA"
+# countries <- "CHNM"
 # countries <- "all" # Run all countries in the PSUT target.
 # countries <- PFUDatabase::canonical_countries %>% as.character()
-# Countries with unique allocation data.
-countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
+# Countries with unique allocation data plus BEL and TUR (for Pierre).
+countries <- c("BEL", "BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
                "GRC", "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX",
-               "NOR", "PRT", "RUS", "USA", "WABK", "WMBK", "ZAF")
+               "NOR", "PRT", "RUS", "TUR", "USA", "WABK", "WMBK", "ZAF")
 
 
 # Set the years to be analyzed.
 years <- 1960:2019
 # years <- 1971
 
-# Set the releases to be used for input.
+# Set the release to be used for input.
 psut_release = "20220828T174526Z-60a07"
 
 # Should we do a release of the results?

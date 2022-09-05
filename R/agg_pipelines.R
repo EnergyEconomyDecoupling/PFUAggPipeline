@@ -41,6 +41,11 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("ExcelOutputFolder", file.path(pipeline_releases_folder, "eta_pfu_excel")),
     targets::tar_target_raw("Release", release),
 
+    # Gather the aggregation maps.
+    targets::tar_target_raw(
+      "AggregationMaps",
+      quote(load_aggregation_maps(path = AggregationMapsPath))),
+
     # Establish prefixes for primary industries
     targets::tar_target_raw(
       "PIndustryPrefixes",
@@ -49,12 +54,7 @@ get_pipeline <- function(countries = "all",
     # Establish final demand sectors
     targets::tar_target_raw(
       "FinalDemandSectors",
-      quote(IEATools::fd_sectors)),
-
-    # Gather the aggregation maps.
-    targets::tar_target_raw(
-      "AggregationMaps",
-      quote(load_aggregation_maps(path = AggregationMapsPath))),
+      quote(create_fd_sectors_list(IEATools::fd_sectors, AggregationMaps$ef_sector_aggregation))),
 
     # Identify the continents to which we'll aggregate
     targets::tar_target_raw(
@@ -77,7 +77,6 @@ get_pipeline <- function(countries = "all",
       "PSUT",
       substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
                    pins::pin_read("psut", version = PSUTRelease) %>%
-                   # filter_countries_and_years(countries = Countries, years = Years))),
                    PFUDatabase::filter_countries_years(countries = Countries, years = Years))),
 
 
@@ -99,9 +98,10 @@ get_pipeline <- function(countries = "all",
       "PSUT_Re_continents",
       substitute(continent_aggregation(PSUT_with_continent_col,
                                        continents = Continents,
+                                       years = Years,
                                        many_colname = IEATools::iea_cols$country,
                                        few_colname = "Continent")),
-      pattern = quote(map(Continents))
+      pattern = quote(cross(Continents))
     ),
 
     # Aggregate to world
@@ -135,7 +135,7 @@ get_pipeline <- function(countries = "all",
                                             # Also, need to wrap in a list to ensure the notations_list is
                                             # correctly propagated to all rows in the PSUT_Re_all data frame.
                                             notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
-      pattern = quote(map(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -156,7 +156,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = ProductAggMap,
                                         margin = "Product")),
-      pattern = quote(map(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -176,7 +176,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = IndustryAggMap,
                                         margin = "Industry")),
-      pattern = quote(map(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -191,7 +191,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = c(ProductAggMap, IndustryAggMap),
                                         margin = c("Product", "Industry"))),
-      pattern = quote(map(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -220,7 +220,7 @@ get_pipeline <- function(countries = "all",
     #                chop_R_eccs(countries = CountriesContinentsWorld,
     #                            years = Years,
     #                            method = "SVD")),
-    #   pattern = quote(map(CountriesContinentsWorld))
+    #   pattern = quote(cross(CountriesContinentsWorld))
     # ),
     #
     # # Chop Y
@@ -230,7 +230,7 @@ get_pipeline <- function(countries = "all",
     #                chop_Y_eccs(countries = CountriesContinentsWorld,
     #                            years = Years,
     #                            method = "SVD")),
-    #   pattern = quote(map(CountriesContinentsWorld))
+    #   pattern = quote(cross(CountriesContinentsWorld))
     # ),
 
 
@@ -240,13 +240,13 @@ get_pipeline <- function(countries = "all",
 
     # targets::tar_target_raw(
     #   "PSUT_Re_all_Gr_all_Chop_all",
-    #   substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all,
-    #                                PSUT_Re_all_Gr_all_Chop_Y,
-    #                                PSUT_Re_all_Gr_all_Chop_R))
+    #   substitute(stack_chopped_ECCs(PSUT_Re_all_Gr_all,
+    #                                PSUT_Re_all_Gr_all_Chop_R,
+    #                                PSUT_Re_all_Gr_all_Chop_Y))
     # ),
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_all_Chop_all",
-      substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all))
+      substitute(stack_chopped_ECCs(PSUT_Re_all_Gr_all))
     ),
 
 
@@ -261,7 +261,7 @@ get_pipeline <- function(countries = "all",
                    calculate_primary_aggregates(countries = CountriesContinentsWorld,
                                                 years = Years,
                                                 p_industries = unlist(PIndustryPrefixes))),
-      pattern = quote(map(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
     # Net and gross final demand aggregates
@@ -271,7 +271,21 @@ get_pipeline <- function(countries = "all",
                    calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
                                                     years = Years,
                                                     fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(map(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+    ##############################################
+    # Calculate final demand sector aggregations #
+    ##############################################
+
+    targets::tar_target_raw(
+      "SectorAggEta",
+      substitute(PSUT_Re_all_Gr_all_Chop_all %>%
+                   calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
+                                               years = Years,
+                                               fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -280,20 +294,11 @@ get_pipeline <- function(countries = "all",
     ####################
 
     targets::tar_target_raw(
-      "ETA_prep",
+      "AggPFU",
       substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
-                   add_grossnet_column(countries = CountriesContinentsWorld,
-                                       years = Years)),
-      pattern = quote(map(CountriesContinentsWorld))
-    ),
-
-
-    targets::tar_target_raw(
-      "ETA_pfd",
-      substitute(ETA_prep %>%
-                   calculate_pfd_efficiencies(countries = CountriesContinentsWorld,
-                                              years = Years)),
-      pattern = quote(map(CountriesContinentsWorld))
+                   calculate_pfu_aggregates(countries = CountriesContinentsWorld,
+                                            years = Years)),
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -302,12 +307,12 @@ get_pipeline <- function(countries = "all",
     ####################
 
     targets::tar_target_raw(
-      "ETA_pfu",
-      substitute(ETA_pfd %>%
+      "EtaPFU",
+      # substitute(ETA_pfd %>%
+      substitute(AggPFU %>%
                    calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
                                               years = Years)),
-      pattern = quote(map(CountriesContinentsWorld))
-
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
@@ -315,12 +320,12 @@ get_pipeline <- function(countries = "all",
     # Save results #
     ################
 
-    # Pin the ETA_pfu data frame
+    # Pin the ETApfu data frame
     targets::tar_target_raw(
-      "ReleaseETApfu",
+      "ReleaseEtaPFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = ETA_pfu,
-                                        targ_name = "eta_pfu",
+                                        targ = EtaPFU,
+                                        pin_name = "eta_pfu",
                                         release = Release))),
 
     # Zip the targets cache and store it in the pipeline_caches_folder
@@ -329,15 +334,24 @@ get_pipeline <- function(countries = "all",
       quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
                                      cache_folder = "_targets",
                                      file_prefix = "pfu_agg_pipeline_cache_",
-                                     dependency = ETA_pfu,
+                                     dependency = EtaPFU,
                                      release = Release))),
+
+    # Write a csv file of sector efficiencies
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaCSV",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = SectorAggEta,
+                                        pin_name = "eta_fu_sector_csv",
+                                        type = "csv",
+                                        release = Release))),
 
     # Write a csv file of efficiencies
     targets::tar_target_raw(
-      "ReleaseETApfuCSV",
+      "ReleaseEtaPFUCSV",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = ETA_pfu,
-                                        targ_name = "eta_pfu_csv",
+                                        targ = EtaPFU,
+                                        pin_name = "eta_pfu_csv",
                                         type = "csv",
                                         release = Release)))
   )

@@ -5,44 +5,34 @@
 \title{Pivot data frame to calculate PFU efficiencies}
 \usage{
 calculate_pfu_efficiencies(
-  .eta_pfd_data,
+  .eta_pfu_data,
   countries,
   years,
-  ex_p = Recca::aggregate_cols$aggregate_primary,
-  ex_fd = Recca::aggregate_cols$aggregate_demand,
-  last_stage = Recca::psut_cols$last_stage,
+  ex_p = IEATools::aggregate_cols$aggregate_primary,
+  ex_f = IEATools::aggregate_cols$aggregate_final,
+  ex_u = IEATools::aggregate_cols$aggregate_useful,
   eta_pf = Recca::efficiency_cols$eta_pf,
   eta_fu = Recca::efficiency_cols$eta_fu,
-  eta_pu = Recca::efficiency_cols$eta_pu,
-  eta_pfd = Recca::efficiency_cols$eta_pfd,
-  final = "Final",
-  useful = "Useful"
+  eta_pu = Recca::efficiency_cols$eta_pu
 )
 }
 \arguments{
-\item{.eta_pfd_data}{A data frame produced by \code{calculate_pfd_efficiencies()}.}
+\item{.eta_pfu_data}{A data frame produced by \code{add_grossnet_column()}.}
 
 \item{countries}{The countries for which primary aggregates are to be calculated.}
 
 \item{years}{The years for which primary aggregates are to be calculated.}
 
-\item{ex_p, ex_fd}{Names of primary and final demand aggregate columns (respectively).
-Defaults are from \code{Recca::aggregate_cols}.}
-
-\item{last_stage}{The name of the last stage column. Default is \code{Recca::psut_cols$last_stage}.}
+\item{ex_p, ex_f, ex_u}{Names of primary, final, and useful energy and exergy aggregate columns (respectively).
+Defaults are from \code{IEATools::aggregate_cols}.}
 
 \item{eta_pf, eta_fu, eta_pu}{The names of efficiency columns: primary-to-final, final-to-useful, and primary-to-useful, respectively.
 Defaults from \code{Recca::efficiency_cols}.}
-
-\item{eta_pfd}{The name of a column containing primary-to-final demand efficiencies. Default is \code{Recca::efficiency_cols$eta_pfd}.}
-
-\item{final, useful}{Entries in the \code{last_stage} column.
-Defaults are "Final" and "Useful", respectively.}
 }
 \value{
 A data frame with ECC stage efficiencies.
 }
 \description{
-This function pivots the data frame produced by \code{calculate_pfd_efficiencies()}
+This function pivots the data frame produced by \code{add_grossnet_column()}
 to obtain primary-final, final-useful, and primary-useful efficiencies.
 }

@@ -1,5 +1,6 @@
 csv
 CMD
+coltypes
 Despecify
 DOI
 despecified
@@ -10,13 +11,16 @@ Exiobase
 exergy
 IEA
 lifecycle
+parallelizing
 PFU
 PFUAggWorkflow
 PSUT
+parallelizing
 pinboard
 rds
 Readme
 Rmd
+rowtypes
 TES
 TFC
 TPES
