@@ -19,7 +19,7 @@ continent_aggregation(
 
 \item{continents}{The continents for which aggregation is desired.}
 
-\item{years}{The years for which aggregatino is desired.}
+\item{years}{The years for which aggregation is desired.}
 
 \item{continent}{The name of the continent column in the \code{PSUT} data frame.
 Default is "Continent".}

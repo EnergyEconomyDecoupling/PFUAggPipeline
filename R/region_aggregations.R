@@ -29,7 +29,7 @@ join_psut_continents <- function(PSUT,
 #'
 #' @param PSUT A data frame of PSUT matrices
 #' @param continents The continents for which aggregation is desired.
-#' @param years The years for which aggregatino is desired.
+#' @param years The years for which aggregation is desired.
 #' @param continent The name of the continent column in the `PSUT` data frame.
 #'                  Default is "Continent".
 #' @param year The name of the year column in the `PSUT` data frame.

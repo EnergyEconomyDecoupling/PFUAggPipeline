@@ -280,9 +280,9 @@ get_pipeline <- function(countries = "all",
     ##############################################
 
     targets::tar_target_raw(
-      "SectorAggregations",
+      "SectorAggEta",
       substitute(PSUT_Re_all_Gr_all_Chop_all %>%
-                   calculate_sector_aggregates(countries = CountriesContinentsWorld,
+                   calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
                                                years = Years,
                                                fd_sectors = unlist(FinalDemandSectors))),
       pattern = quote(cross(CountriesContinentsWorld))
@@ -333,7 +333,7 @@ get_pipeline <- function(countries = "all",
       "ReleaseETApfu",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                         targ = ETA_pfu,
-                                        targ_name = "eta_pfu",
+                                        pin_name = "eta_pfu",
                                         release = Release))),
 
     # Zip the targets cache and store it in the pipeline_caches_folder
@@ -345,12 +345,21 @@ get_pipeline <- function(countries = "all",
                                      dependency = ETA_pfu,
                                      release = Release))),
 
+    # Write a csv file of sector efficiencies
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaCSV",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = SectorAggEta,
+                                        pin_name = "eta_fu_sector_csv",
+                                        type = "csv",
+                                        release = Release))),
+
     # Write a csv file of efficiencies
     targets::tar_target_raw(
       "ReleaseETApfuCSV",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
                                         targ = ETA_pfu,
-                                        targ_name = "eta_pfu_csv",
+                                        pin_name = "eta_pfu_csv",
                                         type = "csv",
                                         release = Release)))
   )
