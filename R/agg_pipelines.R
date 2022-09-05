@@ -240,13 +240,13 @@ get_pipeline <- function(countries = "all",
 
     # targets::tar_target_raw(
     #   "PSUT_Re_all_Gr_all_Chop_all",
-    #   substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all,
-    #                                PSUT_Re_all_Gr_all_Chop_Y,
-    #                                PSUT_Re_all_Gr_all_Chop_R))
+    #   substitute(stack_chopped_ECCs(PSUT_Re_all_Gr_all,
+    #                                PSUT_Re_all_Gr_all_Chop_R,
+    #                                PSUT_Re_all_Gr_all_Chop_Y))
     # ),
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_all_Chop_all",
-      substitute(stack_choped_ECCs(PSUT_Re_all_Gr_all))
+      substitute(stack_chopped_ECCs(PSUT_Re_all_Gr_all))
     ),
 
 
@@ -294,21 +294,21 @@ get_pipeline <- function(countries = "all",
     ####################
 
     targets::tar_target_raw(
-      "ETA_prep",
+      "AggPFU",
       substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
-                   add_grossnet_column(countries = CountriesContinentsWorld,
-                                       years = Years)),
+                   calculate_pfu_aggregates(countries = CountriesContinentsWorld,
+                                            years = Years)),
       pattern = quote(cross(CountriesContinentsWorld))
     ),
 
 
-    targets::tar_target_raw(
-      "ETA_pfd",
-      substitute(ETA_prep %>%
-                   calculate_pfd_efficiencies(countries = CountriesContinentsWorld,
-                                              years = Years)),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
+    # targets::tar_target_raw(
+    #   "ETA_pfd",
+    #   substitute(AggPFU %>%
+    #                calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
+    #                                           years = Years)),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
 
 
     ####################
@@ -316,8 +316,9 @@ get_pipeline <- function(countries = "all",
     ####################
 
     targets::tar_target_raw(
-      "ETA_pfu",
-      substitute(ETA_pfd %>%
+      "EtaPFU",
+      # substitute(ETA_pfd %>%
+      substitute(AggPFU %>%
                    calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
                                               years = Years)),
       pattern = quote(cross(CountriesContinentsWorld))
@@ -328,11 +329,11 @@ get_pipeline <- function(countries = "all",
     # Save results #
     ################
 
-    # Pin the ETA_pfu data frame
+    # Pin the ETApfu data frame
     targets::tar_target_raw(
-      "ReleaseETApfu",
+      "ReleaseEtaPFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = ETA_pfu,
+                                        targ = EtaPFU,
                                         pin_name = "eta_pfu",
                                         release = Release))),
 
@@ -342,7 +343,7 @@ get_pipeline <- function(countries = "all",
       quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
                                      cache_folder = "_targets",
                                      file_prefix = "pfu_agg_pipeline_cache_",
-                                     dependency = ETA_pfu,
+                                     dependency = EtaPFU,
                                      release = Release))),
 
     # Write a csv file of sector efficiencies
@@ -356,9 +357,9 @@ get_pipeline <- function(countries = "all",
 
     # Write a csv file of efficiencies
     targets::tar_target_raw(
-      "ReleaseETApfuCSV",
+      "ReleaseEtaPFUCSV",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = ETA_pfu,
+                                        targ = EtaPFU,
                                         pin_name = "eta_pfu_csv",
                                         type = "csv",
                                         release = Release)))
