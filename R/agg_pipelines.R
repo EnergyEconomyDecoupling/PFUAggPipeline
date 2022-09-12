@@ -290,7 +290,7 @@ get_pipeline <- function(countries = "all",
 
 
     ####################
-    # PFD efficiencies #
+    # PFU aggregations #
     ####################
 
     targets::tar_target_raw(
