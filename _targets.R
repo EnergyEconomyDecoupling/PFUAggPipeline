@@ -16,9 +16,9 @@ library(targets)
 # countries <- "all" # Run all countries in the PSUT target.
 # countries <- PFUDatabase::canonical_countries %>% as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
-countries <- c("BEL", "BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
+countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
                "GRC", "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX",
-               "NOR", "PRT", "RUS", "TUR", "USA", "WABK", "WMBK", "ZAF")
+               "NOR", "PRT", "RUS", "USA", "WABK", "WMBK", "ZAF", "BEL", "TUR")
 
 
 # Set the years to be analyzed.
