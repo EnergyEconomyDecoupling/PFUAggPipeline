@@ -224,14 +224,14 @@ get_pipeline <- function(countries = "all",
     # ),
     #
     # # Chop Y
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_Y",
-      substitute(PSUT_Re_all_Gr_all %>%
-                   chop_Y_eccs(countries = CountriesContinentsWorld,
-                               years = Years,
-                               method = "SVD")),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_all_Chop_Y",
+    #   substitute(PSUT_Re_all_Gr_all %>%
+    #                chop_Y_eccs(countries = CountriesContinentsWorld,
+    #                            years = Years,
+    #                            method = "SVD")),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
 
 
     ######################
