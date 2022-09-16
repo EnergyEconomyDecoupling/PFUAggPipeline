@@ -26,7 +26,7 @@ years <- 1960:2019
 # years <- 1971
 
 # Set the release to be used for input.
-psut_release = "20220828T174526Z-60a07"
+psut_release = "20220916T183913Z-155d3"
 
 # Should we do a release of the results?
 release <- FALSE
