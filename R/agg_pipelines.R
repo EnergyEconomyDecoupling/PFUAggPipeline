@@ -115,7 +115,7 @@ get_pipeline <- function(countries = "all",
                                           many_colname = IEATools::iea_cols$country, # Which actually holds continents
                                           few_colname = "World"))),
 
-    # Bind all region aggregations together
+    # Stack all region aggregations together
     targets::tar_target_raw(
       "PSUT_Re_all",
       substitute(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
@@ -213,16 +213,16 @@ get_pipeline <- function(countries = "all",
     # Chop R and Y #
     ################
 
-    # # Chop R
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_all_Chop_R",
-    #   substitute(PSUT_Re_all_Gr_all %>%
-    #                chop_R_eccs(countries = CountriesContinentsWorld,
-    #                            years = Years,
-    #                            method = "SVD")),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
-    #
+    # Chop R
+    targets::tar_target_raw(
+      "PSUT_Re_all_Gr_all_Chop_R",
+      substitute(PSUT_Re_all_Gr_all %>%
+                   chop_R_eccs(countries = CountriesContinentsWorld,
+                               years = Years,
+                               method = "SVD")),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
     # Chop Y
     targets::tar_target_raw(
       "PSUT_Re_all_Gr_all_Chop_Y",
