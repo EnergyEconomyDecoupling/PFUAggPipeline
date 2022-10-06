@@ -230,7 +230,7 @@ get_pipeline <- function(countries = "all",
                    chop_Y_eccs(countries = CountriesContinentsWorld,
                                years = Years,
                                method = "SVD")),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 

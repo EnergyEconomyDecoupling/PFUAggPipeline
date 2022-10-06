@@ -23,7 +23,8 @@ countries <- "USA"
 
 # Set the years to be analyzed.
 # years <- 1960:2019
-years <- 1971
+# years <- 1971
+years <- 1971:1973
 
 # Set the release to be used for input.
 psut_release = "20220922T120922Z-f5b22"
