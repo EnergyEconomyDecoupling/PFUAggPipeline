@@ -76,7 +76,7 @@ chop_Y_eccs <- function(.psut_data,
 #'
 #' This function stacks chopped data frames with `dplyr::bind_rows()`.
 #'
-#' @param PSUT_Re_all_Gr_all,PSUT_Re_all_Gr_all_Chop_Y,PSUT_Re_all_Gr_all_Chop_R Data frames to be stacked.
+#' @param psut,chop_Y,chop_R Data frames to be stacked.
 #' @param chopped_mat,chopped_var Names of columns that tell the matrix that has been chopped (`chop_mat`) and
 #'                          the column that contains the the row or column name used for this chop.
 #' @param R_matname,Y_matname The names of **R** and **Y** matrices to be added to the `chopped_var` column of the data frame.
@@ -87,25 +87,25 @@ chop_Y_eccs <- function(.psut_data,
 #' @return A row-bound version of `PSUT_Re_all_Gr_all`, `PSUT_Re_all_Gr_all_Chop_Y`, and `PSUT_Re_all_Gr_all_Chop_R`.
 #'
 #' @export
-stack_chopped_ECCs <- function(PSUT_Re_all_Gr_all,
-                              PSUT_Re_all_Gr_all_Chop_R = NULL,
-                              PSUT_Re_all_Gr_all_Chop_Y = NULL,
-                              chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-                              chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
-                              Y_matname = Recca::psut_cols$Y,
-                              R_matname = Recca::psut_cols$R,
-                              product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-                              none = "None") {
+stack_chopped_ECCs <- function(psut,
+                               chop_R = NULL,
+                               chop_Y = NULL,
+                               chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+                               chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+                               Y_matname = Recca::psut_cols$Y,
+                               R_matname = Recca::psut_cols$R,
+                               product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
+                               none = "None") {
 
   # Build a combined data frame.
-  out <- PSUT_Re_all_Gr_all %>%
+  out <- psut %>%
     dplyr::mutate(
       "{chopped_mat}" := none,
       "{chopped_var}" := none
     )
-  if (!is.null(PSUT_Re_all_Gr_all_Chop_R)) {
+  if (!is.null(chop_R)) {
     out <- dplyr::bind_rows(out,
-                            PSUT_Re_all_Gr_all_Chop_R %>%
+                            chop_R %>%
                               rename_prime_psut_columns() %>%
                               dplyr::mutate(
                                 "{chopped_mat}" := R_matname
@@ -114,9 +114,9 @@ stack_chopped_ECCs <- function(PSUT_Re_all_Gr_all,
                                 "{chopped_var}" := .data[[product_sector]]
                               ))
   }
-  if (!is.null(PSUT_Re_all_Gr_all_Chop_Y)) {
+  if (!is.null(chop_Y)) {
     out <- dplyr::bind_rows(out,
-                            PSUT_Re_all_Gr_all_Chop_Y %>%
+                            chop_Y %>%
                               rename_prime_psut_columns() %>%
                               dplyr::mutate(
                                 "{chopped_mat}" := Y_matname

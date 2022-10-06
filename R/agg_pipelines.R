@@ -27,9 +27,8 @@ get_pipeline <- function(countries = "all",
                          release = FALSE) {
 
   list(
-    #####################
-    # Preliminary setup #
-    #####################
+
+    # Preliminary setup -------------------------------------------------------
 
     # Store some incoming data as targets.
     # These targets are invariant across incoming psut_releases.
@@ -72,6 +71,9 @@ get_pipeline <- function(countries = "all",
       "PSUTRelease",
       unname(psut_release)),
 
+
+    # PSUT --------------------------------------------------------------------
+
     # Pull in the PSUT data frame
     targets::tar_target_raw(
       "PSUT",
@@ -80,138 +82,7 @@ get_pipeline <- function(countries = "all",
                    PFUDatabase::filter_countries_years(countries = Countries, years = Years))),
 
 
-    #########################
-    # Regional aggregations #
-    #########################
-
-    # Create a continents data frame, grouped by continent,
-    # so subsequent operations (region aggregation)
-    # will be performed in parallel, if desired.
-    targets::tar_target_raw(
-      "PSUT_with_continent_col",
-      substitute(join_psut_continents(PSUT = PSUT,
-                                      continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                      continent = "Continent"))),
-
-    # Aggregate by continent
-    targets::tar_target_raw(
-      "PSUT_Re_continents",
-      substitute(continent_aggregation(PSUT_with_continent_col,
-                                       continents = Continents,
-                                       years = Years,
-                                       many_colname = IEATools::iea_cols$country,
-                                       few_colname = "Continent")),
-      pattern = quote(cross(Continents))
-    ),
-
-    # Aggregate to world
-    targets::tar_target_raw(
-      "PSUT_Re_world",
-      substitute(Recca::region_aggregates(PSUT_Re_continents %>%
-                                            dplyr::left_join(AggregationMaps$world_aggregation %>%
-                                                               matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
-                                                                                                few_colname = "World"),
-                                                             by = IEATools::iea_cols$country),
-                                          many_colname = IEATools::iea_cols$country, # Which actually holds continents
-                                          few_colname = "World"))),
-
-    # Stack all region aggregations together
-    targets::tar_target_raw(
-      "PSUT_Re_all",
-      substitute(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
-
-
-    ############################
-    # Despecified aggregations #
-    ############################
-
-    targets::tar_target_raw(
-      "PSUT_Re_all_Ds_PrIn",
-      substitute(PSUT_Re_all %>%
-                   despecified_aggregations(countries = CountriesContinentsWorld,
-                                            years = Years,
-                                            # We use arrow, from, and of notations.
-                                            # Restricting to only these notations makes the code faster.
-                                            # Also, need to wrap in a list to ensure the notations_list is
-                                            # correctly propagated to all rows in the PSUT_Re_all data frame.
-                                            notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
-
-
-    ################################
-    # Grouped product aggregations #
-    ################################
-
-    targets::tar_target_raw(
-      "ProductAggMap",
-      substitute(c(AggregationMaps[["ef_product_aggregation"]],
-                   AggregationMaps[["eu_product_aggregation"]]))
-    ),
-
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_Pr",
-      substitute(PSUT_Re_all_Ds_PrIn %>%
-                   grouped_aggregations(countries = CountriesContinentsWorld,
-                                        years = Years,
-                                        aggregation_map = ProductAggMap,
-                                        margin = "Product")),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
-
-
-    #################################
-    # Grouped industry aggregations #
-    #################################
-
-    targets::tar_target_raw(
-      "IndustryAggMap",
-      substitute(AggregationMaps[["ef_sector_aggregation"]])
-    ),
-
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_In",
-      substitute(PSUT_Re_all_Ds_PrIn %>%
-                   grouped_aggregations(countries = CountriesContinentsWorld,
-                                        years = Years,
-                                        aggregation_map = IndustryAggMap,
-                                        margin = "Industry")),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
-
-
-    #############################################
-    # Grouped product and industry aggregations #
-    #############################################
-
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_PrIn",
-      substitute(PSUT_Re_all_Ds_PrIn %>%
-                   grouped_aggregations(countries = CountriesContinentsWorld,
-                                        years = Years,
-                                        aggregation_map = c(ProductAggMap, IndustryAggMap),
-                                        margin = c("Product", "Industry"))),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
-
-
-    ########################################
-    # Stack product and industry groupings #
-    ########################################
-
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all",
-      substitute(stack_PrIn_aggregations(PSUT_Re_all = PSUT_Re_all,
-                                         PSUT_Re_all_Ds_PrIn = PSUT_Re_all_Ds_PrIn,
-                                         PSUT_Re_all_Gr_Pr = PSUT_Re_all_Gr_Pr,
-                                         PSUT_Re_all_Gr_In = PSUT_Re_all_Gr_In,
-                                         PSUT_Re_all_Gr_PrIn = PSUT_Re_all_Gr_PrIn))
-    ),
-
-
-    ################
-    # Chop R and Y #
-    ################
+    # Chops -------------------------------------------------------------------
 
     # Chop R
     # targets::tar_target_raw(
@@ -225,30 +96,147 @@ get_pipeline <- function(countries = "all",
 
     # Chop Y
     targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_Y",
-      substitute(PSUT_Re_all_Gr_all %>%
+      "PSUT_Chop_Y",
+      substitute(PSUT %>%
                    chop_Y_eccs(countries = CountriesContinentsWorld,
                                years = Years,
                                method = "SVD")),
       pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
+    targets::tar_target_raw(
+      "PSUT_Chop_all",
+      substitute(stack_chopped_ECCs(PSUT,
+                                    # chop_R = PSUT_Chop_R,
+                                    chop_Y = PSUT_Chop_Y))
+    ),
 
-    ######################
-    # Stack chopped ECCs #
-    ######################
+
+    # Regional aggregations ---------------------------------------------------
+
+    # Create a continents data frame, grouped by continent,
+    # so subsequent operations (region aggregation)
+    # will be performed in parallel, if desired.
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_with_continent_col",
+      substitute(join_psut_continents(PSUT = PSUT_Chop_all,
+                                      continent_aggregation_map = AggregationMaps$continent_aggregation,
+                                      continent = "Continent"))),
+
+    # Aggregate by continent
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_continents",
+      substitute(continent_aggregation(PSUT_Chop_all_with_continent_col,
+                                       continents = Continents,
+                                       years = Years,
+                                       many_colname = IEATools::iea_cols$country,
+                                       few_colname = "Continent")),
+      pattern = quote(cross(Continents))),
+
+    # Aggregate to world
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_world",
+      substitute(Recca::region_aggregates(PSUT_Chop_all_Re_continents %>%
+                                            dplyr::left_join(AggregationMaps$world_aggregation %>%
+                                                               matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
+                                                                                                few_colname = "World"),
+                                                             by = IEATools::iea_cols$country),
+                                          many_colname = IEATools::iea_cols$country, # Which actually holds continents
+                                          few_colname = "World"))),
+
+    # Stack all region aggregations together
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all",
+      substitute(dplyr::bind_rows(PSUT_Chop_all, PSUT_Chop_all_Re_continents, PSUT_Chop_all_Re_world)))
+
+
+    ############################
+    # Despecified aggregations #
+    ############################
 
     # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_all_Chop_all",
-    #   substitute(stack_chopped_ECCs(PSUT_Re_all_Gr_all,
-    #                                PSUT_Re_all_Gr_all_Chop_R = PSUT_Re_all_Gr_all_Chop_R,
-    #                                PSUT_Re_all_Gr_all_Chop_Y = PSUT_Re_all_Gr_all_Chop_Y))
+    #   "PSUT_Re_all_Ds_PrIn",
+    #   substitute(PSUT_Re_all %>%
+    #                despecified_aggregations(countries = CountriesContinentsWorld,
+    #                                         years = Years,
+    #                                         # We use arrow, from, and of notations.
+    #                                         # Restricting to only these notations makes the code faster.
+    #                                         # Also, need to wrap in a list to ensure the notations_list is
+    #                                         # correctly propagated to all rows in the PSUT_Re_all data frame.
+    #                                         notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
+    #   pattern = quote(cross(CountriesContinentsWorld))
     # ),
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_all",
-      substitute(stack_chopped_ECCs(PSUT_Re_all_Gr_all,
-                                    PSUT_Re_all_Gr_all_Chop_Y = PSUT_Re_all_Gr_all_Chop_Y))
-    ),
+
+
+    ################################
+    # Grouped product aggregations #
+    ################################
+
+    # targets::tar_target_raw(
+    #   "ProductAggMap",
+    #   substitute(c(AggregationMaps[["ef_product_aggregation"]],
+    #                AggregationMaps[["eu_product_aggregation"]]))
+    # ),
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_Pr",
+    #   substitute(PSUT_Re_all_Ds_PrIn %>%
+    #                grouped_aggregations(countries = CountriesContinentsWorld,
+    #                                     years = Years,
+    #                                     aggregation_map = ProductAggMap,
+    #                                     margin = "Product")),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
+
+
+    #################################
+    # Grouped industry aggregations #
+    #################################
+
+    # targets::tar_target_raw(
+    #   "IndustryAggMap",
+    #   substitute(AggregationMaps[["ef_sector_aggregation"]])
+    # ),
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_In",
+    #   substitute(PSUT_Re_all_Ds_PrIn %>%
+    #                grouped_aggregations(countries = CountriesContinentsWorld,
+    #                                     years = Years,
+    #                                     aggregation_map = IndustryAggMap,
+    #                                     margin = "Industry")),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
+
+
+    #############################################
+    # Grouped product and industry aggregations #
+    #############################################
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_PrIn",
+    #   substitute(PSUT_Re_all_Ds_PrIn %>%
+    #                grouped_aggregations(countries = CountriesContinentsWorld,
+    #                                     years = Years,
+    #                                     aggregation_map = c(ProductAggMap, IndustryAggMap),
+    #                                     margin = c("Product", "Industry"))),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
+
+
+    ########################################
+    # Stack product and industry groupings #
+    ########################################
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_all",
+    #   substitute(stack_PrIn_aggregations(PSUT_Re_all = PSUT_Re_all,
+    #                                      PSUT_Re_all_Ds_PrIn = PSUT_Re_all_Ds_PrIn,
+    #                                      PSUT_Re_all_Gr_Pr = PSUT_Re_all_Gr_Pr,
+    #                                      PSUT_Re_all_Gr_In = PSUT_Re_all_Gr_In,
+    #                                      PSUT_Re_all_Gr_PrIn = PSUT_Re_all_Gr_PrIn))
+    # ),
 
 
     ##############################
@@ -256,65 +244,66 @@ get_pipeline <- function(countries = "all",
     ##############################
 
     # Primary aggregates
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_all_St_p",
-      substitute(PSUT_Re_all_Gr_all_Chop_all %>%
-                   calculate_primary_aggregates(countries = CountriesContinentsWorld,
-                                                years = Years,
-                                                p_industries = unlist(PIndustryPrefixes))),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_all_Chop_all_St_p",
+    #   substitute(PSUT_Re_all_Gr_all_Chop_all %>%
+    #                calculate_primary_aggregates(countries = CountriesContinentsWorld,
+    #                                             years = Years,
+    #                                             p_industries = unlist(PIndustryPrefixes))),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
 
     # Net and gross final demand aggregates
-    targets::tar_target_raw(
-      "PSUT_Re_all_Gr_all_Chop_all_St_pfd",
-      substitute(PSUT_Re_all_Gr_all_Chop_all_St_p %>%
-                   calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
-                                                    years = Years,
-                                                    fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
+
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all_Gr_all_Chop_all_St_pfd",
+    #   substitute(PSUT_Re_all_Gr_all_Chop_all_St_p %>%
+    #                calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
+    #                                                 years = Years,
+    #                                                 fd_sectors = unlist(FinalDemandSectors))),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
 
 
     ##############################################
     # Calculate final demand sector aggregations #
     ##############################################
 
-    targets::tar_target_raw(
-      "SectorAggEta",
-      substitute(PSUT_Re_all_Gr_all_Chop_all %>%
-                   calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
-                                               years = Years,
-                                               fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
+    # targets::tar_target_raw(
+    #   "SectorAggEta",
+    #   substitute(PSUT_Re_all_Gr_all_Chop_all %>%
+    #                calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
+    #                                            years = Years,
+    #                                            fd_sectors = unlist(FinalDemandSectors))),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
 
 
     ####################
     # PFU aggregations #
     ####################
 
-    targets::tar_target_raw(
-      "AggPFU",
-      substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
-                   calculate_pfu_aggregates(countries = CountriesContinentsWorld,
-                                            years = Years)),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
+    # targets::tar_target_raw(
+    #   "AggPFU",
+    #   substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
+    #                calculate_pfu_aggregates(countries = CountriesContinentsWorld,
+    #                                         years = Years)),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
 
 
     ####################
     # PFU efficiencies #
     ####################
 
-    targets::tar_target_raw(
-      "EtaPFU",
-      # substitute(ETA_pfd %>%
-      substitute(AggPFU %>%
-                   calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
-                                              years = Years)),
-      pattern = quote(cross(CountriesContinentsWorld))
-    ),
+    # targets::tar_target_raw(
+    #   "EtaPFU",
+    #   substitute(AggPFU %>%
+    #                calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
+    #                                           years = Years)),
+    #   pattern = quote(cross(CountriesContinentsWorld))
+    # ),
 
 
     ################
@@ -322,39 +311,43 @@ get_pipeline <- function(countries = "all",
     ################
 
     # Pin the ETApfu data frame
-    targets::tar_target_raw(
-      "ReleaseEtaPFU",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = EtaPFU,
-                                        pin_name = "eta_pfu",
-                                        release = Release))),
+
+    # targets::tar_target_raw(
+    #   "ReleaseEtaPFU",
+    #   quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+    #                                     targ = EtaPFU,
+    #                                     pin_name = "eta_pfu",
+    #                                     release = Release))),
 
     # Zip the targets cache and store it in the pipeline_caches_folder
-    targets::tar_target_raw(
-      "StoreCache",
-      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
-                                     cache_folder = "_targets",
-                                     file_prefix = "pfu_agg_pipeline_cache_",
-                                     dependency = EtaPFU,
-                                     release = Release))),
+
+    # targets::tar_target_raw(
+    #   "StoreCache",
+    #   quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
+    #                                  cache_folder = "_targets",
+    #                                  file_prefix = "pfu_agg_pipeline_cache_",
+    #                                  dependency = EtaPFU,
+    #                                  release = Release))),
 
     # Write a csv file of sector efficiencies
-    targets::tar_target_raw(
-      "ReleaseSectorAggEtaCSV",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = SectorAggEta,
-                                        pin_name = "eta_fu_sector_csv",
-                                        type = "csv",
-                                        release = Release))),
+
+    # targets::tar_target_raw(
+    #   "ReleaseSectorAggEtaCSV",
+    #   quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+    #                                     targ = SectorAggEta,
+    #                                     pin_name = "eta_fu_sector_csv",
+    #                                     type = "csv",
+    #                                     release = Release))),
 
     # Write a csv file of efficiencies
-    targets::tar_target_raw(
-      "ReleaseEtaPFUCSV",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = EtaPFU,
-                                        pin_name = "eta_pfu_csv",
-                                        type = "csv",
-                                        release = Release)))
+
+    # targets::tar_target_raw(
+    #   "ReleaseEtaPFUCSV",
+    #   quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+    #                                     targ = EtaPFU,
+    #                                     pin_name = "eta_pfu_csv",
+    #                                     type = "csv",
+    #                                     release = Release)))
   )
 }
 
