@@ -184,9 +184,7 @@ get_pipeline <- function(countries = "all",
     )
 
 
-    ################################
-    # Grouped product aggregations #
-    ################################
+    # Grouped aggregations ----------------------------------------------------
 
     # targets::tar_target_raw(
     #   "ProductAggMap",
