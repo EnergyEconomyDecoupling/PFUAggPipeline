@@ -43,17 +43,20 @@ get_pipeline <- function(countries = "all",
     # Gather the aggregation maps.
     targets::tar_target_raw(
       "AggregationMaps",
-      quote(load_aggregation_maps(path = AggregationMapsPath))),
+      quote(load_aggregation_maps(path = AggregationMapsPath))
+    ),
 
     # Establish prefixes for primary industries
     targets::tar_target_raw(
       "PIndustryPrefixes",
-      quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
+      quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())
+    ),
 
     # Establish final demand sectors
     targets::tar_target_raw(
       "FinalDemandSectors",
-      quote(create_fd_sectors_list(IEATools::fd_sectors, AggregationMaps$ef_sector_aggregation))),
+      quote(create_fd_sectors_list(IEATools::fd_sectors, AggregationMaps$ef_sector_aggregation))
+    ),
 
     # Identify the continents to which we'll aggregate
     targets::tar_target_raw(
@@ -69,7 +72,8 @@ get_pipeline <- function(countries = "all",
     # Set the pin and release as targets
     targets::tar_target_raw(
       "PSUTRelease",
-      unname(psut_release)),
+      unname(psut_release)
+    ),
 
 
     # PSUT --------------------------------------------------------------------
@@ -79,7 +83,8 @@ get_pipeline <- function(countries = "all",
       "PSUT",
       substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
                    pins::pin_read("psut", version = PSUTRelease) %>%
-                   PFUDatabase::filter_countries_years(countries = Countries, years = Years))),
+                   PFUDatabase::filter_countries_years(countries = Countries, years = Years))
+    ),
 
 
     # Chops -------------------------------------------------------------------
@@ -122,7 +127,8 @@ get_pipeline <- function(countries = "all",
       "PSUT_Chop_all_with_continent_col",
       substitute(join_psut_continents(PSUT = PSUT_Chop_all,
                                       continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                      continent = "Continent"))),
+                                      continent = "Continent"))
+    ),
 
     # Aggregate by continent
     targets::tar_target_raw(
@@ -132,7 +138,8 @@ get_pipeline <- function(countries = "all",
                                        years = Years,
                                        many_colname = IEATools::iea_cols$country,
                                        few_colname = "Continent")),
-      pattern = quote(cross(Continents))),
+      pattern = quote(cross(Continents))
+    ),
 
     # Aggregate to world
     targets::tar_target_raw(
@@ -143,30 +150,38 @@ get_pipeline <- function(countries = "all",
                                                                                                 few_colname = "World"),
                                                              by = IEATools::iea_cols$country),
                                           many_colname = IEATools::iea_cols$country, # Which actually holds continents
-                                          few_colname = "World"))),
+                                          few_colname = "World"))
+    ),
 
     # Stack all region aggregations together
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all",
-      substitute(dplyr::bind_rows(PSUT_Chop_all, PSUT_Chop_all_Re_continents, PSUT_Chop_all_Re_world)))
+      substitute(dplyr::bind_rows(PSUT_Chop_all, PSUT_Chop_all_Re_continents, PSUT_Chop_all_Re_world))
+    ),
 
 
-    ############################
-    # Despecified aggregations #
-    ############################
+    # Despecified aggregations ------------------------------------------------
 
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Ds_PrIn",
-    #   substitute(PSUT_Re_all %>%
-    #                despecified_aggregations(countries = CountriesContinentsWorld,
-    #                                         years = Years,
-    #                                         # We use arrow, from, and of notations.
-    #                                         # Restricting to only these notations makes the code faster.
-    #                                         # Also, need to wrap in a list to ensure the notations_list is
-    #                                         # correctly propagated to all rows in the PSUT_Re_all data frame.
-    #                                         notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_PrIn",
+      substitute(PSUT_Chop_all_Re_all %>%
+                   despecified_aggregations(countries = CountriesContinentsWorld,
+                                            years = Years,
+                                            # We use arrow, from, and of notations.
+                                            # Restricting to only these notations makes the code faster.
+                                            # Also, need to wrap in a list to ensure the notations_list is
+                                            # correctly propagated to all rows in the PSUT_Re_all data frame.
+                                            notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_all",
+      substitute(stack_despecification_aggregations(PSUT_Chop_all_Re_all,
+                                                    # Ds_Pr = PSUT_Chop_all_Re_all_Ds_Pr,
+                                                    # Ds_In = PSUT_Chop_all_Re_all_Ds_In,
+                                                    Ds_PrIn = PSUT_Chop_all_Re_all_Ds_PrIn))
+    )
 
 
     ################################

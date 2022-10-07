@@ -147,54 +147,110 @@ grouped_aggregations <- function(.psut_data,
 #' This function stacks them (with `dplyr::bind_rows`)
 #' and adds columns to identify the levels of product and industry aggregation.
 #'
-#' @param PSUT_Re_all,PSUT_Re_all_Ds_PrIn,PSUT_Re_all_Gr_Pr,PSUT_Re_all_Gr_In,PSUT_Re_all_Gr_PrIn Data frames to be stacked.
-#' @param product_aggregation,industry_aggregation,specified,despecified,grouped See `PFUAggDatabase::aggregation_df_cols`.
-#' @param ieamw See `PFUDatabase::ieamw_cols`.
+#' @param not_despecified A data frame in which all rows and columns are specified.
+#' @param Ds_Pr A data frame in which products are despecified.
+#' @param Ds_In A data frame in which industries are despecified.
+#' @param Ds_PrIn A data frame in which both products and industries are despecified.
+#' @param product_aggregation,industry_aggregation,specified,despecified See `PFUAggDatabase::aggregation_df_cols`.
 #'
-#' @return A stacked data frame containing new metadata columns for product and industry aggregations.
+#' @return A stacked data frame containing new metadata columns for product and industry specification.
 #'
 #' @export
-stack_PrIn_aggregations <- function(PSUT_Re_all,
-                                    PSUT_Re_all_Ds_PrIn,
-                                    PSUT_Re_all_Gr_Pr,
-                                    PSUT_Re_all_Gr_In,
-                                    PSUT_Re_all_Gr_PrIn,
-                                    product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-                                    industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-                                    specified = PFUAggDatabase::aggregation_df_cols$specified,
-                                    despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-                                    grouped = PFUAggDatabase::aggregation_df_cols$grouped,
-                                    ieamw = PFUDatabase::ieamw_cols$ieamw) {
+stack_despecification_aggregations <- function(not_despecified,
+                                               Ds_Pr = NULL,
+                                               Ds_In = NULL,
+                                               Ds_PrIn = NULL,
+                                               product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+                                               industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+                                               specified = PFUAggDatabase::aggregation_df_cols$specified,
+                                               despecified = PFUAggDatabase::aggregation_df_cols$despecified) {
 
-  # Build a combined data frame.
-  dplyr::bind_rows(PSUT_Re_all %>%
-                     dplyr::mutate(
-                       "{product_aggregation}" := specified,
-                       "{industry_aggregation}" := specified
-                     ),
-                   PSUT_Re_all_Ds_PrIn %>%
-                     dplyr::mutate(
-                       "{product_aggregation}" := despecified,
-                       "{industry_aggregation}" := despecified
-                     ),
-                   PSUT_Re_all_Gr_Pr %>%
-                     dplyr::mutate(
-                       "{product_aggregation}" := grouped,
-                       "{industry_aggregation}" := despecified
-                     ),
-                   PSUT_Re_all_Gr_In %>%
-                     dplyr::mutate(
-                       "{product_aggregation}" := despecified,
-                       "{industry_aggregation}" := grouped
-                     ),
-                   PSUT_Re_all_Gr_PrIn %>%
-                     dplyr::mutate(
-                       "{product_aggregation}" := grouped,
-                       "{industry_aggregation}" := grouped
-                     )
-  ) %>%
-    dplyr::relocate(.data[[product_aggregation]], .after = ieamw) %>%
-    dplyr::relocate(.data[[industry_aggregation]], .after = product_aggregation)
+  out <- not_despecified %>%
+    dplyr::mutate(
+      "{product_aggregation}" := specified,
+      "{industry_aggregation}" := specified
+    )
+  if (!is.null(Ds_Pr)) {
+    out <- out %>%
+      dplyr::bind_rows(Ds_Pr %>%
+                         dplyr::mutate(
+                           "{product_aggregation}" := despecified,
+                           "{industry_aggregation}" := specified
+                         ))
+  }
+  if (!is.null(Ds_In)) {
+    out <- out %>%
+      dplyr::bind_rows(Ds_In %>%
+                         dplyr::mutate(
+                           "{product_aggregation}" := specified,
+                           "{industry_aggregation}" := despecified
+                         ))
+  }
+  if (!is.null(Ds_PrIn)) {
+    out <- out %>%
+      dplyr::bind_rows(Ds_PrIn %>%
+                         dplyr::mutate(
+                           "{product_aggregation}" := despecified,
+                           "{industry_aggregation}" := despecified
+                         ))
+  }
+  return(out)
+}
+
+
+#' Stack grouped data frames
+#'
+#' Matrices can be grouped by products and industries.
+#' This function stacks those data frames with appropriate metadata columns
+#' using `dplyr::bind_rows()`.
+#'
+#' @param not_grouped The data frame with no product or industry grouping.
+#' @param Gr_Pr The data frame with grouped products.
+#' @param Gr_In The data frame with grouped industries.
+#' @param Gr_PrIn The data frame with both grouped products and industries.
+#'
+#' @return A stacked set of data frames with different product and industry groupings
+#'
+#' @export
+stack_group_aggregations <- function(not_grouped,
+                                     Gr_Pr = NULL,
+                                     Gr_In = NULL,
+                                     Gr_PrIn = NULL,
+                                     product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+                                     industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+                                     ungrouped = PFUAggDatabase::aggregation_df_cols$ungrouped,
+                                     grouped = PFUAggDatabase::aggregation_df_cols$grouped) {
+
+  out <- not_grouped %>%
+    dplyr::mutate(
+      "{product_aggregation}" := ungrouped,
+      "{industry_aggregation}" := ungrouped
+    )
+  if (!is.null(Gr_Pr)) {
+    out <- out %>%
+      dplyr::bind_rows(Gr_Pr %>%
+                         dplyr::mutate(
+                           "{product_aggregation}" := grouped,
+                           "{industry_aggregation}" := ungrouped
+                         ))
+  }
+  if (!is.null(Gr_In)) {
+    out <- out %>%
+      dplyr::bind_rows(Gr_In %>%
+                         dplyr::mutate(
+                           "{product_aggregation}" := ungrouped,
+                           "{industry_aggregation}" := grouped
+                         ))
+  }
+  if (!is.null(Gr_PrIn)) {
+    out <- out %>%
+      dplyr::bind_rows(Gr_PrIn %>%
+                         dplyr::mutate(
+                           "{product_aggregation}" := grouped,
+                           "{industry_aggregation}" := grouped
+                         ))
+  }
+  return(out)
 }
 
 
