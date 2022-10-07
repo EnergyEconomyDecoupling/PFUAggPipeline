@@ -181,20 +181,20 @@ get_pipeline <- function(countries = "all",
                                                     # Ds_Pr = PSUT_Chop_all_Re_all_Ds_Pr,
                                                     # Ds_In = PSUT_Chop_all_Re_all_Ds_In,
                                                     Ds_PrIn = PSUT_Chop_all_Re_all_Ds_PrIn))
-    )
+    ),
 
 
     # Grouped aggregations ----------------------------------------------------
 
-    # targets::tar_target_raw(
-    #   "ProductAggMap",
-    #   substitute(c(AggregationMaps[["ef_product_aggregation"]],
-    #                AggregationMaps[["eu_product_aggregation"]]))
-    # ),
+    targets::tar_target_raw(
+      "ProductAggMap",
+      substitute(c(AggregationMaps[["ef_product_aggregation"]],
+                   AggregationMaps[["eu_product_aggregation"]]))
+    )
 
     # targets::tar_target_raw(
     #   "PSUT_Re_all_Gr_Pr",
-    #   substitute(PSUT_Re_all_Ds_PrIn %>%
+    #   substitute(PSUT_Chop_all_Re_all_Ds_PrIn %>%
     #                grouped_aggregations(countries = CountriesContinentsWorld,
     #                                     years = Years,
     #                                     aggregation_map = ProductAggMap,
