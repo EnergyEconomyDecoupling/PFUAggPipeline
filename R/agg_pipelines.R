@@ -184,99 +184,89 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Grouped aggregations ----------------------------------------------------
+    # Grouped product aggregations ----------------------------------------------------
 
     targets::tar_target_raw(
       "ProductAggMap",
       substitute(c(AggregationMaps[["ef_product_aggregation"]],
                    AggregationMaps[["eu_product_aggregation"]]))
+    ),
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_all_Gr_Pr",
+      substitute(PSUT_Chop_all_Re_all_Ds_PrIn %>%
+                   grouped_aggregations(countries = CountriesContinentsWorld,
+                                        years = Years,
+                                        aggregation_map = ProductAggMap,
+                                        margin = "Product")),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+    # Grouped industry aggregations -------------------------------------------
+
+    targets::tar_target_raw(
+      "IndustryAggMap",
+      substitute(AggregationMaps[["ef_sector_aggregation"]])
+    ),
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_all_Gr_In",
+      substitute(PSUT_Chop_all_Re_all_Ds_PrIn %>%
+                   grouped_aggregations(countries = CountriesContinentsWorld,
+                                        years = Years,
+                                        aggregation_map = IndustryAggMap,
+                                        margin = "Industry")),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+    # Grouped product and industry aggregations -------------------------------
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_all_Gr_PrIn",
+      substitute(PSUT_Chop_all_Re_all_Ds_PrIn %>%
+                   grouped_aggregations(countries = CountriesContinentsWorld,
+                                        years = Years,
+                                        aggregation_map = c(ProductAggMap, IndustryAggMap),
+                                        margin = c("Product", "Industry"))),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+    # Stack product and industry groupings ------------------------------------
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_all_Gr_all",
+      substitute(stack_group_aggregations(not_grouped = PSUT_Chop_all_Re_all_Ds_all,
+                                          Gr_Pr = PSUT_Chop_all_Re_all_Ds_all_Gr_Pr,
+                                          Gr_In = PSUT_Chop_all_Re_all_Ds_all_Gr_In,
+                                          Gr_PrIn = PSUT_Chop_all_Re_all_Ds_all_Gr_PrIn))
+    ),
+
+
+    # Primary aggregations ----------------------------------------------------
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_all_Gr_all_St_p",
+      substitute(PSUT_Chop_all_Re_all_Ds_all_Gr_all %>%
+                   calculate_primary_aggregates(countries = CountriesContinentsWorld,
+                                                years = Years,
+                                                p_industries = unlist(PIndustryPrefixes))),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+    # Net and gross final demand aggregations ---------------------------------
+
+    targets::tar_target_raw(
+      "PSUT_Chop_all_Re_all_Ds_all_Gr_all_St_pfd",
+      substitute(PSUT_Chop_all_Re_all_Ds_all_Gr_all_St_p %>%
+                   calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
+                                                    years = Years,
+                                                    fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(cross(CountriesContinentsWorld))
     )
-
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_Pr",
-    #   substitute(PSUT_Chop_all_Re_all_Ds_PrIn %>%
-    #                grouped_aggregations(countries = CountriesContinentsWorld,
-    #                                     years = Years,
-    #                                     aggregation_map = ProductAggMap,
-    #                                     margin = "Product")),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
-
-
-    #################################
-    # Grouped industry aggregations #
-    #################################
-
-    # targets::tar_target_raw(
-    #   "IndustryAggMap",
-    #   substitute(AggregationMaps[["ef_sector_aggregation"]])
-    # ),
-
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_In",
-    #   substitute(PSUT_Re_all_Ds_PrIn %>%
-    #                grouped_aggregations(countries = CountriesContinentsWorld,
-    #                                     years = Years,
-    #                                     aggregation_map = IndustryAggMap,
-    #                                     margin = "Industry")),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
-
-
-    #############################################
-    # Grouped product and industry aggregations #
-    #############################################
-
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_PrIn",
-    #   substitute(PSUT_Re_all_Ds_PrIn %>%
-    #                grouped_aggregations(countries = CountriesContinentsWorld,
-    #                                     years = Years,
-    #                                     aggregation_map = c(ProductAggMap, IndustryAggMap),
-    #                                     margin = c("Product", "Industry"))),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
-
-
-    ########################################
-    # Stack product and industry groupings #
-    ########################################
-
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_all",
-    #   substitute(stack_PrIn_aggregations(PSUT_Re_all = PSUT_Re_all,
-    #                                      PSUT_Re_all_Ds_PrIn = PSUT_Re_all_Ds_PrIn,
-    #                                      PSUT_Re_all_Gr_Pr = PSUT_Re_all_Gr_Pr,
-    #                                      PSUT_Re_all_Gr_In = PSUT_Re_all_Gr_In,
-    #                                      PSUT_Re_all_Gr_PrIn = PSUT_Re_all_Gr_PrIn))
-    # ),
-
-
-    ##############################
-    # Calculate PFU aggregations #
-    ##############################
-
-    # Primary aggregates
-
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_all_Chop_all_St_p",
-    #   substitute(PSUT_Re_all_Gr_all_Chop_all %>%
-    #                calculate_primary_aggregates(countries = CountriesContinentsWorld,
-    #                                             years = Years,
-    #                                             p_industries = unlist(PIndustryPrefixes))),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
-
-    # Net and gross final demand aggregates
-
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all_Gr_all_Chop_all_St_pfd",
-    #   substitute(PSUT_Re_all_Gr_all_Chop_all_St_p %>%
-    #                calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
-    #                                                 years = Years,
-    #                                                 fd_sectors = unlist(FinalDemandSectors))),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
 
 
     ##############################################
