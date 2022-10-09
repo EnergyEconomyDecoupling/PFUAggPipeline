@@ -266,34 +266,31 @@ get_pipeline <- function(countries = "all",
                                                     years = Years,
                                                     fd_sectors = unlist(FinalDemandSectors))),
       pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+    # Final demand sector aggregates ----------------------------------------------------
+
+    targets::tar_target_raw(
+      "SectorAggEta",
+      substitute(PSUT_Chop_all_Re_all_Ds_all_Gr_all %>%
+                   calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
+                                               years = Years,
+                                               fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
+
+
+
+    # PFU aggregations ------------------------------------------------------------------
+
+    targets::tar_target_raw(
+      "AggPFU",
+      substitute(PSUT_Chop_all_Re_all_Ds_all_Gr_all_St_pfd %>%
+                   calculate_pfu_aggregates(countries = CountriesContinentsWorld,
+                                            years = Years)),
+      pattern = quote(cross(CountriesContinentsWorld))
     )
-
-
-    ##############################################
-    # Calculate final demand sector aggregations #
-    ##############################################
-
-    # targets::tar_target_raw(
-    #   "SectorAggEta",
-    #   substitute(PSUT_Re_all_Gr_all_Chop_all %>%
-    #                calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
-    #                                            years = Years,
-    #                                            fd_sectors = unlist(FinalDemandSectors))),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
-
-
-    ####################
-    # PFU aggregations #
-    ####################
-
-    # targets::tar_target_raw(
-    #   "AggPFU",
-    #   substitute(PSUT_Re_all_Gr_all_Chop_all_St_pfd %>%
-    #                calculate_pfu_aggregates(countries = CountriesContinentsWorld,
-    #                                         years = Years)),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
 
 
     ####################
