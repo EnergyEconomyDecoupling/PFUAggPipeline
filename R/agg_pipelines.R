@@ -167,14 +167,9 @@ get_pipeline <- function(countries = "all",
       substitute(PSUT_Chop_all_Re_all %>%
                    despecified_aggregations(countries = CountriesContinentsWorld,
                                             years = Years,
-                                            # We use arrow, from, and of notations.
-                                            # from and of notations are types of bracket notations.
-                                            # Restricting to only these notations makes the code faster.
-                                            # Also, need to wrap in a list to ensure the notations_list is
-                                            # correctly propagated to all rows in the PSUT_Re_all data frame.
                                             notation = list(RCLabels::bracket_notation,
-                                                            RCLabels::arrow_notation)),
-      pattern = quote(cross(CountriesContinentsWorld)))
+                                                            RCLabels::arrow_notation))),
+      pattern = quote(cross(CountriesContinentsWorld))
     ),
 
     targets::tar_target_raw(
@@ -294,9 +289,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    ####################
-    # PFU efficiencies #
-    ####################
+    # PFU efficiencies ------------------------------------------------------------------
 
     targets::tar_target_raw(
       "EtaPFU",
