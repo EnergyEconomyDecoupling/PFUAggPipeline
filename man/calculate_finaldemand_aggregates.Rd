@@ -9,7 +9,10 @@ calculate_finaldemand_aggregates(
   countries,
   years,
   fd_sectors,
-  pattern_type = "leading"
+  piece = "noun",
+  notation = list(RCLabels::bracket_notation, RCLabels::arrow_notation),
+  pattern_type = "exact",
+  prepositions = RCLabels::prepositions_list
 )
 }
 \arguments{

@@ -18,7 +18,11 @@ calculate_primary_aggregates <- function(.psut_data,
                                          countries,
                                          years,
                                          p_industries,
-                                         pattern_type = "leading") {
+                                         piece = "noun",
+                                         notation = list(RCLabels::bracket_notation,
+                                                         RCLabels::arrow_notation),
+                                         pattern_type = "exact",
+                                         prepositions = RCLabels::prepositions_list) {
 
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
@@ -29,7 +33,10 @@ calculate_primary_aggregates <- function(.psut_data,
   }
   filtered_data %>%
     Recca::primary_aggregates(p_industries = p_industries,
-                              pattern_type = pattern_type)
+                              piece = piece,
+                              notation = notation,
+                              pattern_type = pattern_type,
+                              prepositions = prepositions)
 }
 
 
@@ -51,17 +58,25 @@ calculate_finaldemand_aggregates <- function(.psut_data,
                                              countries,
                                              years,
                                              fd_sectors,
-                                             pattern_type = "leading") {
+                                             piece = "noun",
+                                             notation = list(RCLabels::bracket_notation,
+                                                             RCLabels::arrow_notation),
+                                             pattern_type = "exact",
+                                             prepositions = RCLabels::prepositions_list) {
 
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
 
   if (nrow(filtered_data) == 0) {
-    return(filtered_data)
+    # return(filtered_data)
+    return(NULL)
   }
   filtered_data %>%
     Recca::finaldemand_aggregates(fd_sectors = fd_sectors,
-                                  pattern_type = pattern_type)
+                                  piece = piece,
+                                  notation = notation,
+                                  pattern_type = pattern_type,
+                                  prepositions = prepositions)
 }
 
 

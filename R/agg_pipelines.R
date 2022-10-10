@@ -168,11 +168,13 @@ get_pipeline <- function(countries = "all",
                    despecified_aggregations(countries = CountriesContinentsWorld,
                                             years = Years,
                                             # We use arrow, from, and of notations.
+                                            # from and of notations are types of bracket notations.
                                             # Restricting to only these notations makes the code faster.
                                             # Also, need to wrap in a list to ensure the notations_list is
                                             # correctly propagated to all rows in the PSUT_Re_all data frame.
-                                            notation = list(RCLabels::notations_list[c("of_notation", "arrow_notation", "from_notation")]))),
-      pattern = quote(cross(CountriesContinentsWorld))
+                                            notation = list(RCLabels::bracket_notation,
+                                                            RCLabels::arrow_notation)),
+      pattern = quote(cross(CountriesContinentsWorld)))
     ),
 
     targets::tar_target_raw(
@@ -281,7 +283,6 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-
     # PFU aggregations ------------------------------------------------------------------
 
     targets::tar_target_raw(
@@ -290,20 +291,20 @@ get_pipeline <- function(countries = "all",
                    calculate_pfu_aggregates(countries = CountriesContinentsWorld,
                                             years = Years)),
       pattern = quote(cross(CountriesContinentsWorld))
-    )
+    ),
 
 
     ####################
     # PFU efficiencies #
     ####################
 
-    # targets::tar_target_raw(
-    #   "EtaPFU",
-    #   substitute(AggPFU %>%
-    #                calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
-    #                                           years = Years)),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
+    targets::tar_target_raw(
+      "EtaPFU",
+      substitute(AggPFU %>%
+                   calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
+                                              years = Years)),
+      pattern = quote(cross(CountriesContinentsWorld))
+    )
 
 
     ################
