@@ -5,7 +5,7 @@
 \title{Stack all product and industry aggregations}
 \usage{
 stack_despecification_aggregations(
-  not_despecified,
+  specified_df,
   Ds_Pr = NULL,
   Ds_In = NULL,
   Ds_PrIn = NULL,
@@ -16,7 +16,7 @@ stack_despecification_aggregations(
 )
 }
 \arguments{
-\item{not_despecified}{A data frame in which all rows and columns are specified.}
+\item{specified_df}{A data frame in which all rows and columns are specified.}
 
 \item{Ds_Pr}{A data frame in which products are despecified.}
 

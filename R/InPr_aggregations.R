@@ -147,7 +147,7 @@ grouped_aggregations <- function(.psut_data,
 #' This function stacks them (with `dplyr::bind_rows`)
 #' and adds columns to identify the levels of product and industry aggregation.
 #'
-#' @param not_despecified A data frame in which all rows and columns are specified.
+#' @param specified_df A data frame in which all rows and columns are specified.
 #' @param Ds_Pr A data frame in which products are despecified.
 #' @param Ds_In A data frame in which industries are despecified.
 #' @param Ds_PrIn A data frame in which both products and industries are despecified.
@@ -156,7 +156,7 @@ grouped_aggregations <- function(.psut_data,
 #' @return A stacked data frame containing new metadata columns for product and industry specification.
 #'
 #' @export
-stack_despecification_aggregations <- function(not_despecified,
+stack_despecification_aggregations <- function(specified_df,
                                                Ds_Pr = NULL,
                                                Ds_In = NULL,
                                                Ds_PrIn = NULL,
@@ -165,7 +165,7 @@ stack_despecification_aggregations <- function(not_despecified,
                                                specified = PFUAggDatabase::aggregation_df_cols$specified,
                                                despecified = PFUAggDatabase::aggregation_df_cols$despecified) {
 
-  out <- not_despecified %>%
+  out <- specified_df %>%
     dplyr::mutate(
       "{product_aggregation}" := specified,
       "{industry_aggregation}" := specified
@@ -204,41 +204,51 @@ stack_despecification_aggregations <- function(not_despecified,
 #' This function stacks those data frames with appropriate metadata columns
 #' using `dplyr::bind_rows()`.
 #'
-#' @param not_grouped The data frame with no product or industry grouping.
+#' @param despecified_df A data frame in which products and industries
+#'                      are both despecified and not yet grouped.
 #' @param Gr_Pr The data frame with grouped products.
+#'              Default is `NULL`.
 #' @param Gr_In The data frame with grouped industries.
+#'              Default is `NULL`.
 #' @param Gr_PrIn The data frame with both grouped products and industries.
+#'                Default is `NULL`.
+#' @param specified A string that indicates a product or industry is specified.
+#'                  Default is `PFUAggDatabase::aggregation_df_cols$specified`.
+#' @param despecified A string that indicates a product or industry is desprcified.
+#'                    Default is `PFUAggDatabase::aggregation_df_cols$despecified`.
+#' @param ungrouped A string that indicates a product or industry is grouped.
+#'                  Default is `PFUAggDatabase::aggregation_df_cols$ungrouped`.
+#' @param grouped A string that indicates a product or industry is grouped.
+#'                Default is `PFUAggDatabase::aggregation_df_cols$grouped`.
 #'
 #' @return A stacked set of data frames with different product and industry groupings
 #'
 #' @export
-stack_group_aggregations <- function(not_grouped,
+stack_group_aggregations <- function(despecified_df,
                                      Gr_Pr = NULL,
                                      Gr_In = NULL,
                                      Gr_PrIn = NULL,
                                      product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
                                      industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+                                     specified = aggregation_df_cols$specified,
+                                     despecified = aggregation_df_cols$despecified,
                                      ungrouped = PFUAggDatabase::aggregation_df_cols$ungrouped,
                                      grouped = PFUAggDatabase::aggregation_df_cols$grouped) {
 
-  out <- not_grouped %>%
-    dplyr::mutate(
-      "{product_aggregation}" := ungrouped,
-      "{industry_aggregation}" := ungrouped
-    )
+  out <- despecified_df
   if (!is.null(Gr_Pr)) {
     out <- out %>%
       dplyr::bind_rows(Gr_Pr %>%
                          dplyr::mutate(
                            "{product_aggregation}" := grouped,
-                           "{industry_aggregation}" := ungrouped
+                           "{industry_aggregation}" := despecified
                          ))
   }
   if (!is.null(Gr_In)) {
     out <- out %>%
       dplyr::bind_rows(Gr_In %>%
                          dplyr::mutate(
-                           "{product_aggregation}" := ungrouped,
+                           "{product_aggregation}" := despecified,
                            "{industry_aggregation}" := grouped
                          ))
   }

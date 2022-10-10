@@ -5,24 +5,42 @@
 \title{Stack grouped data frames}
 \usage{
 stack_group_aggregations(
-  not_grouped,
+  despecified_df,
   Gr_Pr = NULL,
   Gr_In = NULL,
   Gr_PrIn = NULL,
   product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
   industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+  specified = aggregation_df_cols$specified,
+  despecified = aggregation_df_cols$despecified,
   ungrouped = PFUAggDatabase::aggregation_df_cols$ungrouped,
   grouped = PFUAggDatabase::aggregation_df_cols$grouped
 )
 }
 \arguments{
-\item{not_grouped}{The data frame with no product or industry grouping.}
+\item{despecified_df}{A data frame in which products and industries
+are both despecified and not yet grouped.}
 
-\item{Gr_Pr}{The data frame with grouped products.}
+\item{Gr_Pr}{The data frame with grouped products.
+Default is \code{NULL}.}
 
-\item{Gr_In}{The data frame with grouped industries.}
+\item{Gr_In}{The data frame with grouped industries.
+Default is \code{NULL}.}
 
-\item{Gr_PrIn}{The data frame with both grouped products and industries.}
+\item{Gr_PrIn}{The data frame with both grouped products and industries.
+Default is \code{NULL}.}
+
+\item{specified}{A string that indicates a product or industry is specified.
+Default is \code{PFUAggDatabase::aggregation_df_cols$specified}.}
+
+\item{despecified}{A string that indicates a product or industry is desprcified.
+Default is \code{PFUAggDatabase::aggregation_df_cols$despecified}.}
+
+\item{ungrouped}{A string that indicates a product or industry is grouped.
+Default is \code{PFUAggDatabase::aggregation_df_cols$ungrouped}.}
+
+\item{grouped}{A string that indicates a product or industry is grouped.
+Default is \code{PFUAggDatabase::aggregation_df_cols$grouped}.}
 }
 \value{
 A stacked set of data frames with different product and industry groupings
