@@ -40,7 +40,9 @@ chop_R_eccs <- function(.psut_data,
   }
   filtered_data %>%
     Recca::chop_R(calc_pfd_aggs = FALSE,
-                  pattern_type = "leading",
+                  piece = "noun",
+                  notation = RCLabels::bracket_notation,
+                  pattern_type = "literal",
                   unnest = TRUE,
                   method = method,
                   tol_invert = tol_invert)
