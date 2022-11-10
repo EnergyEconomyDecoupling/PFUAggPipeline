@@ -10,8 +10,8 @@ library(targets)
 # Set control parameters for the pipeline.
 
 # Set the countries to be analyzed.
-# countries <- c("GBR", "USA", "MEX")
-countries <- "USA"
+countries <- c("GBR", "USA", "MEX")
+# countries <- "USA"
 # countries <- "CHNM"
 # countries <- "all" # Run all countries in the PSUT target.
 # countries <- PFUDatabase::canonical_countries %>% as.character()
@@ -22,12 +22,12 @@ countries <- "USA"
 
 
 # Set the years to be analyzed.
-# years <- 1960:2019
+years <- 1960:2019
 # years <- 1971:1973
-years <- 1971
+# years <- 1971
 
 # Set the release to be used for input.
-psut_release = "20220922T120922Z-f5b22"
+psut_release = "20221109T152414Z-7d7ad"
 
 # Should we do a release of the results?
 release <- FALSE
