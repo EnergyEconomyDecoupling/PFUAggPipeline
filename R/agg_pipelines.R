@@ -100,20 +100,20 @@ get_pipeline <- function(countries = "all",
     # ),
 
     # Chop Y
-    # targets::tar_target_raw(
-    #   "PSUT_Chop_Y",
-    #   substitute(PSUT %>%
-    #                chop_Y_eccs(countries = CountriesContinentsWorld,
-    #                            years = Years,
-    #                            method = "SVD")),
-    #   pattern = quote(cross(CountriesContinentsWorld, Years))
-    # ),
+    targets::tar_target_raw(
+      "PSUT_Chop_Y",
+      substitute(PSUT %>%
+                   chop_Y_eccs(countries = CountriesContinentsWorld,
+                               years = Years,
+                               method = "SVD")),
+      pattern = quote(cross(CountriesContinentsWorld, Years))
+    ),
 
     targets::tar_target_raw(
       "PSUT_Chop_all",
       substitute(stack_chopped_ECCs(PSUT,
                                     # chop_R = PSUT_Chop_R,
-                                    # chop_Y = PSUT_Chop_Y
+                                    chop_Y = PSUT_Chop_Y
                                     ))
     ),
 
