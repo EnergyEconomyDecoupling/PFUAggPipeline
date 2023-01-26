@@ -28,7 +28,7 @@ get_pipeline <- function(countries = "all",
 
   list(
 
-    # Preliminary setup -------------------------------------------------------
+    # Preliminary setup --------------------------------------------------------
 
     # Store some incoming data as targets.
     # These targets are invariant across incoming psut_releases.
@@ -76,7 +76,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # PSUT --------------------------------------------------------------------
+    # PSUT ---------------------------------------------------------------------
 
     # Pull in the PSUT data frame
     targets::tar_target_raw(
@@ -87,17 +87,17 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Chops -------------------------------------------------------------------
+    # Chops --------------------------------------------------------------------
 
     # Chop R
-    # targets::tar_target_raw(
-    #   "PSUT_Chop_R",
-    #   substitute(PSUT %>%
-    #                chop_R_eccs(countries = CountriesContinentsWorld,
-    #                            years = Years,
-    #                            method = "SVD")),
-    #   pattern = quote(cross(CountriesContinentsWorld))
-    # ),
+    targets::tar_target_raw(
+      "PSUT_Chop_R",
+      substitute(PSUT %>%
+                   chop_R_eccs(countries = CountriesContinentsWorld,
+                               years = Years,
+                               method = "SVD")),
+      pattern = quote(cross(CountriesContinentsWorld))
+    ),
 
     # Chop Y
     targets::tar_target_raw(
@@ -112,13 +112,13 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Chop_all",
       substitute(stack_chopped_ECCs(PSUT,
-                                    # chop_R = PSUT_Chop_R,
+                                    chop_R = PSUT_Chop_R,
                                     chop_Y = PSUT_Chop_Y
                                     ))
     ),
 
 
-    # Regional aggregations ---------------------------------------------------
+    # Regional aggregations ----------------------------------------------------
 
     # Create a continents data frame, grouped by continent,
     # so subsequent operations (region aggregation)
@@ -142,7 +142,7 @@ get_pipeline <- function(countries = "all",
       pattern = quote(cross(Continents))
     ),
 
-    # Aggregate to world
+    # Aggregate continents to world
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_world",
       substitute(Recca::region_aggregates(PSUT_Chop_all_Re_continents %>%
@@ -161,7 +161,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Despecified aggregations ------------------------------------------------
+    # Despecified aggregations -------------------------------------------------
 
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all_Ds_PrIn",
@@ -182,7 +182,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Grouped product aggregations ----------------------------------------------------
+    # Grouped product aggregations ---------------------------------------------
 
     targets::tar_target_raw(
       "ProductAggMap",
@@ -201,7 +201,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Grouped industry aggregations -------------------------------------------
+    # Grouped industry aggregations --------------------------------------------
 
     targets::tar_target_raw(
       "IndustryAggMap",
@@ -219,7 +219,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Grouped product and industry aggregations -------------------------------
+    # Grouped product and industry aggregations --------------------------------
 
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all_Ds_all_Gr_PrIn",
@@ -232,7 +232,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Stack product and industry groupings ------------------------------------
+    # Stack product and industry groupings -------------------------------------
 
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all_Ds_all_Gr_all",
@@ -243,7 +243,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Primary aggregations ----------------------------------------------------
+    # Primary aggregations -----------------------------------------------------
 
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all_Ds_all_Gr_all_St_p",
@@ -255,7 +255,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Net and gross final demand aggregations ---------------------------------
+    # Net and gross final demand aggregations ----------------------------------
 
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all_Ds_all_Gr_all_St_pfd",
@@ -267,7 +267,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Final demand sector aggregates ----------------------------------------------------
+    # Final demand sector aggregates -------------------------------------------
 
     targets::tar_target_raw(
       "SectorAggEta",
@@ -279,7 +279,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # PFU aggregations ------------------------------------------------------------------
+    # PFU aggregations ---------------------------------------------------------
 
     targets::tar_target_raw(
       "AggPFU",
@@ -290,7 +290,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # PFU efficiencies ------------------------------------------------------------------
+    # PFU efficiencies ---------------------------------------------------------
 
     targets::tar_target_raw(
       "EtaPFU",
@@ -301,7 +301,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Pin the EtaPFU data frame -----------------------------------------------
+    # Pin the EtaPFU data frame ------------------------------------------------
 
     targets::tar_target_raw(
       "ReleaseEtaPFU",
@@ -312,7 +312,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Zip the cache and store in the pipeline_caches_folder -------------------
+    # Zip the cache and store in the pipeline_caches_folder --------------------
 
     targets::tar_target_raw(
       "StoreCache",
@@ -325,7 +325,7 @@ get_pipeline <- function(countries = "all",
 
 
 
-    # Write a CSV file of sector efficiencies ---------------------------------
+    # Write a CSV file of sector efficiencies ----------------------------------
 
     targets::tar_target_raw(
       "ReleaseSectorAggEtaCSV",
@@ -337,7 +337,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Write a CSV file of efficiencies ----------------------------------------
+    # Write a CSV file of efficiencies -----------------------------------------
 
     targets::tar_target_raw(
       "ReleaseEtaPFUCSV",
