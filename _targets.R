@@ -58,7 +58,11 @@ targets::tar_option_set(
   # These options set defaults for all targets.
   # Individual targets can override.
   storage = "worker",
-  retrieval = "worker"
+  retrieval = "worker",
+  # Tell targets to NOT keep everything in memory ...
+  memory = "transient",
+  # ... and to garbage-collect the memory when done.
+  garbage_collection = TRUE
 )
 
 # Pull in the pipeline
