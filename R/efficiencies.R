@@ -31,6 +31,9 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
     return(NULL)
   }
 
+  rm(.eta_pfu_data)
+  gc()
+
   filtered_data %>%
     dplyr::mutate(
       "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]],

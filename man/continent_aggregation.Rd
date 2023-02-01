@@ -5,7 +5,7 @@
 \title{Calculate continent aggregation}
 \usage{
 continent_aggregation(
-  PSUT,
+  PSUT_Chop_all,
   continents,
   years,
   continent = "Continent",
@@ -15,7 +15,7 @@ continent_aggregation(
 )
 }
 \arguments{
-\item{PSUT}{A data frame of PSUT matrices}
+\item{PSUT_Chop_all}{A data frame of PSUT matrices that were previously chopped.}
 
 \item{continents}{The continents for which aggregation is desired.}
 
@@ -34,8 +34,9 @@ Default is \code{IEATools::iea_cols$country}.}
 Default is the same as the value of the \code{continent} argument.}
 }
 \value{
-A data frame in which countries are aggregated to continents according to
-the aggregation map.
+A data frame in which countries are aggregated to continents
+according to the aggregation map
+for the desired \code{continents} and \code{years}.
 }
 \description{
 This function is a wrapper for \code{Recca::region_aggregates()}

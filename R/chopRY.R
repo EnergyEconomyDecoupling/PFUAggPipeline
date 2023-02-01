@@ -35,6 +35,9 @@ chop_R_eccs <- function(.psut_data,
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
 
+  rm(.psut_data)
+  gc()
+
   if (nrow(filtered_data) == 0) {
     return(filtered_data)
   }
@@ -58,6 +61,10 @@ chop_Y_eccs <- function(.psut_data,
                         tol_invert = .Machine$double.eps) {
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
+
+  rm(.psut_data)
+  gc()
+
   # Check for the case where we have no data for that country and year.
   # In that event, we simply want to return the data frame.
   if (nrow(filtered_data) == 0) {

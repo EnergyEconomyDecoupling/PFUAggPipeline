@@ -24,8 +24,16 @@ calculate_primary_aggregates(
 
 \item{p_industries}{A string vector of industries that count as "primary".}
 
+\item{piece}{The piece to be aggregated. Default is "noun".}
+
+\item{notation}{The assumed notation for the labels.
+Default is \code{list(RCLabels::bracket_notation, RCLabels::arrow_notation)}.}
+
 \item{pattern_type}{The type of matching to be used for primary industry names.
 Default is "leading".}
+
+\item{prepositions}{The expected propositions in row and column labels.
+Default is \code{RCLabels::prepositions_list}.}
 }
 \value{
 A version of \code{.psut_data} with additional column for primary aggregate data.

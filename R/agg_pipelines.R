@@ -96,7 +96,7 @@ get_pipeline <- function(countries = "all",
                    chop_R_eccs(countries = CountriesContinentsWorld,
                                years = Years,
                                method = "SVD")),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
     # Chop Y
@@ -127,8 +127,10 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Chop_all_with_continent_col",
       substitute(join_psut_continents(PSUT = PSUT_Chop_all,
+                                      years = Years,
                                       continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                      continent = "Continent"))
+                                      continent = "Continent")),
+      pattern = quote(cross(Years))
     ),
 
     # Aggregate by continent
@@ -143,15 +145,23 @@ get_pipeline <- function(countries = "all",
     ),
 
     # Aggregate continents to world
+    # targets::tar_target_raw(
+    #   "PSUT_Chop_all_Re_world",
+    #   substitute(Recca::region_aggregates(PSUT_Chop_all_Re_continents %>%
+    #                                         dplyr::left_join(AggregationMaps$world_aggregation %>%
+    #                                                            matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
+    #                                                                                             few_colname = "World"),
+    #                                                          by = IEATools::iea_cols$country),
+    #                                       many_colname = IEATools::iea_cols$country, # Which actually holds continents
+    #                                       few_colname = "World")),
+    #   pattern = quote(cross(Years))
+    # ),
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_world",
-      substitute(Recca::region_aggregates(PSUT_Chop_all_Re_continents %>%
-                                            dplyr::left_join(AggregationMaps$world_aggregation %>%
-                                                               matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
-                                                                                                few_colname = "World"),
-                                                             by = IEATools::iea_cols$country),
-                                          many_colname = IEATools::iea_cols$country, # Which actually holds continents
-                                          few_colname = "World"))
+      substitute(world_aggregation(PSUT_Chop_all_Re_continents,
+                                   years = Years,
+                                   world_aggregation_map = AggregationMaps$world_aggregation)),
+      pattern = quote(cross(Years))
     ),
 
     # Stack all region aggregations together
@@ -170,7 +180,7 @@ get_pipeline <- function(countries = "all",
                                             years = Years,
                                             notation = list(RCLabels::bracket_notation,
                                                             RCLabels::arrow_notation))),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
     targets::tar_target_raw(
@@ -197,7 +207,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = ProductAggMap,
                                         margin = "Product")),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -215,7 +225,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = IndustryAggMap,
                                         margin = "Industry")),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -228,7 +238,7 @@ get_pipeline <- function(countries = "all",
                                         years = Years,
                                         aggregation_map = c(ProductAggMap, IndustryAggMap),
                                         margin = c("Product", "Industry"))),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -251,7 +261,7 @@ get_pipeline <- function(countries = "all",
                    calculate_primary_aggregates(countries = CountriesContinentsWorld,
                                                 years = Years,
                                                 p_industries = unlist(PIndustryPrefixes))),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -263,7 +273,7 @@ get_pipeline <- function(countries = "all",
                    calculate_finaldemand_aggregates(countries = CountriesContinentsWorld,
                                                     years = Years,
                                                     fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -275,7 +285,7 @@ get_pipeline <- function(countries = "all",
                    calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
                                                years = Years,
                                                fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -286,7 +296,7 @@ get_pipeline <- function(countries = "all",
       substitute(PSUT_Chop_all_Re_all_Ds_all_Gr_all_St_pfd %>%
                    calculate_pfu_aggregates(countries = CountriesContinentsWorld,
                                             years = Years)),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -297,7 +307,7 @@ get_pipeline <- function(countries = "all",
       substitute(AggPFU %>%
                    calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
                                               years = Years)),
-      pattern = quote(cross(CountriesContinentsWorld))
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 

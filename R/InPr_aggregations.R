@@ -42,6 +42,10 @@ despecified_aggregations <- function(.psut_data,
 
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
+
+  rm(.psut_data)
+  gc()
+
   # Check for the case where we have no data for that country and year.
   # In that event, we simply want to return the data frame.
   if (nrow(filtered_data) == 0) {
@@ -119,6 +123,10 @@ grouped_aggregations <- function(.psut_data,
                                  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
+
+  rm(.psut_data)
+  gc()
+
   # Check for the case where we have no data for that country and year.
   # In that event, we simply want to return the data frame.
   if (nrow(filtered_data) == 0) {
@@ -212,9 +220,13 @@ stack_despecification_aggregations <- function(specified_df,
 #'              Default is `NULL`.
 #' @param Gr_PrIn The data frame with both grouped products and industries.
 #'                Default is `NULL`.
+#' @param product_aggregation The product aggregation column.
+#'                            Default is `PFUAggDatabase::aggregation_df_cols$product_aggregation`.
+#' @param industry_aggregation The industry aggregation column.
+#'                            Default is `PFUAggDatabase::aggregation_df_cols$industry_aggregation`.
 #' @param specified A string that indicates a product or industry is specified.
 #'                  Default is `PFUAggDatabase::aggregation_df_cols$specified`.
-#' @param despecified A string that indicates a product or industry is desprcified.
+#' @param despecified A string that indicates a product or industry is despecified
 #'                    Default is `PFUAggDatabase::aggregation_df_cols$despecified`.
 #' @param ungrouped A string that indicates a product or industry is grouped.
 #'                  Default is `PFUAggDatabase::aggregation_df_cols$ungrouped`.
@@ -230,8 +242,8 @@ stack_group_aggregations <- function(despecified_df,
                                      Gr_PrIn = NULL,
                                      product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
                                      industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-                                     specified = aggregation_df_cols$specified,
-                                     despecified = aggregation_df_cols$despecified,
+                                     specified = PFUAggDatabase::aggregation_df_cols$specified,
+                                     despecified = PFUAggDatabase::aggregation_df_cols$despecified,
                                      ungrouped = PFUAggDatabase::aggregation_df_cols$ungrouped,
                                      grouped = PFUAggDatabase::aggregation_df_cols$grouped) {
 

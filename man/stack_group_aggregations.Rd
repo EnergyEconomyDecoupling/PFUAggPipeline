@@ -11,8 +11,8 @@ stack_group_aggregations(
   Gr_PrIn = NULL,
   product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
   industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-  specified = aggregation_df_cols$specified,
-  despecified = aggregation_df_cols$despecified,
+  specified = PFUAggDatabase::aggregation_df_cols$specified,
+  despecified = PFUAggDatabase::aggregation_df_cols$despecified,
   ungrouped = PFUAggDatabase::aggregation_df_cols$ungrouped,
   grouped = PFUAggDatabase::aggregation_df_cols$grouped
 )
@@ -30,10 +30,16 @@ Default is \code{NULL}.}
 \item{Gr_PrIn}{The data frame with both grouped products and industries.
 Default is \code{NULL}.}
 
+\item{product_aggregation}{The product aggregation column.
+Default is \code{PFUAggDatabase::aggregation_df_cols$product_aggregation}.}
+
+\item{industry_aggregation}{The industry aggregation column.
+Default is \code{PFUAggDatabase::aggregation_df_cols$industry_aggregation}.}
+
 \item{specified}{A string that indicates a product or industry is specified.
 Default is \code{PFUAggDatabase::aggregation_df_cols$specified}.}
 
-\item{despecified}{A string that indicates a product or industry is desprcified.
+\item{despecified}{A string that indicates a product or industry is despecified
 Default is \code{PFUAggDatabase::aggregation_df_cols$despecified}.}
 
 \item{ungrouped}{A string that indicates a product or industry is grouped.

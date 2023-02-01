@@ -7,7 +7,7 @@ output: html_document
 * Rearranged the order of operations for the pipeline.
   Now, chopping happens first.
   Despecifying and aggregating happens after.
-  This change should make upstream and downstreams
+  This change should make upstream and downstream swims
   more stable, numerically.
 * Added a target and .csv pin final-to-useful efficiencies
   for final demand sectors.

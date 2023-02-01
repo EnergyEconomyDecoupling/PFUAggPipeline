@@ -47,8 +47,16 @@ calculate_sector_fu_agg_eta(
 
 \item{fd_sectors}{The sectors that count for final demand.}
 
+\item{piece}{The piece to be aggregated. Default is "noun".}
+
 \item{pattern_type}{Where to look for sectors.
 Default is "leading".}
+
+\item{notation}{The assumed notation for the labels.
+Default is \code{list(RCLabels::bracket_notation, RCLabels::arrow_notation)}.}
+
+\item{prepositions}{The expected propositions in row and column labels.
+Default is \code{RCLabels::prepositions_list}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{The names of the matrix columns in \code{.psut_mats}.
 Defaults from \code{Recca::psut_cols}.}

@@ -26,7 +26,7 @@ countries <- "WRLD"
 # years <- 1960:2019
 # years <- 1971:1973
 # years <- 1971
-years <- 1971:1975
+years <- 1971:1972
 
 # Set the release to be used for input.
 # psut_release <- "20221109T152414Z-7d7ad"
