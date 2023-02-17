@@ -12,9 +12,13 @@
 #'
 #' Both `tol_invert` and `method` should be a single values and apply to all matrices being inverted.
 #'
+#' When `do_chops` is `FALSE`, a data frame is returned
+#' with no rows and the same columns as `.psut_data`.
+#'
 #' @param .psut_data A data frame of PSUT matrices. It should be wide by matrices.
 #' @param countries The countries to analyze.
 #' @param years The years to analyze.
+#' @param do_chops A boolean that tells whether to do the **R** and **Y** chops.
 #' @param method Tells how to invert matrices. Default is "SVD". See details.
 #' @param tol_invert The tolerance for detecting linear dependencies in the columns of matrices to be inverted.
 #'                   Default is `.Machine$double.eps`.
@@ -29,8 +33,13 @@ NULL
 chop_R_eccs <- function(.psut_data,
                         countries,
                         years,
+                        do_chops,
                         method = "SVD",
                         tol_invert = .Machine$double.eps) {
+
+  if (!do_chops) {
+    return(NULL)
+  }
 
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
@@ -57,8 +66,13 @@ chop_R_eccs <- function(.psut_data,
 chop_Y_eccs <- function(.psut_data,
                         countries,
                         years,
+                        do_chops,
                         method = "SVD",
                         tol_invert = .Machine$double.eps) {
+  if (!do_chops) {
+    return(NULL)
+  }
+
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
 

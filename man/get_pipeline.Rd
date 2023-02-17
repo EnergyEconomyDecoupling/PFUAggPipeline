@@ -7,6 +7,7 @@
 get_pipeline(
   countries = "all",
   years = "all",
+  do_chops,
   psut_release,
   aggregation_maps_path,
   pipeline_releases_folder,
@@ -20,6 +21,8 @@ Default is "all", meaning all available countries should be analyzed.}
 
 \item{years}{A numeric vector of years to be analyzed.
 Default is "all", meaning all available years should be analyzed.}
+
+\item{do_chops}{A boolean that tells whether to perform the R and Y chops.}
 
 \item{psut_release}{The release we'll use from \code{pipeline_releases_folder}.
 See details.}

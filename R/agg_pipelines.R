@@ -7,6 +7,7 @@
 #'                  Default is "all", meaning all available countries should be analyzed.
 #' @param years A numeric vector of years to be analyzed.
 #'              Default is "all", meaning all available years should be analyzed.
+#' @param do_chops A boolean that tells whether to perform the R and Y chops.
 #' @param psut_release The release we'll use from `pipeline_releases_folder`.
 #'                     See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
@@ -20,6 +21,7 @@
 #' @export
 get_pipeline <- function(countries = "all",
                          years = "all",
+                         do_chops,
                          psut_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
@@ -95,6 +97,7 @@ get_pipeline <- function(countries = "all",
       substitute(PSUT %>%
                    chop_R_eccs(countries = CountriesContinentsWorld,
                                years = Years,
+                               do_chops = do_chops,
                                method = "SVD")),
       pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
@@ -105,6 +108,7 @@ get_pipeline <- function(countries = "all",
       substitute(PSUT %>%
                    chop_Y_eccs(countries = CountriesContinentsWorld,
                                years = Years,
+                               do_chops = do_chops,
                                method = "SVD")),
       pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
@@ -145,17 +149,6 @@ get_pipeline <- function(countries = "all",
     ),
 
     # Aggregate continents to world
-    # targets::tar_target_raw(
-    #   "PSUT_Chop_all_Re_world",
-    #   substitute(Recca::region_aggregates(PSUT_Chop_all_Re_continents %>%
-    #                                         dplyr::left_join(AggregationMaps$world_aggregation %>%
-    #                                                            matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
-    #                                                                                             few_colname = "World"),
-    #                                                          by = IEATools::iea_cols$country),
-    #                                       many_colname = IEATools::iea_cols$country, # Which actually holds continents
-    #                                       few_colname = "World")),
-    #   pattern = quote(cross(Years))
-    # ),
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_world",
       substitute(world_aggregation(PSUT_Chop_all_Re_continents,
