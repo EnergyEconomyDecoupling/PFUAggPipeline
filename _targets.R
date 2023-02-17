@@ -37,7 +37,7 @@ psut_release <- "20221109T152414Z-7d7ad"
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
-# Should we do a release of the results?
+# Should we release the results?
 release <- FALSE
 
 
