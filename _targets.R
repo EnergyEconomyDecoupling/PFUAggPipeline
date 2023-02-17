@@ -11,10 +11,10 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
-countries <- "USA"
+# countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
-# countries <- "all" # Run all countries in the PSUT target.
+countries <- "all" # Run all countries in the PSUT target.
 # countries <- PFUDatabase::canonical_countries %>% as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
