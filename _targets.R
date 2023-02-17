@@ -11,10 +11,10 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
-# countries <- "USA"
+countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
-countries <- "all" # Run all countries in the PSUT target.
+# countries <- "all" # Run all countries in the PSUT target.
 # countries <- PFUDatabase::canonical_countries %>% as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
@@ -69,29 +69,29 @@ targets::tar_option_set(
 )
 
 # Pull in the pipeline
-# PFUAggDatabase::get_pipeline(countries = countries,
-#                              years = years,
-#                              psut_release = psut_release,
-#                              aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
-#                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
-#                              pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
-#                              release = release)
+PFUAggDatabase::get_pipeline(countries = countries,
+                             years = years,
+                             psut_release = psut_release,
+                             aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
+                             pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
+                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
+                             release = release)
 
 
 
 # For WRLD
 
-project_path <- PFUSetup::get_abs_paths()[["project_path"]]
-wrld_path <- paste0(project_path, "/PFUDatabase-WRLD-InputData/")
-
-PFUAggDatabase::get_pipeline(countries = countries,
-                             years = years,
-                             do_chops = do_chops,
-                             psut_release = psut_release,
-                             aggregation_maps_path = paste0(wrld_path, "aggregation_mapping.xlsx"),
-                             pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
-                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
-                             release = release)
+# project_path <- PFUSetup::get_abs_paths()[["project_path"]]
+# wrld_path <- paste0(project_path, "/PFUDatabase-WRLD-InputData/")
+#
+# PFUAggDatabase::get_pipeline(countries = countries,
+#                              years = years,
+#                              do_chops = do_chops,
+#                              psut_release = psut_release,
+#                              aggregation_maps_path = paste0(wrld_path, "aggregation_mapping.xlsx"),
+#                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
+#                              pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
+#                              release = release)
 
 
 
