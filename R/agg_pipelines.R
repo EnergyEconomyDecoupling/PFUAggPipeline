@@ -160,7 +160,9 @@ get_pipeline <- function(countries = "all",
     # Stack all region aggregations together
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all",
-      substitute(dplyr::bind_rows(PSUT_Chop_all, PSUT_Chop_all_Re_continents, PSUT_Chop_all_Re_world))
+      substitute(dplyr::bind_rows(PSUT_Chop_all,
+                                  PSUT_Chop_all_Re_continents,
+                                  PSUT_Chop_all_Re_world))
     ),
 
 
