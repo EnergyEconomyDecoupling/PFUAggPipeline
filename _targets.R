@@ -71,6 +71,7 @@ targets::tar_option_set(
 # Pull in the pipeline
 PFUAggDatabase::get_pipeline(countries = countries,
                              years = years,
+                             do_chops = do_chops,
                              psut_release = psut_release,
                              aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
