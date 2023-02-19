@@ -1,8 +1,10 @@
 ---
 title: "Access PFU Database Products Via `Pins`"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{access_via_pins}
+  %\VignetteIndexEntry{Access PFU Database Products Via `Pins`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
