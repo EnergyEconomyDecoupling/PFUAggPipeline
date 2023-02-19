@@ -33,11 +33,14 @@ Imports:
     targets,
     tidyr
 Suggests: 
+    knitr,
+    rmarkdown,
     spelling,
-    testthat (>= 3.0.0), 
+    testthat (>= 3.0.0),
     tibble
 Depends: 
     R (>= 2.10)
 LazyData: true
 Language: en-US
 Config/testthat/edition: 3
+VignetteBuilder: knitr
