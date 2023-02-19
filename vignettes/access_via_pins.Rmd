@@ -50,7 +50,7 @@ In addition to the database itself, there are several data products available, m
 
 The database, its versions, and its data products are described in the file named `versions and products.xlsx` at the top level of the `PipelineReleases` folder. Look through that file to determine which PFU Database products are needed for your research. In particular, note the "Pin name" and the "Pin version" of the data products that you desire.
 
-Note: there may be other versions in the Dropbox folder. Ignore all pins except those identified in the `versions and products.xlsx` file.
+Note: there may be other versions of pins in the Dropbox folder. Ignore all versions of pins except those identified in the `versions and products.xlsx` file.
 
 # Accessing the PFU Database and other data products
 
