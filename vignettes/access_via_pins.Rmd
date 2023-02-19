@@ -50,6 +50,8 @@ In addition to the database itself, there are several data products available, m
 
 The database, its versions, and its data products are described in the file named `versions and products.xlsx` at the top level of the `PipelineReleases` folder. Look through that file to determine which PFU Database products are needed for your research. In particular, note the "Pin name" and the "Pin version" of the data products that you desire.
 
+Note: there may be other versions in the Dropbox folder. Ignore all pins except those identified in the `versions and products.xlsx` file.
+
 # Accessing the PFU Database and other data products
 
 To load the PFU Database itself into your `R` session, supply the pin name and pin version to `pins` functions. The following code loads v1 of the database itself, using the name of the pin ("psut") and the version string for version 1 of the database ("20221109T152414Z-7d7ad").
