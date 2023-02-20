@@ -11,10 +11,10 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
-# countries <- "USA"
+countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
-countries <- "all" # Run all countries in the PSUT target.
+# countries <- "all" # Run all countries in the PSUT target.
 # countries <- PFUDatabase::canonical_countries %>% as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
@@ -23,8 +23,8 @@ countries <- "all" # Run all countries in the PSUT target.
 
 
 # Set the years to be analyzed.
-years <- 1960:2019
-# years <- 1971:1973
+# years <- 1960:2019
+years <- 1971:1973
 # years <- 1971
 # years <- 1971:1972
 
@@ -32,7 +32,8 @@ years <- 1960:2019
 do_chops <- FALSE
 
 # Set the release to be used for input.
-psut_release <- "20221109T152414Z-7d7ad"
+psut_release <- "20230220T011746Z-d5c4a"    # v0.9 (USA only)
+# psut_release <- "20221109T152414Z-7d7ad"  # v1
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
