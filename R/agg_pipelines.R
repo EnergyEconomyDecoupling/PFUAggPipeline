@@ -214,7 +214,7 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PSUT_Chop_all_Re_all_Ds_all_Gr_Pr",
-      substitute(PSUT_Chop_all_Re_all_Ds_all %>%
+      substitute(PSUT_Chop_all_Re_all_Ds_PrIn %>%
                    grouped_aggregations(countries = CountriesContinentsWorld,
                                         years = Years,
                                         aggregation_map = ProductAggMap,
