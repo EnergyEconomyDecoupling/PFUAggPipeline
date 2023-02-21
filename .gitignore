@@ -30,3 +30,4 @@ _targets
 .Rproj.user
 docs
 .DS_Store
+inst/doc

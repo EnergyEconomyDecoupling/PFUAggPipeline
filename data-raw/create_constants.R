@@ -77,12 +77,13 @@ usethis::use_data(aggregation_file_cols, overwrite = TRUE)
 # Aggregation data frame columns
 #
 
-aggregation_df_cols <- list(product_aggregation = "Product.Aggregation",
-                            industry_aggregation = "Industry.Aggregation",
+aggregation_df_cols <- list(product_aggregation = "Product.aggregation",
+                            industry_aggregation = "Industry.aggregation",
                             specified = "Specified",
                             despecified = "Despecified",
+                            ungrouped = "Ungrouped",
                             grouped = "Grouped",
-                            chopped_mat = "Chopped.Mat",
-                            chopped_var = "Chopped.Var",
+                            chopped_mat = "Chopped.mat",
+                            chopped_var = "Chopped.var",
                             product_sector = Recca::aggregate_cols$product_sector)
 usethis::use_data(aggregation_df_cols, overwrite = TRUE)

@@ -10,6 +10,7 @@ chop_R_eccs(
   .psut_data,
   countries,
   years,
+  do_chops,
   method = "SVD",
   tol_invert = .Machine$double.eps
 )
@@ -18,6 +19,7 @@ chop_Y_eccs(
   .psut_data,
   countries,
   years,
+  do_chops,
   method = "SVD",
   tol_invert = .Machine$double.eps
 )
@@ -28,6 +30,8 @@ chop_Y_eccs(
 \item{countries}{The countries to analyze.}
 
 \item{years}{The years to analyze.}
+
+\item{do_chops}{A boolean that tells whether to do the \strong{R} and \strong{Y} chops.}
 
 \item{method}{Tells how to invert matrices. Default is "SVD". See details.}
 
@@ -50,4 +54,7 @@ calculating the inverse.
 See \code{matsbyname::invert_byname()} for additional details.
 
 Both \code{tol_invert} and \code{method} should be a single values and apply to all matrices being inverted.
+
+When \code{do_chops} is \code{FALSE}, a data frame is returned
+with no rows and the same columns as \code{.psut_data}.
 }

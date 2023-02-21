@@ -29,8 +29,13 @@ create_fd_sectors_list <- function(iea_fd_sectors, sector_aggregation_map) {
 #' @param countries The countries for which primary aggregates are to be calculated.
 #' @param years The years for which primary aggregates are to be calculated.
 #' @param fd_sectors The sectors that count for final demand.
+#' @param piece The piece to be aggregated. Default is "noun".
 #' @param pattern_type Where to look for sectors.
 #'                     Default is "leading".
+#' @param notation The assumed notation for the labels.
+#'                 Default is `list(RCLabels::bracket_notation, RCLabels::arrow_notation)`.
+#' @param prepositions The expected propositions in row and column labels.
+#'                     Default is `RCLabels::prepositions_list`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units The names of the matrix columns in `.psut_mats`.
 #'                                             Defaults from `Recca::psut_cols`.
 #' @param year The string name of the year column.
@@ -93,6 +98,9 @@ calculate_sector_fu_agg_eta <- function(.psut_data,
   if (nrow(filtered_data) == 0) {
     return(NULL)
   }
+
+  rm(.psut_data)
+  gc()
 
   filtered_data %>%
     Recca::finaldemand_aggregates(fd_sectors = fd_sectors,

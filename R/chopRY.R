@@ -12,9 +12,13 @@
 #'
 #' Both `tol_invert` and `method` should be a single values and apply to all matrices being inverted.
 #'
+#' When `do_chops` is `FALSE`, a data frame is returned
+#' with no rows and the same columns as `.psut_data`.
+#'
 #' @param .psut_data A data frame of PSUT matrices. It should be wide by matrices.
 #' @param countries The countries to analyze.
 #' @param years The years to analyze.
+#' @param do_chops A boolean that tells whether to do the **R** and **Y** chops.
 #' @param method Tells how to invert matrices. Default is "SVD". See details.
 #' @param tol_invert The tolerance for detecting linear dependencies in the columns of matrices to be inverted.
 #'                   Default is `.Machine$double.eps`.
@@ -29,18 +33,28 @@ NULL
 chop_R_eccs <- function(.psut_data,
                         countries,
                         years,
+                        do_chops,
                         method = "SVD",
                         tol_invert = .Machine$double.eps) {
 
+  if (!do_chops) {
+    return(NULL)
+  }
+
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
+
+  rm(.psut_data)
+  gc()
 
   if (nrow(filtered_data) == 0) {
     return(filtered_data)
   }
   filtered_data %>%
     Recca::chop_R(calc_pfd_aggs = FALSE,
-                  pattern_type = "leading",
+                  piece = "noun",
+                  notation = RCLabels::bracket_notation,
+                  pattern_type = "literal",
                   unnest = TRUE,
                   method = method,
                   tol_invert = tol_invert)
@@ -52,10 +66,19 @@ chop_R_eccs <- function(.psut_data,
 chop_Y_eccs <- function(.psut_data,
                         countries,
                         years,
+                        do_chops,
                         method = "SVD",
                         tol_invert = .Machine$double.eps) {
+  if (!do_chops) {
+    return(NULL)
+  }
+
   filtered_data <- .psut_data %>%
     PFUDatabase::filter_countries_years(countries = countries, years = years)
+
+  rm(.psut_data)
+  gc()
+
   # Check for the case where we have no data for that country and year.
   # In that event, we simply want to return the data frame.
   if (nrow(filtered_data) == 0) {
@@ -76,7 +99,7 @@ chop_Y_eccs <- function(.psut_data,
 #'
 #' This function stacks chopped data frames with `dplyr::bind_rows()`.
 #'
-#' @param PSUT_Re_all_Gr_all,PSUT_Re_all_Gr_all_Chop_Y,PSUT_Re_all_Gr_all_Chop_R Data frames to be stacked.
+#' @param psut,chop_Y,chop_R Data frames to be stacked.
 #' @param chopped_mat,chopped_var Names of columns that tell the matrix that has been chopped (`chop_mat`) and
 #'                          the column that contains the the row or column name used for this chop.
 #' @param R_matname,Y_matname The names of **R** and **Y** matrices to be added to the `chopped_var` column of the data frame.
@@ -87,25 +110,25 @@ chop_Y_eccs <- function(.psut_data,
 #' @return A row-bound version of `PSUT_Re_all_Gr_all`, `PSUT_Re_all_Gr_all_Chop_Y`, and `PSUT_Re_all_Gr_all_Chop_R`.
 #'
 #' @export
-stack_chopped_ECCs <- function(PSUT_Re_all_Gr_all,
-                              PSUT_Re_all_Gr_all_Chop_R = NULL,
-                              PSUT_Re_all_Gr_all_Chop_Y = NULL,
-                              chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-                              chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
-                              Y_matname = Recca::psut_cols$Y,
-                              R_matname = Recca::psut_cols$R,
-                              product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-                              none = "None") {
+stack_chopped_ECCs <- function(psut,
+                               chop_R = NULL,
+                               chop_Y = NULL,
+                               chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+                               chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+                               Y_matname = Recca::psut_cols$Y,
+                               R_matname = Recca::psut_cols$R,
+                               product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
+                               none = "None") {
 
   # Build a combined data frame.
-  out <- PSUT_Re_all_Gr_all %>%
+  out <- psut %>%
     dplyr::mutate(
       "{chopped_mat}" := none,
       "{chopped_var}" := none
     )
-  if (!is.null(PSUT_Re_all_Gr_all_Chop_R)) {
+  if (!is.null(chop_R)) {
     out <- dplyr::bind_rows(out,
-                            PSUT_Re_all_Gr_all_Chop_R %>%
+                            chop_R %>%
                               rename_prime_psut_columns() %>%
                               dplyr::mutate(
                                 "{chopped_mat}" := R_matname
@@ -114,9 +137,9 @@ stack_chopped_ECCs <- function(PSUT_Re_all_Gr_all,
                                 "{chopped_var}" := .data[[product_sector]]
                               ))
   }
-  if (!is.null(PSUT_Re_all_Gr_all_Chop_Y)) {
+  if (!is.null(chop_Y)) {
     out <- dplyr::bind_rows(out,
-                            PSUT_Re_all_Gr_all_Chop_Y %>%
+                            chop_Y %>%
                               rename_prime_psut_columns() %>%
                               dplyr::mutate(
                                 "{chopped_mat}" := Y_matname

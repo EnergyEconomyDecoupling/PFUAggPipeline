@@ -9,7 +9,10 @@ calculate_finaldemand_aggregates(
   countries,
   years,
   fd_sectors,
-  pattern_type = "leading"
+  piece = "noun",
+  notation = list(RCLabels::bracket_notation, RCLabels::arrow_notation),
+  pattern_type = "exact",
+  prepositions = RCLabels::prepositions_list
 )
 }
 \arguments{
@@ -21,8 +24,16 @@ calculate_finaldemand_aggregates(
 
 \item{fd_sectors}{A string vector of sectors that count as "final demand".}
 
+\item{piece}{The piece to be aggregated. Default is "noun".}
+
+\item{notation}{The assumed notation for the labels.
+Default is \code{list(RCLabels::bracket_notation, RCLabels::arrow_notation)}.}
+
 \item{pattern_type}{The type of matching to be used for final demand sectors names.
 Default is "leading".}
+
+\item{prepositions}{The expected propositions in row and column labels.
+Default is \code{RCLabels::prepositions_list}.}
 }
 \value{
 A version of \code{.psut_data} with additional column for final demand aggregate data.

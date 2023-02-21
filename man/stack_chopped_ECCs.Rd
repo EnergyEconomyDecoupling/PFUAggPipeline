@@ -5,9 +5,9 @@
 \title{Stack chopped ECC data frames}
 \usage{
 stack_chopped_ECCs(
-  PSUT_Re_all_Gr_all,
-  PSUT_Re_all_Gr_all_Chop_R = NULL,
-  PSUT_Re_all_Gr_all_Chop_Y = NULL,
+  psut,
+  chop_R = NULL,
+  chop_Y = NULL,
   chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
   chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
   Y_matname = Recca::psut_cols$Y,
@@ -17,7 +17,7 @@ stack_chopped_ECCs(
 )
 }
 \arguments{
-\item{PSUT_Re_all_Gr_all, PSUT_Re_all_Gr_all_Chop_Y, PSUT_Re_all_Gr_all_Chop_R}{Data frames to be stacked.}
+\item{psut, chop_Y, chop_R}{Data frames to be stacked.}
 
 \item{chopped_mat, chopped_var}{Names of columns that tell the matrix that has been chopped (\code{chop_mat}) and
 the column that contains the the row or column name used for this chop.}
