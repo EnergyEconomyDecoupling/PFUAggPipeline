@@ -300,6 +300,31 @@ get_pipeline <- function(countries = "all",
       pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
+    # Write a data frame of sector efficiencies --------------------------------
+
+    # Add a new target here.
+    # Then add the target name and pin details to the versions and products spreadsheet.
+
+    targets::tar_target_raw(
+      "ReleaseSectorAggEta",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = SectorAggEta,
+                                        pin_name = "eta_fu_sector",
+                                        release = Release))
+    ),
+
+
+    # Write a CSV file of sector efficiencies ----------------------------------
+
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaCSV",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = SectorAggEta,
+                                        pin_name = "eta_fu_sector_csv",
+                                        type = "csv",
+                                        release = Release))
+    ),
+
 
     # PFU aggregations ---------------------------------------------------------
 
@@ -334,6 +359,17 @@ get_pipeline <- function(countries = "all",
     ),
 
 
+    # Write a CSV file of efficiencies -----------------------------------------
+
+    targets::tar_target_raw(
+      "ReleaseEtaPFUCSV",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = pivot_for_csv(EtaPFU),
+                                        pin_name = "eta_pfu_csv",
+                                        type = "csv",
+                                        release = Release))),
+
+
     # Zip the cache and store in the pipeline_caches_folder --------------------
 
     targets::tar_target_raw(
@@ -343,31 +379,7 @@ get_pipeline <- function(countries = "all",
                                      file_prefix = "pfu_agg_pipeline_cache_",
                                      dependency = EtaPFU,
                                      release = Release))
-    ),
-
-
-
-    # Write a CSV file of sector efficiencies ----------------------------------
-
-    targets::tar_target_raw(
-      "ReleaseSectorAggEtaCSV",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = SectorAggEta,
-                                        pin_name = "eta_fu_sector_csv",
-                                        type = "csv",
-                                        release = Release))
-    ),
-
-
-    # Write a CSV file of efficiencies -----------------------------------------
-
-    targets::tar_target_raw(
-      "ReleaseEtaPFUCSV",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = EtaPFU,
-                                        pin_name = "eta_pfu_csv",
-                                        type = "csv",
-                                        release = Release)))
+    )
   )
 }
 
