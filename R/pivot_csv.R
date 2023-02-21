@@ -1,24 +1,23 @@
-#' Title
+#' Pivot a data frame for saving as a .csv file
 #'
-#' @param .df
-#' @param year_col
-#' @param val_cols
-#' @param var_col
+#' Data frames in tidy format should be pivoted
+#' to wide-by-year data frames for saving as .csv files.
+#' This function does that pivoting.
 #'
-#' @return
+#' @param .df The data frame to be pivoted.
+#' @param val_cols Data columns to be swapped to the `var_col`.
+#'                 These should be variable names as a string vector.
+#' @param year_col The string name of the year column.
+#'                 Default is `IEATools::iea_cols$year`.
+#' @param var_col The name of the resulting variable name column.
+#'                Default is "var".
+#'
+#' @return The pivoted data frame.
+#'
 #' @export
-#'
-#' @examples
-pivot_for_csv <- function(.df, year_col = "Year", val_cols, var_col = ".var") {
-  # year_cols <- sae |>
-  #   IEATools::year_cols()
-  # sae |>
-  #   tidyr::pivot_longer(cols = year_cols, names_to = "Year") |>
-  #   tidyr::pivot_wider(names_from = "var", values_from = "value") |>
-  #   View()
-  # .df |>
-  #   tidyr::pivot_longer(cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu"), names_to = "var", values_to = "val") |>
-  #   tidyr::pivot_wider(names_from = "Year", values_from = "val")
+pivot_for_csv <- function(.df,
+                          year_col = IEATools::iea_cols$year,
+                          val_cols, var_col = "var") {
   .df |>
     tidyr::pivot_longer(cols = val_cols, names_to = var_col, values_to = "val") |>
     tidyr::pivot_wider(names_from = year_col, values_from = "val")

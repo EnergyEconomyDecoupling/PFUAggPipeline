@@ -2,13 +2,32 @@
 % Please edit documentation in R/pivot_csv.R
 \name{pivot_for_csv}
 \alias{pivot_for_csv}
-\title{Title}
+\title{Pivot a data frame for saving as a .csv file}
 \usage{
-pivot_for_csv(.df, year_col = "Year", val_cols, var_col = ".var")
+pivot_for_csv(
+  .df,
+  year_col = IEATools::iea_cols$year,
+  val_cols,
+  var_col = "var"
+)
 }
 \arguments{
-\item{var_col}{}
+\item{.df}{The data frame to be pivoted.}
+
+\item{year_col}{The string name of the year column.
+Default is \code{IEATools::iea_cols$year}.}
+
+\item{val_cols}{Data columns to be swapped to the \code{var_col}.
+These should be variable names as a string vector.}
+
+\item{var_col}{The name of the resulting variable name column.
+Default is "var".}
+}
+\value{
+The pivoted data frame.
 }
 \description{
-Title
+Data frames in tidy format should be pivoted
+to wide-by-year data frames for saving as .csv files.
+This function does that pivoting.
 }
