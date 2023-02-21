@@ -26,7 +26,7 @@ Take the following steps to prepare for accessing PFU Database products.
 
 ## (1) Purchase IEA WEEB Data
 
-The PFU database contains [World Extended Energy Balance](https://www.iea.org/data-and-statistics/data-product/world-energy-balances#energy-balances) (WEEB) data. So you must have already purchased the data to use the PFU database. At present, you must purchase all countries and all years of WEEB data to access the PFU Database.
+The PFU database contains [World Extended Energy Balance](https://www.iea.org/data-and-statistics/data-product/world-energy-balances#energy-balances) (WEEB) data. To use the PFU Database, you or your institution must already have purchased the WEEB data, obtained a license to use the WEEB data, or subscribe to a data service with access to the WEEB data. At present, you must have access to all countries and all years of WEEB data to access the PFU Database.
 
 ## (2) Install Dropbox
 
