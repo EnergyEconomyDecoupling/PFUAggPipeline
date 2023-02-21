@@ -16,8 +16,9 @@
 #'
 #' @export
 pivot_for_csv <- function(.df,
+                          val_cols,
                           year_col = IEATools::iea_cols$year,
-                          val_cols, var_col = "var") {
+                          var_col = "var") {
   .df |>
     tidyr::pivot_longer(cols = val_cols, names_to = var_col, values_to = "val") |>
     tidyr::pivot_wider(names_from = year_col, values_from = "val")

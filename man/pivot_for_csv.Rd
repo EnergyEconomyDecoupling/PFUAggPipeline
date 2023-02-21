@@ -6,19 +6,19 @@
 \usage{
 pivot_for_csv(
   .df,
-  year_col = IEATools::iea_cols$year,
   val_cols,
+  year_col = IEATools::iea_cols$year,
   var_col = "var"
 )
 }
 \arguments{
 \item{.df}{The data frame to be pivoted.}
 
-\item{year_col}{The string name of the year column.
-Default is \code{IEATools::iea_cols$year}.}
-
 \item{val_cols}{Data columns to be swapped to the \code{var_col}.
 These should be variable names as a string vector.}
+
+\item{year_col}{The string name of the year column.
+Default is \code{IEATools::iea_cols$year}.}
 
 \item{var_col}{The name of the resulting variable name column.
 Default is "var".}
