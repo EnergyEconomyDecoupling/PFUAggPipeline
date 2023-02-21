@@ -23,10 +23,10 @@ countries <- "USA"
 
 
 # Set the years to be analyzed.
-years <- 1960:2019
+# years <- 1960:2019
 # years <- 1971:1973
-# years <- 1971
 # years <- 1971:1972
+years <- 1971
 
 # Tells whether to do the R and Y chops.
 do_chops <- FALSE
