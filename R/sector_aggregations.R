@@ -60,7 +60,7 @@ create_fd_sectors_list <- function(iea_fd_sectors, sector_aggregation_map) {
 #' @return A data frame of sector energy and exergy sums.
 #'
 #' @export
-calculate_sector_fu_agg_eta <- function(.psut_data,
+calculate_sector_agg_eta_fu <- function(.psut_data,
                                         countries,
                                         years,
                                         fd_sectors,
@@ -141,7 +141,7 @@ calculate_sector_fu_agg_eta <- function(.psut_data,
     tidyr::pivot_wider(names_from = last_stage, values_from = aggregate_demand) %>%
     dplyr::mutate(
       "{eta_fu}" := .data[[useful]] / .data[[final]]
-    ) %>%
-    tidyr::pivot_longer(cols = c(final, useful, eta_fu), names_to = "var", values_to = "val") %>%
-    tidyr::pivot_wider(names_from = year, values_from = "val")
+    ) # %>%
+    # tidyr::pivot_longer(cols = c(final, useful, eta_fu), names_to = "var", values_to = "val") %>%
+    # tidyr::pivot_wider(names_from = year, values_from = "val")
 }

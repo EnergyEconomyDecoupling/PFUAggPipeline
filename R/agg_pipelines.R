@@ -95,7 +95,10 @@ get_pipeline <- function(countries = "all",
                    dplyr::filter(Country == "USA"))
     ),
 
-    # Pin the PSUT_USA data frame ------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Product A ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Pin the PSUT_USA data frame ----------------------------------------------
 
     targets::tar_target_raw(
       "ReleasePSUT_USA",
@@ -289,40 +292,52 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Final demand sector aggregates -------------------------------------------
+    # Final demand sector aggregates and efficiencies --------------------------
 
     targets::tar_target_raw(
-      "SectorAggEta",
+      "SectorAggEtaFU",
       substitute(PSUT_Chop_all_Re_all_Ds_all_Gr_all %>%
-                   calculate_sector_fu_agg_eta(countries = CountriesContinentsWorld,
+                   calculate_sector_agg_eta_fu(countries = CountriesContinentsWorld,
                                                years = Years,
                                                fd_sectors = unlist(FinalDemandSectors))),
       pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
+    # --------------------------------------------------------------------------
+    # Product B ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Write a data frame of sector efficiencies --------------------------------
 
-    # Add a new target here.
-    # Then add the target name and pin details to the versions and products spreadsheet.
-
     targets::tar_target_raw(
-      "ReleaseSectorAggEta",
+      "ReleaseSectorAggEtaFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = SectorAggEta,
-                                        pin_name = "eta_fu_sector",
+                                        targ = SectorAggEtaFU,
+                                        pin_name = "sector_agg_eta_fu",
                                         release = Release))
     ),
 
 
+    # Pivot SectorAggEtaFU in preparation for writing .csv file ----------------
+
+    targets::tar_target_raw(
+      "PivotedSectorAggEtaFU",
+      substitute(pivot_for_csv(SectorAggEtaFU,
+                               val_cols = c("Final", "Useful", "eta_fu")))
+    ),
+
+
+    # --------------------------------------------------------------------------
+    # Product C ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Write a CSV file of sector efficiencies ----------------------------------
 
     targets::tar_target_raw(
-      "ReleaseSectorAggEtaCSV",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = SectorAggEta,
-                                        pin_name = "eta_fu_sector_csv",
-                                        type = "csv",
-                                        release = Release))
+      "ReleaseSectorAggEtaFUCSV",
+      substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = PivotedSectorAggEtaFU,
+                                             pin_name = "sector_agg_eta_fu_csv",
+                                             type = "csv",
+                                             release = Release))
     ),
 
 
@@ -340,7 +355,7 @@ get_pipeline <- function(countries = "all",
     # PFU efficiencies ---------------------------------------------------------
 
     targets::tar_target_raw(
-      "EtaPFU",
+      "AggEtaPFU",
       substitute(AggPFU %>%
                    calculate_pfu_efficiencies(countries = CountriesContinentsWorld,
                                               years = Years)),
@@ -348,25 +363,39 @@ get_pipeline <- function(countries = "all",
     ),
 
 
+    # --------------------------------------------------------------------------
+    # Product D ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Pin the EtaPFU data frame ------------------------------------------------
 
     targets::tar_target_raw(
-      "ReleaseEtaPFU",
+      "ReleaseAggEtaPFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = EtaPFU,
-                                        pin_name = "eta_pfu",
+                                        targ = AggEtaPFU,
+                                        pin_name = "agg_eta_pfu",
                                         release = Release))
     ),
 
 
-    # Write a CSV file of efficiencies -----------------------------------------
+    # Pivot AggEtaPFU in preparation for writing .csv file ---------------------
 
     targets::tar_target_raw(
-      "ReleaseEtaPFUCSV",
+      "PivotedAggEtaPFU",
+      substitute(AggEtaPFU %>%
+                   pivot_for_csv(val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")))
+    ),
+
+
+    # --------------------------------------------------------------------------
+    # Product D ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a CSV file of PFU efficiencies -------------------------------------
+
+    targets::tar_target_raw(
+      "ReleaseAggEtaPFUCSV",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = pivot_for_csv(EtaPFU,
-                                                             val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")),
-                                        pin_name = "eta_pfu_csv",
+                                        targ = PivotedAggEtaPFU,
+                                        pin_name = "agg_eta_pfu_csv",
                                         type = "csv",
                                         release = Release))),
 

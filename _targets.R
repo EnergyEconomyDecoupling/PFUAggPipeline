@@ -23,10 +23,10 @@ countries <- "USA"
 
 
 # Set the years to be analyzed.
-# years <- 1960:2019
+years <- 1960:2019
 # years <- 1971:1973
 # years <- 1971:1972
-years <- 1971
+# years <- 1971
 
 # Tells whether to do the R and Y chops.
 do_chops <- FALSE
@@ -39,7 +39,7 @@ psut_release <- "20230220T160616Z-35e3e"    # v0.9 (USA only)
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
 # Should we release the results?
-release <- FALSE
+release <- TRUE
 
 
 
