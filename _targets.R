@@ -39,7 +39,7 @@ psut_release <- "20230220T160616Z-35e3e"    # v0.9 (USA only)
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
 # Should we release the results?
-release <- TRUE
+release <- FALSE
 
 
 
