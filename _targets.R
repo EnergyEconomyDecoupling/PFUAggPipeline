@@ -32,7 +32,7 @@ years <- 1960:2019
 do_chops <- FALSE
 
 # Set the release to be used for input.
-psut_release <- "20230220T160616Z-35e3e"    # v0.9 (USA only)
+psut_release <- "20230309T184624Z-7ace5"    # v0.9 (USA only)
 # psut_release <- "20221109T152414Z-7d7ad"  # v1
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
