@@ -306,7 +306,7 @@ get_pipeline <- function(countries = "all",
     # --------------------------------------------------------------------------
     # Product B ----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    # Write a data frame of sector efficiencies --------------------------------
+    # Write a data frame of final demand sector efficiencies -------------------
 
     targets::tar_target_raw(
       "ReleaseSectorAggEtaFU",
@@ -329,7 +329,7 @@ get_pipeline <- function(countries = "all",
     # --------------------------------------------------------------------------
     # Product C ----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    # Write a CSV file of sector efficiencies ----------------------------------
+    # Write a CSV file of final demand sector efficiencies ---------------------
 
     targets::tar_target_raw(
       "ReleaseSectorAggEtaFUCSV",
