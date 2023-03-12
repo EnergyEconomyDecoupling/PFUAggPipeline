@@ -69,7 +69,8 @@ continent_aggregation <- function(PSUT_Chop_all,
 
   Recca::region_aggregates(filtered_psut,
                            many_colname = many_colname,
-                           few_colname = few_colname)
+                           few_colname = few_colname,
+                           drop_na_few = TRUE)
 }
 
 
@@ -117,5 +118,6 @@ world_aggregation <- function(PSUT_Chop_all_Re_continents,
                                                         few_colname = few_colname),
                      by = country) %>%
     Recca::region_aggregates(many_colname = country,
-                             few_colname = few_colname)
+                             few_colname = few_colname,
+                             drop_na_few = TRUE)
 }
