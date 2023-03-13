@@ -102,8 +102,14 @@ efficiency_pipeline <- function(.psut_data,
                                 U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
                                 U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
                                 S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
-                                # The suffix added to the name of the columns of aggregated matrices.
-                                aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
+                                # The suffix added to the name of the columns of aggregated matrices
+                                aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
+                                # Some identifying strings
+                                product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+                                industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+                                specified = PFUAggDatabase::aggregation_df_cols$specified,
+                                despecified = PFUAggDatabase::aggregation_df_cols$despecified,
+                                grouped = PFUAggDatabase::aggregation_df_cols$grouped) {
 
   # Despecify and aggregate both Product and Industry dimensions
   PSUT_Ds_InPr <- .psut_data |>
@@ -173,13 +179,37 @@ efficiency_pipeline <- function(.psut_data,
                                  r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units)
 
   # Stack all the despecifications and groupings together
-  PSUT_Ds_all_Gr_all <- dplyr::bind_rows(.psut_data,
-                                         PSUT_Ds_InPr,
-                                         PSUT_Ds_InPr_Gr_Pr,
-                                         PSUT_Ds_InPr_Gr_In,
-                                         PSUT_Ds_InPr_Gr_PrIn)
+  PSUT_Ds_all_Gr_all <- dplyr::bind_rows(.psut_data |>
+                                           dplyr::mutate(
+                                             "{product_aggregation}" := specified,
+                                             "{industry_aggregation}" := specified
+                                           ),
+                                         PSUT_Ds_InPr |>
+                                           dplyr::mutate(
+                                             "{product_aggregation}" := despecified,
+                                             "{industry_aggregation}" := despecified
+                                           ),
+                                         PSUT_Ds_InPr_Gr_Pr |>
+                                           dplyr::mutate(
+                                             "{product_aggregation}" := grouped,
+                                             "{industry_aggregation}" := despecified
+                                           ),
+                                         PSUT_Ds_InPr_Gr_In |>
+                                           dplyr::mutate(
+                                             "{product_aggregation}" := despecified,
+                                             "{industry_aggregation}" := grouped
+                                           ),
+                                         PSUT_Ds_InPr_Gr_PrIn |>
+                                           dplyr::mutate(
+                                             "{product_aggregation}" := grouped,
+                                             "{industry_aggregation}" := grouped
+                                           ))
 
-  # Calculate primary and final demand aggregates
+  # Calculate primary aggregates
+
+
+
+  # Calculate final demand aggregates
 
 
 
