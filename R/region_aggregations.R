@@ -121,3 +121,46 @@ world_aggregation <- function(PSUT_Chop_all_Re_continents,
                              few_colname = few_colname,
                              drop_na_few = TRUE)
 }
+
+
+#' Aggregation regions
+#'
+#' The database can benefit from continent and World aggregations.
+#' This function bundles those aggregations into a single function.
+#'
+#' All regional aggregations have names that are 5 characters or longer.
+#'
+#' @param .psut_data
+#'
+#' @return A data frame that includes new "Country"s for
+#'         continents and the World.
+#' @export
+#'
+#' @examples
+region_agg_pipeline <- function(.psut_data,
+                                country = IEATools::iea_cols$country,
+                                aggregation_maps,
+                                continent_aggregation_map,
+                                world_aggregation_map,
+                                continent = "Continent") {
+
+  PSUT_Re_continents <- .psut_data |>
+    dplyr::left_join(continent_aggregation_map |>
+                       matsbyname::agg_map_to_agg_table(many_colname = country,
+                                                        few_colname = continent),
+                     by = country) |>
+    Recca::region_aggregates(many_colname = country,
+                             few_colname = continent,
+                             drop_na_few = TRUE)
+
+  PSUT_Re_world <- PSUT_Re_continents |>
+    dplyr::left_join(world_aggregation_map |>
+                       matsbyname::agg_map_to_agg_table(many_colname = country,
+                                                        few_colname = continent),
+                     by = country) %>%
+    Recca::region_aggregates(many_colname = country,
+                             few_colname = few_colname,
+                             drop_na_few = TRUE)
+
+
+}

@@ -2,18 +2,16 @@
 % Please edit documentation in R/efficiencies.R
 \name{efficiency_pipeline}
 \alias{efficiency_pipeline}
-\title{Bundle several aggregation calculations together}
+\title{Calculate PFU aggregations and efficiencies}
 \usage{
 efficiency_pipeline(
   .psut_data,
-  product_agg_map,
   p_industries,
-  pattern_type = "exact",
+  fd_sectors,
   piece = "noun",
   notation = list(RCLabels::bracket_notation, RCLabels::arrow_notation),
+  pattern_type = "exact",
   prepositions = RCLabels::prepositions_list,
-  product_type = Recca::row_col_types$product_type,
-  industry_type = Recca::row_col_types$industry_type,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -22,58 +20,26 @@ efficiency_pipeline(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
-  R_aggregated_colname = paste0(R, aggregated_suffix),
-  U_aggregated_colname = paste0(U, aggregated_suffix),
-  V_aggregated_colname = paste0(V, aggregated_suffix),
-  Y_aggregated_colname = paste0(Y, aggregated_suffix),
-  r_eiou_aggregated_colname = paste0(r_eiou, aggregated_suffix),
-  U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
-  U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
-  S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
-  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
-  product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-  industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-  specified = PFUAggDatabase::aggregation_df_cols$specified,
-  despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-  grouped = PFUAggDatabase::aggregation_df_cols$grouped
+  gross = Recca::efficiency_cols$gross,
+  net = Recca::efficiency_cols$net,
+  gross_net = Recca::efficiency_cols$gross_net,
+  last_stage = Recca::psut_cols$last_stage,
+  final = IEATools::all_stages$final,
+  useful = IEATools::all_stages$useful,
+  ex_p = Recca::aggregate_cols$aggregate_primary,
+  ex_f = IEATools::aggregate_cols$aggregate_final,
+  ex_u = IEATools::aggregate_cols$aggregate_useful,
+  ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
+  ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
+  ex_fd = Recca::aggregate_cols$aggregate_demand
 )
 }
 \arguments{
-\item{.psut_data}{PSUT matrices in wide-by-matrix format.
-This could be an entire data frame,
-a slice (row) of the data frame, or
-a group of the data frame.}
-
-\item{notation}{The notations from which notation for row and column names can be inferred.}
-
-\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units}{The names of input columns in \code{.psut_data}.
-Default values are from \code{Recca::psut_cols}.}
-
-\item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_eiou_aggregated_colname, U_eiou_aggregated_colname, U_feed_aggregated_colname, S_units_aggregated_colname}{The names of output aggregated columns.
-Defaults are the matrix names with \code{aggregated_suffix} appended.}
-
-\item{aggregated_suffix}{The suffix for columns of aggregated matrices.
-Default is \code{Recca::aggregate_cols$aggregated_suffix}.}
+\item{.psut_data}{A data frame of PSUT data or a slice (row) of the data frame.}
 }
 \value{
-A data frame of efficiencies for the original, despecified, and grouped versions
-of \code{.psut_data}.
+A data frame of metadata columns and efficiencies
 }
 \description{
-The efficiency pipeline calculates efficiencies
-for various despecifications, row aggregations, and column aggregations.
-}
-\details{
-This function is an attempt to streamline the calculation pipeline
-by eliminating the need to repeatedly re-load intermediate targets from disk.
-It bundles the work of previous targets to
-\itemize{
-\item despecify and aggregate both product and industry dimensions of PSUT matrices,
-\item group and aggregate products,
-\item group and aggregate industries,
-\item group and aggregate both products and industries,
-\item calculate primary-to-final efficiencies,
-\item calculate primary-to-useful efficiencies, and
-\item calculate final-to-useful efficiencies.
-}
+Calculate PFU aggregations and efficiencies
 }
