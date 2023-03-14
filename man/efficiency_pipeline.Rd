@@ -6,9 +6,12 @@
 \usage{
 efficiency_pipeline(
   .psut_data,
-  notation,
   product_agg_map,
+  p_industries,
   pattern_type = "exact",
+  piece = "noun",
+  notation = list(RCLabels::bracket_notation, RCLabels::arrow_notation),
+  prepositions = RCLabels::prepositions_list,
   product_type = Recca::row_col_types$product_type,
   industry_type = Recca::row_col_types$industry_type,
   R = Recca::psut_cols$R,
@@ -27,7 +30,12 @@ efficiency_pipeline(
   U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
   U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
   S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
-  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix
+  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
+  product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+  industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+  specified = PFUAggDatabase::aggregation_df_cols$specified,
+  despecified = PFUAggDatabase::aggregation_df_cols$despecified,
+  grouped = PFUAggDatabase::aggregation_df_cols$grouped
 )
 }
 \arguments{

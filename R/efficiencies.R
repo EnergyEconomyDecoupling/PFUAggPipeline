@@ -78,9 +78,13 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
 #'
 #' @export
 efficiency_pipeline <- function(.psut_data,
-                                notation,
                                 product_agg_map,
+                                p_industries,
                                 pattern_type = "exact",
+                                piece = "noun",
+                                notation = list(RCLabels::bracket_notation,
+                                                RCLabels::arrow_notation),
+                                prepositions = RCLabels::prepositions_list,
                                 # Row and column types
                                 product_type = Recca::row_col_types$product_type,
                                 industry_type = Recca::row_col_types$industry_type,
@@ -206,8 +210,12 @@ efficiency_pipeline <- function(.psut_data,
                                            ))
 
   # Calculate primary aggregates
-
-
+  PSUT_Ds_all_Gr_all_St_p <- PSUT_Ds_all_Gr_all |>
+    Recca::primary_aggregates(p_industries = p_industries,
+                              piece = piece,
+                              notation = notation,
+                              pattern_type = pattern_type,
+                              prepositions = prepositions)
 
   # Calculate final demand aggregates
 
