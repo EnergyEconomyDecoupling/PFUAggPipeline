@@ -144,6 +144,8 @@ region_pipeline <- function(.psut_data,
                             continent = "Continent",
                             world = "World") {
 
+  # Create a data frame of continents,
+  # by aggregating countries to continents according to continent_aggregation_map.
   PSUT_Re_continents <- .psut_data |>
     dplyr::left_join(continent_aggregation_map |>
                        matsbyname::agg_map_to_agg_table(many_colname = country,
@@ -153,14 +155,19 @@ region_pipeline <- function(.psut_data,
                              few_colname = continent,
                              drop_na_few = TRUE)
 
+  # Create a data frame of the World,
+  # by aggregating continents to World according to world_aggregation_map.
   PSUT_Re_world <- PSUT_Re_continents |>
     dplyr::left_join(world_aggregation_map |>
                        matsbyname::agg_map_to_agg_table(many_colname = country,
-                                                        few_colname = continent),
+                                                        few_colname = world),
                      by = country) %>%
     Recca::region_aggregates(many_colname = country,
-                             few_colname = few_colname,
+                             few_colname = world,
                              drop_na_few = TRUE)
 
-
+  # Stach the data frames and return
+  dplyr::bind_rows(.psut_data,
+                   PSUT_Re_continents,
+                   PSUT_Re_world)
 }

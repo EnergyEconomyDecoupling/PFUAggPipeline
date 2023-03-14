@@ -142,21 +142,21 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all_Chop_all_Ds_all_Gr_all",
       substitute(PSUT_Re_all |>
-                   row_col_agg_pipeline(countries = CountriesContinentsWorld,
-                                        years = Years,
-                                        do_chops = do_chops,
-                                        method = "SVD"))
+                   pr_in_agg_pipeline(product_agg_map = ProductAggMap,
+                                      industry_agg_map = IndustryAggMap,
+                                      p_industries = unlist(PIndustryPrefixes),
+                                      do_chops = do_chops,
+                                      method = "SVD"))
     ),
+
 
     # PFU aggregates and efficiencies ------------------------------------------
 
     targets::tar_target_raw(
       "AggEtaPFU",
       substitute(PSUT_Re_all_Chop_all_Ds_all_Gr_all |>
-                   efficiency_pipeline(countries = CountriesContinentsWorld,
-                                       years = Years,
-                                       do_chops = do_chops,
-                                       method = "SVD"))
+                   efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
+                                       fd_sectors = unlist(FinalDemandSectors)))
     ),
 
 

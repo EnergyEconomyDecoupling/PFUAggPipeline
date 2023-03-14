@@ -362,53 +362,54 @@ rename_suffixed_psut_columns <- function(.psut_data,
 #'         of `.psut_data`.
 #'
 #' @export
-row_col_agg_pipeline <- function(.psut_data,
-                                 product_agg_map,
-                                 p_industries,
-                                 do_chops = FALSE,
-                                 pattern_type = "exact",
-                                 piece = "noun",
-                                 bracket_notation = RCLabels::bracket_notation,
-                                 arrow_notation = RCLabels::arrow_notation,
-                                 prepositions = RCLabels::prepositions_list,
-                                 method = "SVD",
-                                 tol_invert = .Machine$double.eps,
-                                 # Row and column types
-                                 product_type = Recca::row_col_types$product_type,
-                                 industry_type = Recca::row_col_types$industry_type,
-                                 # Names of original matrices in .psut_data
-                                 R = Recca::psut_cols$R,
-                                 U = Recca::psut_cols$U,
-                                 V = Recca::psut_cols$V,
-                                 Y = Recca::psut_cols$Y,
-                                 r_eiou = Recca::psut_cols$r_eiou,
-                                 U_eiou = Recca::psut_cols$U_eiou,
-                                 U_feed = Recca::psut_cols$U_feed,
-                                 S_units = Recca::psut_cols$S_units,
-                                 # Names for the aggregated matrices after aggregation
-                                 R_aggregated_colname = paste0(R, aggregated_suffix),
-                                 U_aggregated_colname = paste0(U, aggregated_suffix),
-                                 V_aggregated_colname = paste0(V, aggregated_suffix),
-                                 Y_aggregated_colname = paste0(Y, aggregated_suffix),
-                                 r_eiou_aggregated_colname = paste0(r_eiou, aggregated_suffix),
-                                 U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
-                                 U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
-                                 S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
-                                 # The suffix added to the name of the columns of aggregated matrices
-                                 aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
-                                 # Some identifying strings
-                                 product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-                                 industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-                                 specified = PFUAggDatabase::aggregation_df_cols$specified,
-                                 despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-                                 grouped = PFUAggDatabase::aggregation_df_cols$grouped,
-                                 # Strings for chopping
-                                 chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-                                 chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
-                                 Y_matname = Recca::psut_cols$Y,
-                                 R_matname = Recca::psut_cols$R,
-                                 product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-                                 none = "None") {
+pr_in_agg_pipeline <- function(.psut_data,
+                               product_agg_map,
+                               industry_agg_map,
+                               p_industries,
+                               do_chops = FALSE,
+                               pattern_type = "exact",
+                               piece = "noun",
+                               bracket_notation = RCLabels::bracket_notation,
+                               arrow_notation = RCLabels::arrow_notation,
+                               prepositions = RCLabels::prepositions_list,
+                               method = "SVD",
+                               tol_invert = .Machine$double.eps,
+                               # Row and column types
+                               product_type = Recca::row_col_types$product_type,
+                               industry_type = Recca::row_col_types$industry_type,
+                               # Names of original matrices in .psut_data
+                               R = Recca::psut_cols$R,
+                               U = Recca::psut_cols$U,
+                               V = Recca::psut_cols$V,
+                               Y = Recca::psut_cols$Y,
+                               r_eiou = Recca::psut_cols$r_eiou,
+                               U_eiou = Recca::psut_cols$U_eiou,
+                               U_feed = Recca::psut_cols$U_feed,
+                               S_units = Recca::psut_cols$S_units,
+                               # Names for the aggregated matrices after aggregation
+                               R_aggregated_colname = paste0(R, aggregated_suffix),
+                               U_aggregated_colname = paste0(U, aggregated_suffix),
+                               V_aggregated_colname = paste0(V, aggregated_suffix),
+                               Y_aggregated_colname = paste0(Y, aggregated_suffix),
+                               r_eiou_aggregated_colname = paste0(r_eiou, aggregated_suffix),
+                               U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
+                               U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
+                               S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
+                               # The suffix added to the name of the columns of aggregated matrices
+                               aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
+                               # Some identifying strings
+                               product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+                               industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
+                               specified = PFUAggDatabase::aggregation_df_cols$specified,
+                               despecified = PFUAggDatabase::aggregation_df_cols$despecified,
+                               grouped = PFUAggDatabase::aggregation_df_cols$grouped,
+                               # Strings for chopping
+                               chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+                               chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+                               Y_matname = Recca::psut_cols$Y,
+                               R_matname = Recca::psut_cols$R,
+                               product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
+                               none = "None") {
 
 
   # Chop the R and Y matrices, if desired
@@ -439,7 +440,7 @@ row_col_agg_pipeline <- function(.psut_data,
   PSUT_chop_all <- dplyr::bind_rows(.psut_data |>
                                       dplyr::mutate(
                                         "{chopped_mat}" := none,
-                                        "{chpped_var}" := none
+                                        "{chopped_var}" := none
                                       ),
                                     PSUT_chop_R,
                                     PSUT_chop_Y)
@@ -461,7 +462,11 @@ row_col_agg_pipeline <- function(.psut_data,
                                   aggregated_suffix = aggregated_suffix) |>
     rename_suffixed_psut_columns(suffix = aggregated_suffix,
                                  R = R, U = U, V = V, Y = Y,
-                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units)
+                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units) |>
+    dplyr::mutate(
+      "{product_aggregation}" := despecified,
+      "{industry_aggregation}" := despecified
+    )
 
   # Group on Product dimension
   PSUT_Chop_all_Ds_InPr_Gr_Pr <- PSUT_Chop_all_Ds_InPr |>
@@ -477,11 +482,15 @@ row_col_agg_pipeline <- function(.psut_data,
                               S_units_aggregated_colname = S_units_aggregated_colname) |>
     rename_suffixed_psut_columns(suffix = aggregated_suffix,
                                  R = R, U = U, V = V, Y = Y,
-                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units)
+                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units) |>
+    dplyr::mutate(
+      "{product_aggregation}" := grouped,
+      "{industry_aggregation}" := despecified
+    )
 
   # Group on Industry dimension
   PSUT_Chop_all_Ds_InPr_Gr_In <- PSUT_Chop_all_Ds_InPr |>
-    Recca::grouped_aggregates(aggregation_map = product_agg_map, margin = industry_type, pattern_type = pattern_type,
+    Recca::grouped_aggregates(aggregation_map = industry_agg_map, margin = industry_type, pattern_type = pattern_type,
                               R = R, U = U, V = V, Y = Y, r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units,
                               R_aggregated_colname = R_aggregated_colname,
                               U_aggregated_colname = U_aggregated_colname,
@@ -493,11 +502,17 @@ row_col_agg_pipeline <- function(.psut_data,
                               S_units_aggregated_colname = S_units_aggregated_colname) |>
     rename_suffixed_psut_columns(suffix = aggregated_suffix,
                                  R = R, U = U, V = V, Y = Y,
-                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units)
+                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units) |>
+    dplyr::mutate(
+      "{product_aggregation}" := despecified,
+      "{industry_aggregation}" := grouped
+    )
 
   # Group on Product and Industry dimensions
   PSUT_Chop_all_Ds_InPr_Gr_PrIn <- PSUT_Chop_all_Ds_InPr |>
-    Recca::grouped_aggregates(aggregation_map = product_agg_map, margin = c(product_type, industry_type), pattern_type = pattern_type,
+    Recca::grouped_aggregates(aggregation_map = c(product_agg_map, industry_agg_map),
+                              margin = c(product_type, industry_type),
+                              pattern_type = pattern_type,
                               R = R, U = U, V = V, Y = Y, r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units,
                               R_aggregated_colname = R_aggregated_colname,
                               U_aggregated_colname = U_aggregated_colname,
@@ -509,7 +524,11 @@ row_col_agg_pipeline <- function(.psut_data,
                               S_units_aggregated_colname = S_units_aggregated_colname) |>
     rename_suffixed_psut_columns(suffix = aggregated_suffix,
                                  R = R, U = U, V = V, Y = Y,
-                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units)
+                                 r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units) |>
+    dplyr::mutate(
+      "{product_aggregation}" := grouped,
+      "{industry_aggregation}" := grouped
+    )
 
   # Stack all the despecifications and groupings together
   dplyr::bind_rows(PSUT_chop_all |>
@@ -517,24 +536,8 @@ row_col_agg_pipeline <- function(.psut_data,
                        "{product_aggregation}" := specified,
                        "{industry_aggregation}" := specified,
                      ),
-                   PSUT_Chop_all_Ds_InPr |>
-                     dplyr::mutate(
-                       "{product_aggregation}" := despecified,
-                       "{industry_aggregation}" := despecified
-                     ),
-                   PSUT_Chop_all_Ds_InPr_Gr_Pr |>
-                     dplyr::mutate(
-                       "{product_aggregation}" := grouped,
-                       "{industry_aggregation}" := despecified
-                     ),
-                   PSUT_Chop_all_Ds_InPr_Gr_In |>
-                     dplyr::mutate(
-                       "{product_aggregation}" := despecified,
-                       "{industry_aggregation}" := grouped
-                     ),
-                   PSUT_Chop_all_Ds_InPr_Gr_PrIn |>
-                     dplyr::mutate(
-                       "{product_aggregation}" := grouped,
-                       "{industry_aggregation}" := grouped
-                     ))
+                   PSUT_Chop_all_Ds_InPr,
+                   PSUT_Chop_all_Ds_InPr_Gr_Pr,
+                   PSUT_Chop_all_Ds_InPr_Gr_In,
+                   PSUT_Chop_all_Ds_InPr_Gr_PrIn)
 }

@@ -31,7 +31,10 @@ efficiency_pipeline(
   ex_u = IEATools::aggregate_cols$aggregate_useful,
   ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
   ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
-  ex_fd = Recca::aggregate_cols$aggregate_demand
+  ex_fd = Recca::aggregate_cols$aggregate_demand,
+  eta_pf = Recca::efficiency_cols$eta_pf,
+  eta_fu = Recca::efficiency_cols$eta_fu,
+  eta_pu = Recca::efficiency_cols$eta_pu
 )
 }
 \arguments{
