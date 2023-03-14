@@ -116,40 +116,11 @@ get_pipeline <- function(countries = "all",
     # will be performed in parallel, if desired.
 
     targets::tar_target_raw(
-      "PSUT_with_continent_col",
-      substitute(join_psut_continents(PSUT = PSUT,
-                                      years = Years,
-                                      continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                      continent = "Continent")),
-      pattern = quote(cross(Years))
-    ),
-
-    # Aggregate by continent
-    targets::tar_target_raw(
-      "PSUT_Re_continents",
-      substitute(continent_aggregation(PSUT_with_continent_col,
-                                       continents = Continents,
-                                       years = Years,
-                                       many_colname = IEATools::iea_cols$country,
-                                       few_colname = "Continent")),
-      pattern = quote(cross(Continents))
-    ),
-
-    # Aggregate continents to world
-    targets::tar_target_raw(
-      "PSUT_Re_world",
-      substitute(world_aggregation(PSUT_Chop_all_Re_continents,
-                                   years = Years,
-                                   world_aggregation_map = AggregationMaps$world_aggregation)),
-      pattern = quote(cross(Years))
-    ),
-
-    # Stack all region aggregations together
-    targets::tar_target_raw(
       "PSUT_Re_all",
-      substitute(dplyr::bind_rows(PSUT,
-                                  PSUT_Re_continents,
-                                  PSUT_Re_world))
+      substitute(region_pipeline(PSUT,
+                                 continent_aggregation_map = AggregationMaps$continent_aggregation,
+                                 world_aggregation_map = AggregationMaps$world_aggregation,
+                                 continent = "Continent"))
     ),
 
 
@@ -255,6 +226,48 @@ get_pipeline <- function(countries = "all",
 
 
 
+    # # Regional aggregations ----------------------------------------------------
+    #
+    # # Create a continents data frame, grouped by continent,
+    # # so subsequent operations (region aggregation)
+    # # will be performed in parallel, if desired.
+    #
+    # targets::tar_target_raw(
+    #   "PSUT_with_continent_col",
+    #   substitute(join_psut_continents(PSUT = PSUT,
+    #                                   years = Years,
+    #                                   continent_aggregation_map = AggregationMaps$continent_aggregation,
+    #                                   continent = "Continent")),
+    #   pattern = quote(cross(Years))
+    # ),
+    #
+    # # Aggregate by continent
+    # targets::tar_target_raw(
+    #   "PSUT_Re_continents",
+    #   substitute(continent_aggregation(PSUT_with_continent_col,
+    #                                    continents = Continents,
+    #                                    years = Years,
+    #                                    many_colname = IEATools::iea_cols$country,
+    #                                    few_colname = "Continent")),
+    #   pattern = quote(cross(Continents))
+    # ),
+    #
+    # # Aggregate continents to world
+    # targets::tar_target_raw(
+    #   "PSUT_Re_world",
+    #   substitute(world_aggregation(PSUT_Chop_all_Re_continents,
+    #                                years = Years,
+    #                                world_aggregation_map = AggregationMaps$world_aggregation)),
+    #   pattern = quote(cross(Years))
+    # ),
+    #
+    # # Stack all region aggregations together
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all",
+    #   substitute(dplyr::bind_rows(PSUT,
+    #                               PSUT_Re_continents,
+    #                               PSUT_Re_world))
+    # ),
 
 
 

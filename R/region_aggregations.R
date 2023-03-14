@@ -137,12 +137,12 @@ world_aggregation <- function(PSUT_Chop_all_Re_continents,
 #' @export
 #'
 #' @examples
-region_agg_pipeline <- function(.psut_data,
-                                country = IEATools::iea_cols$country,
-                                aggregation_maps,
-                                continent_aggregation_map,
-                                world_aggregation_map,
-                                continent = "Continent") {
+region_pipeline <- function(.psut_data,
+                            continent_aggregation_map,
+                            world_aggregation_map,
+                            country = IEATools::iea_cols$country,
+                            continent = "Continent",
+                            world = "World") {
 
   PSUT_Re_continents <- .psut_data |>
     dplyr::left_join(continent_aggregation_map |>
