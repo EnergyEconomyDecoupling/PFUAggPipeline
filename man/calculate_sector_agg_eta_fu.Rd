@@ -7,6 +7,8 @@
 calculate_sector_agg_eta_fu(
   .psut_data,
   fd_sectors,
+  countries,
+  years,
   piece = "all",
   pattern_type = "exact",
   notation = RCLabels::notations_list,
@@ -19,6 +21,7 @@ calculate_sector_agg_eta_fu(
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   S_units = Recca::psut_cols$S_units,
+  country = Recca::psut_cols$country,
   year = Recca::psut_cols$year,
   last_stage = Recca::psut_cols$last_stage,
   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
@@ -40,6 +43,10 @@ calculate_sector_agg_eta_fu(
 \item{.psut_data}{A data frame of PSUT matrices.}
 
 \item{fd_sectors}{The sectors that count for final demand.}
+
+\item{countries}{The countries for which primary aggregates are to be calculated.}
+
+\item{years}{The years for which primary aggregates are to be calculated.}
 
 \item{piece}{The piece to be aggregated. Default is "noun".}
 
@@ -81,10 +88,6 @@ Defaults from \code{IEATools::all_stages}.}
 
 \item{eta_fu}{The string name of the final-to-useful efficiency.
 Default is \code{Recca::efficiency_cols$eta_fu}.}
-
-\item{countries}{The countries for which primary aggregates are to be calculated.}
-
-\item{years}{The years for which primary aggregates are to be calculated.}
 }
 \value{
 A data frame of sector energy and exergy sums.

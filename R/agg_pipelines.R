@@ -32,8 +32,8 @@ get_pipeline <- function(countries = "all",
 
     # Preliminary setup --------------------------------------------------------
 
-    # Store some incoming data as targets.
-    # These targets are invariant across incoming psut_releases.
+    # Store some incoming data as targets
+    # These targets are invariant across incoming psut_releases
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
@@ -42,10 +42,23 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw("ExcelOutputFolder", file.path(pipeline_releases_folder, "eta_pfu_excel")),
     targets::tar_target_raw("Release", release),
 
-    # Gather the aggregation maps.
+    # Gather the aggregation maps
     targets::tar_target_raw(
       "AggregationMaps",
       quote(load_aggregation_maps(path = AggregationMapsPath))
+    ),
+
+    # Separate the product aggregation map
+    targets::tar_target_raw(
+      "ProductAggMap",
+      substitute(c(AggregationMaps[["ef_product_aggregation"]],
+                   AggregationMaps[["eu_product_aggregation"]]))
+    ),
+
+    # Separate the industry aggregation map
+    targets::tar_target_raw(
+      "IndustryAggMap",
+      substitute(AggregationMaps[["ef_sector_aggregation"]])
     ),
 
     # Establish prefixes for primary industries
@@ -88,17 +101,17 @@ get_pipeline <- function(countries = "all",
                    PFUDatabase::filter_countries_years(countries = Countries, years = Years))
     ),
 
+    # --------------------------------------------------------------------------
+    # Product A ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Pin the PSUT_USA data frame ----------------------------------------------
+
     # Filter to the US for Carey King
     targets::tar_target_raw(
       "PSUT_USA",
       substitute(PSUT %>%
                    dplyr::filter(Country == "USA"))
     ),
-
-    # --------------------------------------------------------------------------
-    # Product A ----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Pin the PSUT_USA data frame ----------------------------------------------
 
     targets::tar_target_raw(
       "ReleasePSUT_USA",
@@ -111,42 +124,32 @@ get_pipeline <- function(countries = "all",
 
     # Regional aggregations ----------------------------------------------------
 
-    # Create a continents data frame, grouped by continent,
-    # so subsequent operations (region aggregation)
-    # will be performed in parallel, if desired.
-
     targets::tar_target_raw(
       "PSUT_Re_all",
-      substitute(region_pipeline(PSUT,
-                                 continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                 world_aggregation_map = AggregationMaps$world_aggregation,
-                                 continent = "Continent"))
+      substitute(PSUT |>
+                   region_pipeline(years = Years,
+                                   continent_aggregation_map = AggregationMaps$continent_aggregation,
+                                   world_aggregation_map = AggregationMaps$world_aggregation,
+                                   continent = "Continent")),
+      pattern = quote(cross(Years))
     ),
 
 
     # Chopping, despecifying, and grouping -------------------------------------
 
     targets::tar_target_raw(
-      "ProductAggMap",
-      substitute(c(AggregationMaps[["ef_product_aggregation"]],
-                   AggregationMaps[["eu_product_aggregation"]]))
-    ),
-
-
-    targets::tar_target_raw(
-      "IndustryAggMap",
-      substitute(AggregationMaps[["ef_sector_aggregation"]])
-    ),
-
-
-    targets::tar_target_raw(
       "PSUT_Re_all_Chop_all_Ds_all_Gr_all",
       substitute(PSUT_Re_all |>
-                   pr_in_agg_pipeline(product_agg_map = ProductAggMap,
+                   pr_in_agg_pipeline(countries = CountriesContinentsWorld,
+                                      years = Years,
+                                      product_agg_map = ProductAggMap,
                                       industry_agg_map = IndustryAggMap,
                                       p_industries = unlist(PIndustryPrefixes),
                                       do_chops = do_chops,
-                                      method = "SVD"))
+                                      method = "SVD",
+                                      country = Recca::psut_cols$country,
+                                      year = Recca::psut_cols$year)) ,
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -155,7 +158,10 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "SectorAggEtaFU",
       substitute(PSUT_Re_all_Chop_all_Ds_all_Gr_all %>%
-                   calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)))
+                   calculate_sector_agg_eta_fu(countries = CountriesContinentsWorld,
+                                               years = Years,
+                                               fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -202,8 +208,11 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "AggEtaPFU",
       substitute(PSUT_Re_all_Chop_all_Ds_all_Gr_all |>
-                   efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
-                                       fd_sectors = unlist(FinalDemandSectors)))
+                   efficiency_pipeline(countries = CountriesContinentsWorld,
+                                       years = Years,
+                                       p_industries = unlist(PIndustryPrefixes),
+                                       fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(cross(CountriesContinentsWorld, Years))
     ),
 
 
@@ -294,7 +303,7 @@ get_pipeline <- function(countries = "all",
     #   substitute(continent_aggregation(PSUT_with_continent_col,
     #                                    continents = Continents,
     #                                    years = Years,
-    #                                    many_colname = IEATools::iea_cols$country,
+    #                                    many_colname = Recca::psut_cols$country,
     #                                    few_colname = "Continent")),
     #   pattern = quote(cross(Continents))
     # ),

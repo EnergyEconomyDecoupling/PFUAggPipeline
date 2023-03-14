@@ -6,9 +6,11 @@
 \usage{
 region_pipeline(
   .psut_data,
+  years,
   continent_aggregation_map,
   world_aggregation_map,
-  country = IEATools::iea_cols$country,
+  country = Recca::psut_cols$country,
+  year = Recca::psut_cols$year,
   continent = "Continent",
   world = "World"
 )

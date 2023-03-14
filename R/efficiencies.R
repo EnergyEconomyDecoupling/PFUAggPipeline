@@ -51,6 +51,8 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
 #'
 #' @export
 efficiency_pipeline <- function(.psut_data,
+                                countries,
+                                years,
                                 p_industries,
                                 fd_sectors,
                                 piece = "noun",
@@ -67,6 +69,9 @@ efficiency_pipeline <- function(.psut_data,
                                 U_eiou = Recca::psut_cols$U_eiou,
                                 U_feed = Recca::psut_cols$U_feed,
                                 S_units = Recca::psut_cols$S_units,
+                                # Country and year columns
+                                country = Recca::psut_cols$country,
+                                year = Recca::psut_cols$year,
                                 # Key names
                                 gross = Recca::efficiency_cols$gross,
                                 net = Recca::efficiency_cols$net,
@@ -83,8 +88,18 @@ efficiency_pipeline <- function(.psut_data,
                                 eta_pf = Recca::efficiency_cols$eta_pf,
                                 eta_fu = Recca::efficiency_cols$eta_fu,
                                 eta_pu = Recca::efficiency_cols$eta_pu) {
+
+  filtered_data <- .psut_data |>
+    dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
+  rm(.psut_data)
+  gc()
+
+  if (nrow(filtered_data) == 0) {
+    return(NULL)
+  }
+
   # Calculate primary aggregates
-  PSUT_Chop_all_Ds_all_Gr_all_St_p <- .psut_data |>
+  PSUT_Chop_all_Ds_all_Gr_all_St_p <- filtered_data |>
     Recca::primary_aggregates(p_industries = p_industries,
                               piece = piece,
                               notation = notation,

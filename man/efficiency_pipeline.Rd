@@ -6,6 +6,8 @@
 \usage{
 efficiency_pipeline(
   .psut_data,
+  countries,
+  years,
   p_industries,
   fd_sectors,
   piece = "noun",
@@ -20,6 +22,8 @@ efficiency_pipeline(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
+  country = Recca::psut_cols$country,
+  year = Recca::psut_cols$year,
   gross = Recca::efficiency_cols$gross,
   net = Recca::efficiency_cols$net,
   gross_net = Recca::efficiency_cols$gross_net,

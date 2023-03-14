@@ -28,7 +28,7 @@ countries <- "USA"
 # years <- 1971:1973
 # years <- 1971:1972
 # years <- 1971
-years <- 1960
+years <- 1960:1961
 
 # Tells whether to do the R and Y chops.
 do_chops <- FALSE
@@ -83,19 +83,6 @@ PFUAggDatabase::get_pipeline(countries = countries,
 
 
 
-# For WRLD
-
-# project_path <- PFUSetup::get_abs_paths()[["project_path"]]
-# wrld_path <- paste0(project_path, "/PFUDatabase-WRLD-InputData/")
-#
-# PFUAggDatabase::get_pipeline(countries = countries,
-#                              years = years,
-#                              do_chops = do_chops,
-#                              psut_release = psut_release,
-#                              aggregation_maps_path = paste0(wrld_path, "aggregation_mapping.xlsx"),
-#                              pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
-#                              pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
-#                              release = release)
 
 
 
