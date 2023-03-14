@@ -150,6 +150,53 @@ get_pipeline <- function(countries = "all",
     ),
 
 
+    # Final demand sector aggregates and efficiencies --------------------------
+
+    targets::tar_target_raw(
+      "SectorAggEtaFU",
+      substitute(PSUT_Re_all_Chop_all_Ds_all_Gr_all %>%
+                   calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)))
+    ),
+
+
+    # --------------------------------------------------------------------------
+    # Product B ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a data frame of final demand sector efficiencies -------------------
+
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaFU",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = SectorAggEtaFU,
+                                        pin_name = "sector_agg_eta_fu",
+                                        release = Release))
+    ),
+
+
+    # Pivot SectorAggEtaFU in preparation for writing .csv file ----------------
+
+    targets::tar_target_raw(
+      "PivotedSectorAggEtaFU",
+      substitute(pivot_for_csv(SectorAggEtaFU,
+                               val_cols = c("Final", "Useful", "eta_fu")))
+    ),
+
+
+    # --------------------------------------------------------------------------
+    # Product C ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a CSV file of final demand sector efficiencies ---------------------
+
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaFUCSV",
+      substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = PivotedSectorAggEtaFU,
+                                             pin_name = "sector_agg_eta_fu_csv",
+                                             type = "csv",
+                                             release = Release))
+    ),
+
+
     # PFU aggregates and efficiencies ------------------------------------------
 
     targets::tar_target_raw(
