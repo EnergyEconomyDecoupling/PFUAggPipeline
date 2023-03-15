@@ -153,6 +153,11 @@ get_pipeline <- function(countries = "all",
     ),
 
 
+    # --------------------------------------------------------------------------
+    # Product B ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a data frame of final demand sector efficiencies -------------------
+
     # Final demand sector aggregates and efficiencies --------------------------
 
     targets::tar_target_raw(
@@ -165,11 +170,6 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # --------------------------------------------------------------------------
-    # Product B ----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Write a data frame of final demand sector efficiencies -------------------
-
     targets::tar_target_raw(
       "ReleaseSectorAggEtaFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
@@ -179,6 +179,11 @@ get_pipeline <- function(countries = "all",
     ),
 
 
+    # --------------------------------------------------------------------------
+    # Product C ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a CSV file of final demand sector efficiencies ---------------------
+
     # Pivot SectorAggEtaFU in preparation for writing .csv file ----------------
 
     targets::tar_target_raw(
@@ -186,12 +191,6 @@ get_pipeline <- function(countries = "all",
       substitute(pivot_for_csv(SectorAggEtaFU,
                                val_cols = c("Final", "Useful", "eta_fu")))
     ),
-
-
-    # --------------------------------------------------------------------------
-    # Product C ----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Write a CSV file of final demand sector efficiencies ---------------------
 
     targets::tar_target_raw(
       "ReleaseSectorAggEtaFUCSV",
@@ -202,6 +201,11 @@ get_pipeline <- function(countries = "all",
                                              release = Release))
     ),
 
+
+    # --------------------------------------------------------------------------
+    # Product D ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Pin the EtaPFU data frame ------------------------------------------------
 
     # PFU aggregates and efficiencies ------------------------------------------
 
@@ -216,11 +220,6 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # --------------------------------------------------------------------------
-    # Product D ----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Pin the EtaPFU data frame ------------------------------------------------
-
     targets::tar_target_raw(
       "ReleaseAggEtaPFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
@@ -230,6 +229,11 @@ get_pipeline <- function(countries = "all",
     ),
 
 
+    # --------------------------------------------------------------------------
+    # Product E ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a CSV file of PFU efficiencies -------------------------------------
+
     # Pivot AggEtaPFU in preparation for writing .csv file ---------------------
 
     targets::tar_target_raw(
@@ -238,11 +242,6 @@ get_pipeline <- function(countries = "all",
                    pivot_for_csv(val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")))
     ),
 
-
-    # --------------------------------------------------------------------------
-    # Product E ----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Write a CSV file of PFU efficiencies -------------------------------------
 
     targets::tar_target_raw(
       "ReleaseAggEtaPFUCSV",
