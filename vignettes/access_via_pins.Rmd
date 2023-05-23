@@ -30,7 +30,7 @@ The PFU database contains [World Extended Energy Balance](https://www.iea.org/da
 
 ## (2) Install Dropbox
 
-At present, the PFU Database is distributed via a shared Dropbox folder; thus, users of the database must install Dropbox. At present (Feb 2023), data in the Dropbox folder are 3.42 GB. The database will grow in size in the future. You may need to upgrade your [Dropbox plan](https://www.dropbox.com/products?source=plans) if that amount of data will cause you to exceed your current storage limit.
+At present, the PFU Database is distributed via a shared Dropbox folder; thus, users of the database must install Dropbox. At present (May 2023), data in the Dropbox folder are 12 GB. The database will grow in size in the future. You may need to upgrade your [Dropbox plan](https://www.dropbox.com/products?source=plans) if that amount of data will cause you to exceed your current storage limit.
 
 ## (3) Receive and accept an invitation
 
@@ -78,6 +78,14 @@ The procedure is the same to load any data product in the database. For example,
 library(pins)
 psut_data_frame <- pins::pin_read(board = pfu_pinboard, name = "psut_usa", 
                                   version = "20230217T182459Z-287a0")
+```
+
+To select only a single year of data, 
+use the following code.
+
+```{r, eval=FALSE}
+col_only <- psut_data_frame |> 
+  dplyr::filter(Country == "COL")
 ```
 
 # Questions
