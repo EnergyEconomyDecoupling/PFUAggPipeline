@@ -14,9 +14,9 @@ library(targets)
 # countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
-# countries <- "GHA"
+countries <- "GHA"
 # countries <- "all" # Run all countries in the PSUT target.
-countries <- c(PFUDatabase::canonical_countries, "WRLD") |> as.character()
+# countries <- c(PFUDatabase::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
 #                "GRC", "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX",
@@ -24,10 +24,10 @@ countries <- c(PFUDatabase::canonical_countries, "WRLD") |> as.character()
 
 
 # Set the years to be analyzed.
-years <- 1960:2020
+# years <- 1960:2020
 # years <- 1971:1973
 # years <- 1971:1972
-# years <- 1971
+years <- 1971
 # years <- 1960:1961
 
 # Tells whether to do the R and Y chops.
