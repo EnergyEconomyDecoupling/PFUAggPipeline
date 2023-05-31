@@ -37,7 +37,7 @@ do_chops <- FALSE
 # psut_release <- "20230309T184624Z-7ace5"  # v0.9 (USA only)
 # psut_release <- "20221109T152414Z-7d7ad"  # v1.0 (with matrix objects)
 # psut_release <- "20230312T211924Z-007da"  # v1.0 (with Matrix objects)
-psut_release <- "20230518T202223Z-bec6b"    # v1.1 (with Matrix objects)
+psut_release <- "20230527T005946Z-99e22"    # v1.1 (with Matrix objects)
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019

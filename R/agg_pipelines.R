@@ -101,25 +101,25 @@ get_pipeline <- function(countries = "all",
                    PFUDatabase::filter_countries_years(countries = Countries, years = Years))
     ),
 
-    # --------------------------------------------------------------------------
-    # Product A ----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # Pin the PSUT_USA data frame ----------------------------------------------
-
-    # Filter to the US for Carey King
-    targets::tar_target_raw(
-      "PSUT_USA",
-      substitute(PSUT %>%
-                   dplyr::filter(Country == "USA"))
-    ),
-
-    targets::tar_target_raw(
-      "ReleasePSUT_USA",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = PSUT_USA,
-                                        pin_name = "psut_usa",
-                                        release = Release))
-    ),
+    # # --------------------------------------------------------------------------
+    # # Product A ----------------------------------------------------------------
+    # # --------------------------------------------------------------------------
+    # # Pin the PSUT_USA data frame ----------------------------------------------
+    #
+    # # Filter to the US for Carey King
+    # targets::tar_target_raw(
+    #   "PSUT_USA",
+    #   substitute(PSUT %>%
+    #                dplyr::filter(Country == "USA"))
+    # ),
+    #
+    # targets::tar_target_raw(
+    #   "ReleasePSUT_USA",
+    #   quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+    #                                     targ = PSUT_USA,
+    #                                     pin_name = "psut_usa",
+    #                                     release = Release))
+    # ),
 
 
     # Regional aggregations ----------------------------------------------------
