@@ -363,8 +363,6 @@ rename_suffixed_psut_columns <- function(.psut_data,
 #'
 #' @export
 pr_in_agg_pipeline <- function(.psut_data,
-                               countries,
-                               years,
                                product_agg_map,
                                industry_agg_map,
                                p_industries,
@@ -416,19 +414,19 @@ pr_in_agg_pipeline <- function(.psut_data,
                                product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
                                none = "None") {
 
-  filtered_data <- .psut_data |>
-    dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
+  # filtered_data <- .psut_data |>
+  #   dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
+  #
+  # rm(.psut_data)
+  # gc()
 
-  rm(.psut_data)
-  gc()
-
-  if (nrow(filtered_data) == 0) {
+  if (nrow(.psut_data) == 0) {
     return(NULL)
   }
 
   # Chop the R and Y matrices, if desired
   if (do_chops) {
-    PSUT_chop_R <- filtered_data |>
+    PSUT_chop_R <- .psut_data |>
       Recca::chop_R(calc_pfd_aggs = FALSE,
                     piece = "noun",
                     notation = bracket_notation,
@@ -436,7 +434,7 @@ pr_in_agg_pipeline <- function(.psut_data,
                     unnest = TRUE,
                     method = method,
                     tol_invert = tol_invert)
-    PSUT_chop_Y <- filtered_data |>
+    PSUT_chop_Y <- .psut_data |>
       Recca::chop_Y(calc_pfd_aggs = FALSE,
                     piece = "noun",
                     notation = bracket_notation,
@@ -451,7 +449,7 @@ pr_in_agg_pipeline <- function(.psut_data,
     PSUT_chop_Y <- NULL
   }
 
-  PSUT_chop_all <- dplyr::bind_rows(filtered_data |>
+  PSUT_chop_all <- dplyr::bind_rows(.psut_data |>
                                       dplyr::mutate(
                                         "{chopped_mat}" := none,
                                         "{chopped_var}" := none

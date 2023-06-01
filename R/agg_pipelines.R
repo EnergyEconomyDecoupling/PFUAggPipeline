@@ -101,9 +101,11 @@ get_pipeline <- function(countries = "all",
                    PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
     ),
 
-    tarchetypes::tar_group_by(PSUTbyYear,
-                              PSUT,
-                              Year),
+    tarchetypes::tar_group_by(
+      PSUTbyYear,
+      PSUT,
+      Year
+    ),
 
     # Regional aggregations ----------------------------------------------------
 
@@ -117,29 +119,38 @@ get_pipeline <- function(countries = "all",
     #   pattern = quote(cross(Years))
     # ),
 
-    tar_target(PSUT_Re_all,
-               PSUTbyYear |>
-                 region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                 world_aggregation_map = AggregationMaps$world_aggregation,
-                                 continent = "Continent"),
-               pattern = map(PSUTbyYear)
+    targets::tar_target_raw(
+      "PSUT_Re_all",
+      quote(PSUTbyYear |>
+              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
+                              world_aggregation_map = AggregationMaps$world_aggregation,
+                              continent = "Continent")),
+      pattern = quote(map(PSUTbyYear))
+    ),
+    tarchetypes::tar_group_size(
+      PSUT_Re_all_grouped,
+      PSUT_Re_all,
+      size = 10
     ),
 
     # Chopping, despecifying, and grouping -------------------------------------
 
     targets::tar_target_raw(
       "PSUT_Re_all_Chop_all_Ds_all_Gr_all",
-      substitute(PSUT_Re_all |>
-                   pr_in_agg_pipeline(countries = CountriesContinentsWorld,
-                                      years = Years,
-                                      product_agg_map = ProductAggMap,
+      substitute(PSUT_Re_all_grouped |>
+                   pr_in_agg_pipeline(product_agg_map = ProductAggMap,
                                       industry_agg_map = IndustryAggMap,
                                       p_industries = unlist(PIndustryPrefixes),
                                       do_chops = do_chops,
                                       method = "SVD",
                                       country = Recca::psut_cols$country,
                                       year = Recca::psut_cols$year)) ,
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      pattern = quote(map(PSUT_Re_all_grouped))
+    ),
+    tarchetypes::tar_group_size(
+      PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped,
+      PSUT_Re_all_Chop_all_Ds_all_Gr_all,
+      size = 10
     ),
 
 
@@ -152,7 +163,7 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "SectorAggEtaFU",
-      substitute(PSUT_Re_all_Chop_all_Ds_all_Gr_all %>%
+      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all %>%
                    calculate_sector_agg_eta_fu(countries = CountriesContinentsWorld,
                                                years = Years,
                                                fd_sectors = unlist(FinalDemandSectors))),
