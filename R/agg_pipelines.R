@@ -109,16 +109,6 @@ get_pipeline <- function(countries = "all",
 
     # Regional aggregations ----------------------------------------------------
 
-    # targets::tar_target_raw(
-    #   "PSUT_Re_all",
-    #   substitute(PSUT |>
-    #                region_pipeline(years = Years,
-    #                                continent_aggregation_map = AggregationMaps$continent_aggregation,
-    #                                world_aggregation_map = AggregationMaps$world_aggregation,
-    #                                continent = "Continent")),
-    #   pattern = quote(cross(Years))
-    # ),
-
     targets::tar_target_raw(
       "PSUT_Re_all",
       quote(PSUTbyYear |>
