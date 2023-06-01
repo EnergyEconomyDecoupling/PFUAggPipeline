@@ -147,10 +147,10 @@ get_pipeline <- function(countries = "all",
                                       year = Recca::psut_cols$year)) ,
       pattern = quote(map(PSUT_Re_all_grouped))
     ),
-    tarchetypes::tar_group_size(
+    tarchetypes::tar_group_by(
       PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped,
       PSUT_Re_all_Chop_all_Ds_all_Gr_all,
-      size = 10
+      Country, Year
     ),
 
 
@@ -161,13 +161,19 @@ get_pipeline <- function(countries = "all",
 
     # Final demand sector aggregates and efficiencies --------------------------
 
+    # targets::tar_target_raw(
+    #   "SectorAggEtaFU",
+    #   quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all %>%
+    #                calculate_sector_agg_eta_fu(countries = CountriesContinentsWorld,
+    #                                            years = Years,
+    #                                            fd_sectors = unlist(FinalDemandSectors))),
+    #   pattern = quote(cross(CountriesContinentsWorld, Years))
+    # ),
     targets::tar_target_raw(
       "SectorAggEtaFU",
-      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all %>%
-                   calculate_sector_agg_eta_fu(countries = CountriesContinentsWorld,
-                                               years = Years,
-                                               fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped %>%
+              calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors))),
+      pattern = quote(map(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped))
     ),
 
 
