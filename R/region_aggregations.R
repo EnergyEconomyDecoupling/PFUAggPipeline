@@ -135,8 +135,6 @@ world_aggregation <- function(PSUT_Chop_all_Re_continents,
 #' @return A data frame that includes new "Country"s for
 #'         continents and the World.
 #' @export
-#'
-#' @examples
 region_pipeline <- function(.psut_data,
                             continent_aggregation_map,
                             world_aggregation_map,
