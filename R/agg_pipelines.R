@@ -171,8 +171,9 @@ get_pipeline <- function(countries = "all",
     # ),
     targets::tar_target_raw(
       "SectorAggEtaFU",
-      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped %>%
-              calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors))),
+      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
+              calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
+              PFUPipelineTools::tar_ungroup()),
       pattern = quote(map(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped))
     ),
 
@@ -195,17 +196,17 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PivotedSectorAggEtaFU",
-      substitute(pivot_for_csv(SectorAggEtaFU,
-                               val_cols = c("Final", "Useful", "eta_fu")))
+      quote(pivot_for_csv(SectorAggEtaFU,
+                          val_cols = c("Final", "Useful", "eta_fu")))
     ),
 
     targets::tar_target_raw(
       "ReleaseSectorAggEtaFUCSV",
-      substitute(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                             targ = PivotedSectorAggEtaFU,
-                                             pin_name = "sector_agg_eta_fu_csv",
-                                             type = "csv",
-                                             release = Release))
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = PivotedSectorAggEtaFU,
+                                        pin_name = "sector_agg_eta_fu_csv",
+                                        type = "csv",
+                                        release = Release))
     ),
 
 
@@ -218,12 +219,11 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "AggEtaPFU",
-      substitute(PSUT_Re_all_Chop_all_Ds_all_Gr_all |>
-                   efficiency_pipeline(countries = CountriesContinentsWorld,
-                                       years = Years,
-                                       p_industries = unlist(PIndustryPrefixes),
-                                       fd_sectors = unlist(FinalDemandSectors))),
-      pattern = quote(cross(CountriesContinentsWorld, Years))
+      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
+              efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
+                                  fd_sectors = unlist(FinalDemandSectors)) |>
+              PFUPipelineTools::tar_ungroup()),
+      pattern = quote(map(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped))
     ),
 
 
