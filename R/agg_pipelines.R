@@ -96,24 +96,34 @@ get_pipeline <- function(countries = "all",
     # Pull in the PSUT data frame
     targets::tar_target_raw(
       "PSUT",
-      substitute(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
-                   pins::pin_read("psut", version = PSUTRelease) %>%
-                   PFUDatabase::filter_countries_years(countries = Countries, years = Years))
+      substitute(pins::board_folder(PinboardFolder, versioned = TRUE) |>
+                   pins::pin_read("psut", version = PSUTRelease) |>
+                   PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
     ),
 
+    tarchetypes::tar_group_by(PSUTbyYear,
+                              PSUT,
+                              Year),
 
     # Regional aggregations ----------------------------------------------------
 
-    targets::tar_target_raw(
-      "PSUT_Re_all",
-      substitute(PSUT |>
-                   region_pipeline(years = Years,
-                                   continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                   world_aggregation_map = AggregationMaps$world_aggregation,
-                                   continent = "Continent")),
-      pattern = quote(cross(Years))
-    ),
+    # targets::tar_target_raw(
+    #   "PSUT_Re_all",
+    #   substitute(PSUT |>
+    #                region_pipeline(years = Years,
+    #                                continent_aggregation_map = AggregationMaps$continent_aggregation,
+    #                                world_aggregation_map = AggregationMaps$world_aggregation,
+    #                                continent = "Continent")),
+    #   pattern = quote(cross(Years))
+    # ),
 
+    tar_target(PSUT_Re_all,
+               PSUTbyYear |>
+                 region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
+                                 world_aggregation_map = AggregationMaps$world_aggregation,
+                                 continent = "Continent"),
+               pattern = map(PSUTbyYear)
+    ),
 
     # Chopping, despecifying, and grouping -------------------------------------
 
