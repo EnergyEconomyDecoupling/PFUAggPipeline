@@ -61,9 +61,9 @@ create_fd_sectors_list <- function(iea_fd_sectors, sector_aggregation_map) {
 #'
 #' @export
 calculate_sector_agg_eta_fu <- function(.psut_data,
+                                        fd_sectors,
                                         countries,
                                         years,
-                                        fd_sectors,
                                         piece = "all",
                                         pattern_type = "exact",
                                         notation = RCLabels::notations_list,
@@ -76,6 +76,7 @@ calculate_sector_agg_eta_fu <- function(.psut_data,
                                         V = Recca::psut_cols$V,
                                         Y = Recca::psut_cols$Y,
                                         S_units = Recca::psut_cols$S_units,
+                                        country = Recca::psut_cols$country,
                                         year = Recca::psut_cols$year,
                                         last_stage = Recca::psut_cols$last_stage,
                                         gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
@@ -92,17 +93,16 @@ calculate_sector_agg_eta_fu <- function(.psut_data,
                                         useful = IEATools::all_stages$useful,
                                         eta_fu = Recca::efficiency_cols$eta_fu) {
 
-  filtered_data <- .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+  filtered_data <- .psut_data |>
+    dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
+  rm(.psut_data)
+  gc()
 
   if (nrow(filtered_data) == 0) {
     return(NULL)
   }
 
-  rm(.psut_data)
-  gc()
-
-  filtered_data %>%
+  filtered_data |>
     Recca::finaldemand_aggregates(fd_sectors = fd_sectors,
                                   piece = piece,
                                   notation = notation,
@@ -111,7 +111,7 @@ calculate_sector_agg_eta_fu <- function(.psut_data,
                                   U = U, U_feed = U_feed, Y = Y,
                                   by = "Sector",
                                   net_aggregate_demand = net_aggregate_demand,
-                                  gross_aggregate_demand = gross_aggregate_demand) %>%
+                                  gross_aggregate_demand = gross_aggregate_demand) |>
     # Eliminate matrix columns
     dplyr::mutate(
       "{R}" := NULL,
@@ -122,26 +122,24 @@ calculate_sector_agg_eta_fu <- function(.psut_data,
       "{V}" := NULL,
       "{Y}" := NULL,
       "{S_units}" := NULL
-    ) %>%
-    tidyr::pivot_longer(cols = c(net_aggregate_demand, gross_aggregate_demand), names_to = gross_net, values_to = aggregate_demand) %>%
+    ) |>
+    tidyr::pivot_longer(cols = c(net_aggregate_demand, gross_aggregate_demand), names_to = gross_net, values_to = aggregate_demand) |>
     dplyr::mutate(
       "{gross_net}" := dplyr::case_when(
         .data[[gross_net]] == gross_aggregate_demand ~ gross,
         .data[[gross_net]] == net_aggregate_demand ~ net,
         TRUE ~ NA_character_
       )
-    ) %>%
+    ) |>
     # Expand matrices
-    matsindf::expand_to_tidy(matnames = net_aggregate_demand, matvals = aggregate_demand, rownames = sector) %>%
+    matsindf::expand_to_tidy(matnames = net_aggregate_demand, matvals = aggregate_demand, rownames = sector) |>
     dplyr::mutate(
       "{colnames}" := NULL,
       "{rowtypes}" := NULL,
       "{coltypes}" := NULL
-    ) %>%
-    tidyr::pivot_wider(names_from = last_stage, values_from = aggregate_demand) %>%
+    ) |>
+    tidyr::pivot_wider(names_from = last_stage, values_from = aggregate_demand) |>
     dplyr::mutate(
       "{eta_fu}" := .data[[useful]] / .data[[final]]
-    ) # %>%
-    # tidyr::pivot_longer(cols = c(final, useful, eta_fu), names_to = "var", values_to = "val") %>%
-    # tidyr::pivot_wider(names_from = year, values_from = "val")
+    )
 }

@@ -8,10 +8,10 @@ world_aggregation(
   PSUT_Chop_all_Re_continents,
   years,
   world_aggregation_map,
-  country = IEATools::iea_cols$country,
+  country = Recca::psut_cols$country,
   world = "World",
-  year = IEATools::iea_cols$year,
-  many_colname = IEATools::iea_cols$country,
+  year = Recca::psut_cols$year,
+  many_colname = Recca::psut_cols$country,
   few_colname = world
 )
 }
@@ -23,16 +23,16 @@ world_aggregation(
 \item{world_aggregation_map}{The aggregation map to sum continents into the world.}
 
 \item{country}{The name of the country column in the \code{PSUT_Chop_all_Re_continents} data frame.
-Default is \code{IEATools::iea_cols$country}.}
+Default is \code{Recca::psut_cols$country}.}
 
 \item{world}{The name of the column of few things that will remain on output.
 Default is "World".}
 
 \item{year}{The name of the year column in the \code{PSUT} data frame.
-Default is \code{IEATools::iea_cols$year}.}
+Default is \code{Recca::psut_cols$year}.}
 
 \item{many_colname}{The name of the column of many things that will be aggregated into continents.
-Default is \code{IEATools::iea_cols$country}.}
+Default is \code{Recca::psut_cols$country}.}
 
 \item{few_colname}{The name of the column of few things that will remain on output.
 Default is the same as the value of the \code{world} argument.}

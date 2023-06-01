@@ -4,12 +4,7 @@
 \alias{pivot_for_csv}
 \title{Pivot a data frame for saving as a .csv file}
 \usage{
-pivot_for_csv(
-  .df,
-  val_cols,
-  year_col = IEATools::iea_cols$year,
-  var_col = "var"
-)
+pivot_for_csv(.df, val_cols, year_col = Recca::psut_cols$year, var_col = "var")
 }
 \arguments{
 \item{.df}{The data frame to be pivoted.}
@@ -18,7 +13,7 @@ pivot_for_csv(
 These should be variable names as a string vector.}
 
 \item{year_col}{The string name of the year column.
-Default is \code{IEATools::iea_cols$year}.}
+Default is \code{Recca::psut_cols$year}.}
 
 \item{var_col}{The name of the resulting variable name column.
 Default is "var".}

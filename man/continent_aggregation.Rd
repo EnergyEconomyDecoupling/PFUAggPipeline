@@ -9,8 +9,8 @@ continent_aggregation(
   continents,
   years,
   continent = "Continent",
-  year = IEATools::iea_cols$year,
-  many_colname = IEATools::iea_cols$country,
+  year = Recca::psut_cols$year,
+  many_colname = Recca::psut_cols$country,
   few_colname = continent
 )
 }
@@ -25,10 +25,10 @@ continent_aggregation(
 Default is "Continent".}
 
 \item{year}{The name of the year column in the \code{PSUT} data frame.
-Default is \code{IEATools::iea_cols$year}.}
+Default is \code{Recca::psut_cols$year}.}
 
 \item{many_colname}{The name of the column of many things that will be aggregated into continents.
-Default is \code{IEATools::iea_cols$country}.}
+Default is \code{Recca::psut_cols$country}.}
 
 \item{few_colname}{The name of the column of few things that will remain on output.
 Default is the same as the value of the \code{continent} argument.}
