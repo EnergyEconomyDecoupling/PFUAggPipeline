@@ -31,11 +31,11 @@ pr_in_agg_pipeline(
   year = Recca::psut_cols$year,
   R_aggregated_colname = paste0(R, aggregated_suffix),
   U_aggregated_colname = paste0(U, aggregated_suffix),
+  U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
+  U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
+  r_eiou_aggregated_colname = paste0(r_eiou, aggregated_suffix),
   V_aggregated_colname = paste0(V, aggregated_suffix),
   Y_aggregated_colname = paste0(Y, aggregated_suffix),
-  r_eiou_aggregated_colname = paste0(r_eiou, aggregated_suffix),
-  U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
-  U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
   S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
   aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
   product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
@@ -57,16 +57,56 @@ This could be an entire data frame,
 a slice (row) of the data frame, or
 a group of the data frame.}
 
-\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units}{The names of input columns in \code{.psut_data}.
+\item{product_agg_map}{The product aggregation map.}
+
+\item{industry_agg_map}{The industry aggregation map.}
+
+\item{p_industries}{A string vector of primary industries.}
+
+\item{do_chops}{A boolean that tells whether to do the chopping of \strong{R} and \strong{Y} matrices.}
+
+\item{pattern_type}{The matching type for row and column labels.
+Default is "exact".}
+
+\item{piece}{The piece of row and column labels to be matched.
+Default is "noun".}
+
+\item{bracket_notation}{A row and column notation.
+Default is \code{RCLabels::bracket_notation}.}
+
+\item{arrow_notation}{A row and column notation.
+Default is \code{RCLabels::arrow_notation}.}
+
+\item{prepositions}{Prepositions to be used in row and column labels.
+Default is \code{RCLabels::prepositions_list}.}
+
+\item{method}{The method for doing matrix inversion when chopping the \strong{R} and \strong{Y} matrices.
+Default is "SVD" for singular value decomposition.}
+
+\item{tol_invert}{The tolerance for nearness to 0 in matrix inversion.
+Default is \code{.Machine$double.eps}.}
+
+\item{product_type, industry_type}{See \code{Recca::row_col_types}.}
+
+\item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units, country, year}{The names of input columns in \code{.psut_data}.
 Default values are from \code{Recca::psut_cols}.}
 
 \item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_eiou_aggregated_colname, U_eiou_aggregated_colname, U_feed_aggregated_colname, S_units_aggregated_colname}{The names of output aggregated columns.
 Defaults are the matrix names with \code{aggregated_suffix} appended.}
 
-\item{aggregated_suffix}{The suffix for columns of aggregated matrices.
-Default is \code{Recca::aggregate_cols$aggregated_suffix}.}
+\item{aggregated_suffix}{The suffix for aggregated column names.
+See \code{Recca::aggregate_cols}.}
 
-\item{notation}{The notations from which notation for row and column names can be inferred.}
+\item{product_aggregation, industry_aggregation, specified, despecified, grouped, product_sector}{See \code{PFUAggDatabase::aggregation_df_cols}.}
+
+\item{chopped_mat, chopped_var}{Column names that indicate which matrix has been chopped, \strong{R} or \strong{Y}.
+Default values are from \code{PFUAggDatabase::aggregation_df_cols}.}
+
+\item{Y_matname, R_matname}{Matrix names for the \code{chopped_mat} and \code{chopped_var} columns.
+Default values are from \code{Recca::psut_cols$R} and \code{Recca::psut_cols$Y}.}
+
+\item{none}{The string to specify no aggregations.
+Default is "None".}
 }
 \value{
 A data frame of efficiencies for the original, despecified, and grouped versions

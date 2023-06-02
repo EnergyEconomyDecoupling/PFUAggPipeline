@@ -369,12 +369,19 @@ rename_suffixed_psut_columns <- function(.psut_data,
 #' @param tol_invert The tolerance for nearness to 0 in matrix inversion.
 #'                   Default is `.Machine$double.eps`.
 #' @param product_type,industry_type See `Recca::row_col_types`.
-#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units The names of input columns in `.psut_data`.
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units,country,year The names of input columns in `.psut_data`.
 #'                                             Default values are from `Recca::psut_cols`.
+#' @param aggregated_suffix The suffix for aggregated column names.
+#'                          See `Recca::aggregate_cols`.
 #' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_eiou_aggregated_colname,U_eiou_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname The names of output aggregated columns.
 #'                          Defaults are the matrix names with `aggregated_suffix` appended.
-#' @param aggregated_suffix The suffix for columns of aggregated matrices.
-#'                          Default is `Recca::aggregate_cols$aggregated_suffix`.
+#' @param product_aggregation,industry_aggregation,specified,despecified,grouped,product_sector See `PFUAggDatabase::aggregation_df_cols`.
+#' @param chopped_mat,chopped_var Column names that indicate which matrix has been chopped, **R** or **Y**.
+#'                                Default values are from `PFUAggDatabase::aggregation_df_cols`.
+#' @param Y_matname,R_matname Matrix names for the `chopped_mat` and `chopped_var` columns.
+#'                            Default values are from `Recca::psut_cols$R` and `Recca::psut_cols$Y`.
+#' @param none The string to specify no aggregations.
+#'             Default is "None".
 #'
 #' @return A data frame of efficiencies for the original, despecified, and grouped versions
 #'         of `.psut_data`.
@@ -410,11 +417,11 @@ pr_in_agg_pipeline <- function(.psut_data,
                                # Names for the aggregated matrices after aggregation
                                R_aggregated_colname = paste0(R, aggregated_suffix),
                                U_aggregated_colname = paste0(U, aggregated_suffix),
+                               U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
+                               U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
+                               r_eiou_aggregated_colname = paste0(r_eiou, aggregated_suffix),
                                V_aggregated_colname = paste0(V, aggregated_suffix),
                                Y_aggregated_colname = paste0(Y, aggregated_suffix),
-                               r_eiou_aggregated_colname = paste0(r_eiou, aggregated_suffix),
-                               U_eiou_aggregated_colname = paste0(U_eiou, aggregated_suffix),
-                               U_feed_aggregated_colname = paste0(U_feed, aggregated_suffix),
                                S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
                                # The suffix added to the name of the columns of aggregated matrices
                                aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
