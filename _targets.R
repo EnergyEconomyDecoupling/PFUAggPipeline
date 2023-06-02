@@ -15,19 +15,19 @@ library(targets)
 # countries <- "WRLD"
 # countries <- "CHNM"
 # countries <- "GHA"
-countries <- c("GHA", "ZAF")
+# countries <- c("GHA", "ZAF")
 # countries <- "all" # Run all countries in the PSUT target.
-# countries <- c(PFUDatabase::canonical_countries, "WRLD") |> as.character()
+countries <- c(PFUDatabase::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
-# countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA",
-#                "GRC", "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX",
-#                "NOR", "PRT", "RUS", "USA", "WABK", "WMBK", "ZAF", "BEL", "TUR")
+# countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
+#                "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
+#                "RUS", "USA", "WABK", "WMBK", "ZAF", "BEL", "TUR")
 
 
 # Set the years to be analyzed.
-# years <- 1960:2020
+years <- 1960:2020
 # years <- 1971:1973
-years <- 1971:1978
+# years <- 1971:1978
 # years <- 1971
 # years <- 1960:1961
 
@@ -69,7 +69,7 @@ targets::tar_option_set(
   storage = "worker",
   retrieval = "worker",
   # Tell targets to NOT keep everything in memory ...
-  memory = "transient",
+  # memory = "transient",
   # ... and to garbage-collect the memory when done.
   garbage_collection = TRUE
 )
