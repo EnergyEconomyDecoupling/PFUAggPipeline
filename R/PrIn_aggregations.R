@@ -350,8 +350,26 @@ rename_suffixed_psut_columns <- function(.psut_data,
 #'                   This could be an entire data frame,
 #'                   a slice (row) of the data frame, or
 #'                   a group of the data frame.
-#' @param notation The notations from which notation for row and column names can be inferred.
-#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units The names of input columns in `.psut_data`.
+#' @param product_agg_map The product aggregation map.
+#' @param industry_agg_map The industry aggregation map.
+#' @param p_industries A string vector of primary industries.
+#' @param do_chops A boolean that tells whether to do the chopping of **R** and **Y** matrices.
+#' @param pattern_type The matching type for row and column labels.
+#'                     Default is "exact".
+#' @param piece The piece of row and column labels to be matched.
+#'              Default is "noun".
+#' @param bracket_notation A row and column notation.
+#'                         Default is `RCLabels::bracket_notation`.
+#' @param arrow_notation A row and column notation.
+#'                       Default is `RCLabels::arrow_notation`.
+#' @param prepositions Prepositions to be used in row and column labels.
+#'                     Default is `RCLabels::prepositions_list`.
+#' @param method The method for doing matrix inversion when chopping the **R** and **Y** matrices.
+#'               Default is "SVD" for singular value decomposition.
+#' @param tol_invert The tolerance for nearness to 0 in matrix inversion.
+#'                   Default is `.Machine$double.eps`.
+#' @param product_type,industry_type See `Recca::row_col_types`.
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units The names of input columns in `.psut_data`.
 #'                                             Default values are from `Recca::psut_cols`.
 #' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_eiou_aggregated_colname,U_eiou_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname The names of output aggregated columns.
 #'                          Defaults are the matrix names with `aggregated_suffix` appended.

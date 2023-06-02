@@ -56,6 +56,9 @@ Default is \code{RCLabels::prepositions_list}.}
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{The names of the matrix columns in \code{.psut_mats}.
 Defaults from \code{Recca::psut_cols}.}
 
+\item{country}{The string name of the country column.
+Default is \code{Recca::psut_cols$country}.}
+
 \item{year}{The string name of the year column.
 Default is \code{Recca::psut_cols$year}.}
 
@@ -82,10 +85,6 @@ Defaults from \code{IEATools::all_stages}.}
 
 \item{eta_fu}{The string name of the final-to-useful efficiency.
 Default is \code{Recca::efficiency_cols$eta_fu}.}
-
-\item{countries}{The countries for which primary aggregates are to be calculated.}
-
-\item{years}{The years for which primary aggregates are to be calculated.}
 }
 \value{
 A data frame of sector energy and exergy sums.

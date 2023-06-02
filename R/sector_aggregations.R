@@ -26,8 +26,6 @@ create_fd_sectors_list <- function(iea_fd_sectors, sector_aggregation_map) {
 #' for both final and useful stages and resulting efficiencies.
 #'
 #' @param .psut_data A data frame of PSUT matrices.
-#' @param countries The countries for which primary aggregates are to be calculated.
-#' @param years The years for which primary aggregates are to be calculated.
 #' @param fd_sectors The sectors that count for final demand.
 #' @param piece The piece to be aggregated. Default is "noun".
 #' @param pattern_type Where to look for sectors.
@@ -38,6 +36,8 @@ create_fd_sectors_list <- function(iea_fd_sectors, sector_aggregation_map) {
 #'                     Default is `RCLabels::prepositions_list`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units The names of the matrix columns in `.psut_mats`.
 #'                                             Defaults from `Recca::psut_cols`.
+#' @param country The string name of the country column.
+#'                Default is `Recca::psut_cols$country`.
 #' @param year The string name of the year column.
 #'             Default is `Recca::psut_cols$year`.
 #' @param last_stage The string name of the last stage column.
@@ -62,8 +62,6 @@ create_fd_sectors_list <- function(iea_fd_sectors, sector_aggregation_map) {
 #' @export
 calculate_sector_agg_eta_fu <- function(.psut_data,
                                         fd_sectors,
-                                        # countries,
-                                        # years,
                                         piece = "all",
                                         pattern_type = "exact",
                                         notation = RCLabels::notations_list,

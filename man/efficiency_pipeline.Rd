@@ -14,11 +14,11 @@ efficiency_pipeline(
   prepositions = RCLabels::prepositions_list,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
+  U_feed = Recca::psut_cols$U_feed,
+  U_eiou = Recca::psut_cols$U_eiou,
+  r_eiou = Recca::psut_cols$r_eiou,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  r_eiou = Recca::psut_cols$r_eiou,
-  U_eiou = Recca::psut_cols$U_eiou,
-  U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
   country = Recca::psut_cols$country,
   year = Recca::psut_cols$year,
@@ -41,6 +41,34 @@ efficiency_pipeline(
 }
 \arguments{
 \item{.psut_data}{A data frame of PSUT data or a slice (row) of the data frame.}
+
+\item{p_industries}{A string vector of primary industries.}
+
+\item{fd_sectors}{A string vector of final demand sectors.}
+
+\item{piece}{The piece of the labels used for matching.
+Default is "noun".}
+
+\item{notation}{The notation used for row and column labels.
+Default is \code{list(RCLabels::bracket_notation, RCLabels::arrow_notation)}.}
+
+\item{pattern_type}{The pattern type to be used for row and column matching.
+Default is "exact".}
+
+\item{prepositions}{A list of prepositions for row and column labels.
+Default is \code{RCLabels::prepositions_list}.}
+
+\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, country, year, last_stage}{See \code{Recca::psut_cols}.}
+
+\item{gross, net, gross_net}{See \code{Recca::efficiency_cols}.}
+
+\item{final, useful}{See \code{IEATools::all_stages}.}
+
+\item{ex_p, ex_fd_gross, ex_fd_net, ex_fd}{See \code{Recca::aggregate_cols}.}
+
+\item{ex_f, ex_u}{See \code{IEATools::aggregate_cols}.}
+
+\item{eta_pf, eta_fu, eta_pu}{See \code{Recca::efficiency_cols}.}
 }
 \value{
 A data frame of metadata columns and efficiencies

@@ -25,11 +25,13 @@ Imports:
     matsbyname,
     matsindf,
     PFUDatabase,
+    PFUPipelineTools,
     pins,
     RCLabels,
     readxl,
     Recca, 
     rlang,
+    tarchetypes,
     targets,
     tidyr
 Suggests: 

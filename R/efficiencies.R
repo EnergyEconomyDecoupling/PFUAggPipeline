@@ -46,6 +46,22 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
 #' Calculate PFU aggregations and efficiencies
 #'
 #' @param .psut_data A data frame of PSUT data or a slice (row) of the data frame.
+#' @param p_industries A string vector of primary industries.
+#' @param fd_sectors A string vector of final demand sectors.
+#' @param piece The piece of the labels used for matching.
+#'              Default is "noun".
+#' @param notation The notation used for row and column labels.
+#'                 Default is `list(RCLabels::bracket_notation, RCLabels::arrow_notation)`.
+#' @param pattern_type The pattern type to be used for row and column matching.
+#'                     Default is "exact".
+#' @param prepositions A list of prepositions for row and column labels.
+#'                     Default is `RCLabels::prepositions_list`.
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units,country,year,last_stage See `Recca::psut_cols`.
+#' @param gross,net,gross_net See `Recca::efficiency_cols`.
+#' @param final,useful See `IEATools::all_stages`.
+#' @param ex_p,ex_fd_gross,ex_fd_net,ex_fd See `Recca::aggregate_cols`.
+#' @param ex_f,ex_u See `IEATools::aggregate_cols`.
+#' @param eta_pf,eta_fu,eta_pu See `Recca::efficiency_cols`.
 #'
 #' @return A data frame of metadata columns and efficiencies
 #'
@@ -61,11 +77,11 @@ efficiency_pipeline <- function(.psut_data,
                                 # Names of original matrices in .psut_data
                                 R = Recca::psut_cols$R,
                                 U = Recca::psut_cols$U,
+                                U_feed = Recca::psut_cols$U_feed,
+                                U_eiou = Recca::psut_cols$U_eiou,
+                                r_eiou = Recca::psut_cols$r_eiou,
                                 V = Recca::psut_cols$V,
                                 Y = Recca::psut_cols$Y,
-                                r_eiou = Recca::psut_cols$r_eiou,
-                                U_eiou = Recca::psut_cols$U_eiou,
-                                U_feed = Recca::psut_cols$U_feed,
                                 S_units = Recca::psut_cols$S_units,
                                 # Country and year columns
                                 country = Recca::psut_cols$country,
