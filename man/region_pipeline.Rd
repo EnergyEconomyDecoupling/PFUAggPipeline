@@ -6,7 +6,6 @@
 \usage{
 region_pipeline(
   .psut_data,
-  years,
   continent_aggregation_map,
   world_aggregation_map,
   country = Recca::psut_cols$country,

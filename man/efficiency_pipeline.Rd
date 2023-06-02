@@ -6,8 +6,6 @@
 \usage{
 efficiency_pipeline(
   .psut_data,
-  countries,
-  years,
   p_industries,
   fd_sectors,
   piece = "noun",

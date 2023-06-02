@@ -135,10 +135,7 @@ world_aggregation <- function(PSUT_Chop_all_Re_continents,
 #' @return A data frame that includes new "Country"s for
 #'         continents and the World.
 #' @export
-#'
-#' @examples
 region_pipeline <- function(.psut_data,
-                            years,
                             continent_aggregation_map,
                             world_aggregation_map,
                             country = Recca::psut_cols$country,
@@ -146,15 +143,9 @@ region_pipeline <- function(.psut_data,
                             continent = "Continent",
                             world = "World") {
 
-  filtered_data <- .psut_data |>
-    dplyr::filter(.data[[year]] %in% years)
-
-  rm(.psut_data)
-  gc()
-
   # Create a data frame of continents,
   # by aggregating countries to continents according to continent_aggregation_map.
-  PSUT_Re_continents <- filtered_data |>
+  PSUT_Re_continents <- .psut_data |>
     dplyr::left_join(continent_aggregation_map |>
                        matsbyname::agg_map_to_agg_table(many_colname = country,
                                                         few_colname = continent),
@@ -175,7 +166,7 @@ region_pipeline <- function(.psut_data,
                              drop_na_few = TRUE)
 
   # Stach the data frames and return
-  dplyr::bind_rows(filtered_data,
+  dplyr::bind_rows(.psut_data,
                    PSUT_Re_continents,
                    PSUT_Re_world)
 }

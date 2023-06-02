@@ -62,8 +62,8 @@ create_fd_sectors_list <- function(iea_fd_sectors, sector_aggregation_map) {
 #' @export
 calculate_sector_agg_eta_fu <- function(.psut_data,
                                         fd_sectors,
-                                        countries,
-                                        years,
+                                        # countries,
+                                        # years,
                                         piece = "all",
                                         pattern_type = "exact",
                                         notation = RCLabels::notations_list,
@@ -93,16 +93,20 @@ calculate_sector_agg_eta_fu <- function(.psut_data,
                                         useful = IEATools::all_stages$useful,
                                         eta_fu = Recca::efficiency_cols$eta_fu) {
 
-  filtered_data <- .psut_data |>
-    dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
-  rm(.psut_data)
-  gc()
+  # filtered_data <- .psut_data |>
+  #   dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
+  # rm(.psut_data)
+  # gc()
+#
+#   if (nrow(filtered_data) == 0) {
+#     return(NULL)
+#   }
+    if (nrow(.psut_data) == 0) {
+      return(NULL)
+    }
 
-  if (nrow(filtered_data) == 0) {
-    return(NULL)
-  }
-
-  filtered_data |>
+  # filtered_data |>
+  .psut_data |>
     Recca::finaldemand_aggregates(fd_sectors = fd_sectors,
                                   piece = piece,
                                   notation = notation,

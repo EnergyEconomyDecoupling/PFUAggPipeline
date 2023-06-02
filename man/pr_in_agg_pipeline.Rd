@@ -6,8 +6,6 @@
 \usage{
 pr_in_agg_pipeline(
   .psut_data,
-  countries,
-  years,
   product_agg_map,
   industry_agg_map,
   p_industries,
