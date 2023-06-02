@@ -68,7 +68,7 @@ targets::tar_option_set(
   storage = "worker",
   retrieval = "worker",
   # Tell targets to NOT keep everything in memory ...
-  # memory = "transient",
+  memory = "transient",
   # ... and to garbage-collect the memory when done.
   garbage_collection = TRUE
 )
