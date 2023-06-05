@@ -4,6 +4,7 @@ output: html_document
 ---
 
 
+* Preparing pipeline for execution on ARC facilities at Leeds University.
 * Rearranged the order of operations for the pipeline.
   Now, chopping happens first.
   Despecifying and aggregating happens after.
