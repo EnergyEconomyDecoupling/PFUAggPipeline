@@ -3,21 +3,20 @@
 \docType{data}
 \name{efficiency_cols}
 \alias{efficiency_cols}
-\title{PFUAggDatabase efficiency data frame column names}
+\title{Efficiency columns}
 \format{
 A string list with 3 entries.
 \describe{
-\item{eta_pf}{The name of a column containing primary-to-final efficiencies.}
-\item{eta_fu}{The name of a column containing final-to-useful efficiencies.}
-\item{eta_pu}{The name of a column containing primary-to-useful efficiencies.}
+\item{eta_pf}{The string indicating primary-to-final efficiency. "eta_pf".}
+\item{eta_fu}{The string indicating final-to-useful efficiency. "eta_fu".}
+\item{eta_pu}{The string indicating primary-to-final efficiency. "eta_pu".}
 }
 }
 \usage{
 efficiency_cols
 }
 \description{
-A string list containing named names of columns in the efficiency data frame of the
-PFUAggDatabase.
+A string list containing names of efficiency columns.
 }
 \examples{
 efficiency_cols

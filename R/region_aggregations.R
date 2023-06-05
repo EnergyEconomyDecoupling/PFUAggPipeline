@@ -1,75 +1,184 @@
-#' Create an aggregation map for continent aggregation
-#'
-#' An aggregation map is a named list.
-#' Names are the continents.
-#' List items are 3-letter country codes.
-#'
-#' The exemplar table is assumed to be an Excel file with the following columns:
-#' `region_code` and years (as numbers).
-#' The body of the table should contain 3-letter codes
-#' of countries.
-#' The exemplar table is assumed to be on the `exemplar_table_tab` tab
-#' of the Excel file.
-#'
-#' @param exemplar_table_path The path to the exemplar table
-#' @param exemplar_table_tab The name of the tab in the file at `exemplar_table_path`
-#'                           where the region information exists.
-#'                           Default is "exemplar_table".
-#' @param region_code The name of a column containing region codes.
-#'                    Default is "Region.code".
-#' @param continent The name of the continent column. Default is "Continent".
-#' @param country The name of the country column in the outgoing data frame.
-#'                Default is `IEATools::iea_cols$country`.
-#' @param year The name of the year column in the outgoing data frame.
-#'             Default is `IEATools::iea_cols$year`.
-#'
-#' @return A continent aggregation map.
-#'
-#' @export
-continent_aggregation_map <- function(exemplar_table_path,
-                                      exemplar_table_tab = "exemplar_table",
-                                      region_code = "Region.code",
-                                      continent = "Continent",
-                                      country = IEATools::iea_cols$country,
-                                      year = IEATools::iea_cols$year) {
-
-  # Load the file
-  region_table <- readxl::read_excel(path = exemplar_table_path,
-                                     sheet = exemplar_table_tab)
-  # Find names for the region_code column and year columns
-  region_code_col <- which((names(region_table) == region_code), arr.ind = TRUE)
-  year_col_nums <- IEATools::year_cols(region_table)
-  year_col_names <- IEATools::year_cols(region_table, return_names = TRUE)
-  keep <- c(region_code_col, year_col_nums)
-  # pivot the table and return an aggregation map
-  region_table %>%
-    dplyr::select(keep) %>%
-    tidyr::pivot_longer(cols = year_col_names, names_to = year, values_to = country) %>%
-    dplyr::rename(
-      "{continent}" := .data[[region_code]]
-    ) %>%
-    matsbyname::agg_table_to_agg_map(few_colname = continent, many_colname = country)
-}
-
-
 #' Join the continent aggregation map to the PSUT data frame
 #'
 #' The join is accomplished in a way that supports aggregating into continents.
 #'
 #' @param PSUT The `PSUT` data frame.
+#' @param years The years for which this join should occur.
 #' @param continent_aggregation_map A list with names for continents and vectors of countries as items.
-#' @param country The name of the country column. Default is `IEATools::iea_cols$country`.
+#' @param country The name of the country column. Default is `Recca::psut_cols$country`.
+#' @param year The name of the year column. Default is `Recca::psut_cols$year`.
 #' @param continent The name of the continent column. Default is "Continent".
 #'
 #' @return `PSUT` with an additional "Continent" column.
 #'
 #' @export
 join_psut_continents <- function(PSUT,
+                                 years,
                                  continent_aggregation_map,
-                                 country = IEATools::iea_cols$country,
+                                 country = Recca::psut_cols$country,
+                                 year = Recca::psut_cols$year,
                                  continent = "Continent") {
   agg_df <- matsbyname::agg_map_to_agg_table(continent_aggregation_map,
                                              few_colname = continent,
-                                             many_colname = IEATools::iea_cols$country)
-  dplyr::left_join(PSUT, agg_df, by = country)
+                                             many_colname = country)
+  filtered_data <- PSUT %>%
+    dplyr::filter(.data[[year]] %in% years)
+
+  rm(PSUT)
+  gc()
+
+  dplyr::left_join(filtered_data, agg_df, by = country)
+}
+
+
+#' Calculate continent aggregation
+#'
+#' This function is a wrapper for `Recca::region_aggregates()`
+#' that also filters on `continents`,
+#' thereby enabling parallel processing across continents.
+#'
+#' @param PSUT_Chop_all A data frame of PSUT matrices that were previously chopped.
+#' @param continents The continents for which aggregation is desired.
+#' @param years The years for which aggregation is desired.
+#' @param continent The name of the continent column in the `PSUT` data frame.
+#'                  Default is "Continent".
+#' @param year The name of the year column in the `PSUT` data frame.
+#'             Default is `Recca::psut_cols$year`.
+#' @param many_colname The name of the column of many things that will be aggregated into continents.
+#'                     Default is `Recca::psut_cols$country`.
+#' @param few_colname The name of the column of few things that will remain on output.
+#'                    Default is the same as the value of the `continent` argument.
+#'
+#' @return A data frame in which countries are aggregated to continents
+#'         according to the aggregation map
+#'         for the desired `continents` and `years`.
+#'
+#' @export
+continent_aggregation <- function(PSUT_Chop_all,
+                                  continents,
+                                  years,
+                                  continent = "Continent",
+                                  year = Recca::psut_cols$year,
+                                  many_colname = Recca::psut_cols$country,
+                                  few_colname = continent) {
+  filtered_psut <- PSUT_Chop_all %>%
+    dplyr::filter(.data[[few_colname]] %in% continents, .data[[year]] %in% years)
+
+  rm(PSUT_Chop_all)
+  gc()
+
+  Recca::region_aggregates(filtered_psut,
+                           many_colname = many_colname,
+                           few_colname = few_colname,
+                           drop_na_few = TRUE)
+}
+
+
+#' Aggregate continents to world
+#'
+#' This function is a wrapper for `Recca::region_aggregates()`
+#' that also filters on `years`,
+#' thereby enabling parallel processing across years.
+#'
+#' @param PSUT_Chop_all_Re_continents A data frame of PSUT matrices for continents.
+#' @param years The years for which aggregation is desired.
+#' @param world_aggregation_map The aggregation map to sum continents into the world.
+#' @param country The name of the country column in the `PSUT_Chop_all_Re_continents` data frame.
+#'                Default is `Recca::psut_cols$country`.
+#' @param world The name of the column of few things that will remain on output.
+#'              Default is "World".
+#' @param year The name of the year column in the `PSUT` data frame.
+#'             Default is `Recca::psut_cols$year`.
+#' @param many_colname The name of the column of many things that will be aggregated into continents.
+#'                     Default is `Recca::psut_cols$country`.
+#' @param few_colname The name of the column of few things that will remain on output.
+#'                    Default is the same as the value of the `world` argument.
+#' @return A data frame in which continents are aggregated to world
+#'         according to the aggregation map
+#'         for the desired `years`.
+#'
+#' @export
+world_aggregation <- function(PSUT_Chop_all_Re_continents,
+                              years,
+                              world_aggregation_map,
+                              country = Recca::psut_cols$country,
+                              world = "World",
+                              year = Recca::psut_cols$year,
+                              many_colname = Recca::psut_cols$country,
+                              few_colname = world) {
+  filtered_data <- PSUT_Chop_all_Re_continents %>%
+    dplyr::filter(.data[[year]] %in% years)
+
+  rm(PSUT_Chop_all_Re_continents)
+  gc()
+
+  filtered_data %>%
+    dplyr::left_join(world_aggregation_map %>%
+                       matsbyname::agg_map_to_agg_table(many_colname = country,
+                                                        few_colname = few_colname),
+                     by = country) %>%
+    Recca::region_aggregates(many_colname = country,
+                             few_colname = few_colname,
+                             drop_na_few = TRUE)
+}
+
+
+#' Aggregation regions
+#'
+#' The database can benefit from continent and World aggregations.
+#' This function bundles those aggregations into a single function.
+#'
+#' All regional aggregations have names that are 5 characters or longer.
+#'
+#' @param .psut_data A data frame of PSUT information.
+#' @param continent_aggregation_map An aggregation map that shows how to
+#'                                  aggregate countries to continents.
+#' @param world_aggregation_map An aggregation map that shows how to
+#'                              aggregate continents to the world.
+#' @param country The name of the country column.
+#'                Default is `Recca::psut_cols$country`.
+#' @param year The name of the year column.
+#'             Default is `Recca::psut_cols$year`.
+#' @param continent The name of the continent column.
+#'                  Default is "Continent".
+#' @param world The name of the world column.
+#'              Default is "World".
+#'
+#' @return A data frame that includes new "Country"s for
+#'         continents and the World.
+#' @export
+region_pipeline <- function(.psut_data,
+                            continent_aggregation_map,
+                            world_aggregation_map,
+                            country = Recca::psut_cols$country,
+                            year = Recca::psut_cols$year,
+                            continent = "Continent",
+                            world = "World") {
+
+  # Create a data frame of continents,
+  # by aggregating countries to continents according to continent_aggregation_map.
+  PSUT_Re_continents <- .psut_data |>
+    dplyr::left_join(continent_aggregation_map |>
+                       matsbyname::agg_map_to_agg_table(many_colname = country,
+                                                        few_colname = continent),
+                     by = country) |>
+    Recca::region_aggregates(many_colname = country,
+                             few_colname = continent,
+                             drop_na_few = TRUE)
+
+  # Create a data frame of the World,
+  # by aggregating continents to World according to world_aggregation_map.
+  PSUT_Re_world <- PSUT_Re_continents |>
+    dplyr::left_join(world_aggregation_map |>
+                       matsbyname::agg_map_to_agg_table(many_colname = country,
+                                                        few_colname = world),
+                     by = country) %>%
+    Recca::region_aggregates(many_colname = country,
+                             few_colname = world,
+                             drop_na_few = TRUE)
+
+  # Stach the data frames and return
+  dplyr::bind_rows(.psut_data,
+                   PSUT_Re_continents,
+                   PSUT_Re_world)
 }

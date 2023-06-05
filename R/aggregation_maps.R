@@ -7,7 +7,7 @@
 #' An aggregation map is a named list of items, where the names are the few
 #' and the items are the many.
 #'
-#' @param path  The path to an Excel file containing aggregation tables.
+#' @param path The path to an Excel file containing aggregation tables.
 #' @param aggregation_file_tabs A list of tabs in the aggregation file.
 #'                              The names are the programmatic names for the tabs.
 #'                              The items are the actual names.
@@ -33,3 +33,4 @@ load_aggregation_maps <- function(path,
   }) %>%
     magrittr::set_names(names(aggregation_file_tabs))
 }
+

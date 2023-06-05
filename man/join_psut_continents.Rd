@@ -6,17 +6,23 @@
 \usage{
 join_psut_continents(
   PSUT,
+  years,
   continent_aggregation_map,
-  country = IEATools::iea_cols$country,
+  country = Recca::psut_cols$country,
+  year = Recca::psut_cols$year,
   continent = "Continent"
 )
 }
 \arguments{
 \item{PSUT}{The \code{PSUT} data frame.}
 
+\item{years}{The years for which this join should occur.}
+
 \item{continent_aggregation_map}{A list with names for continents and vectors of countries as items.}
 
-\item{country}{The name of the country column. Default is \code{IEATools::iea_cols$country}.}
+\item{country}{The name of the country column. Default is \code{Recca::psut_cols$country}.}
+
+\item{year}{The name of the year column. Default is \code{Recca::psut_cols$year}.}
 
 \item{continent}{The name of the continent column. Default is "Continent".}
 }

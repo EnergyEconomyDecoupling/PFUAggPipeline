@@ -4,7 +4,25 @@ output: html_document
 ---
 
 
-# PFUAggDatabase 0.1.0 (2022-04-15)
+# PFUAggDatabase 0.1.1 (2022-06-05)
+
+* Preparing pipeline for execution on ARC facilities at Leeds University.
+* Rearranged the order of operations for the pipeline.
+  Now, chopping happens first.
+  Despecifying and aggregating happens after.
+  This change should make upstream and downstream swims
+  more stable, numerically.
+* Added a target and .csv pin final-to-useful efficiencies
+  for final demand sectors.
+* Simplified calculation of primary, final, and useful aggregates.
+* Now parallelizing across all combinations of countries and years.
+  Previously only parallelized across countries.
+  Hopefully this fixes some memory issues.
+* Now includes targets for product and industry aggregations.
+* Now creates targets for a vector of pins from the `PFUDatabase`.
+
+
+# PFUAggDatabase 0.1.0 (2022-04-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6463858.svg)](https://doi.org/10.5281/zenodo.6463858)
 
 * First fully-working version where the pipeline
   completes in parallel on its own,

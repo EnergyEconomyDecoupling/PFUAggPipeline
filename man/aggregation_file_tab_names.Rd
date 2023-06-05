@@ -3,26 +3,22 @@
 \docType{data}
 \name{aggregation_file_tab_names}
 \alias{aggregation_file_tab_names}
-\title{Aggregation file tabs}
+\title{Aggregation file tab information}
 \format{
-A string list with 2 entries.
+A string list with 5 entries.
 \describe{
-\item{continent_aggregation_tab}{The name of the continent aggregation tab.}
-\item{world_aggregation_tab}{The name of the world aggregation tab.}
-\item{exiobase_region_aggregation_tab}{The name of the Exiobase region aggregation tab.}
-\item{eu.product_aggregation_tab}{The name of the useful product aggregation tab.}
-\item{ef.product_aggregation_tab}{The name of the final product aggregation tab.}
-\item{destination_aggregation_tab}{The name of the destination aggregation tab.}
+\item{continent_aggregation}{The name of the continent aggregation tab, "continent_aggregation".}
+\item{world_aggregation}{The string name of the world aggregation tab. "world_aggregation".}
+\item{ef_product_aggregation}{The string name of the final energy product aggregation tab. "ef_product_aggregation".}
+\item{eu_product_aggregation}{The string name of the useful energy product aggregation tab. "eu_product_aggregation".}
+\item{ef_sector_aggregation}{The string name of the final energy sector aggregation tab. "ef_sector_aggregation".}
 }
 }
 \usage{
 aggregation_file_tab_names
 }
 \description{
-A string list containing names of tabs for an Excel aggregation file.
-}
-\details{
-The aggregation file should have several tabs, one for each type of aggregation.
+A string list containing the aggregation file's tab names.
 }
 \examples{
 aggregation_file_tab_names

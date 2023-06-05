@@ -1,273 +1,264 @@
 #' Create a targets workflow
 #'
-#' Arguments to this function specify the details of a targets workflow to be executed.
-#'
-#' The exemplar table is assumed to be an Excel file with the following columns:
-#' "Region.code" and years (as numbers).
-#' The body of the table should contain 3-letter codes
-#' of countries.
-#' The exemplar table is assumed to be on the "exemplar_table" tab of the Excel file.
+#' This is a target factory whose arguments
+#' specify the details of a targets workflow to be constructed
 #'
 #' @param countries A string vector of 3-letter country codes.
 #'                  Default is "all", meaning all available countries should be analyzed.
 #' @param years A numeric vector of years to be analyzed.
 #'              Default is "all", meaning all available years should be analyzed.
-#' @param psut_release The release we'll use from `psut_releases_folder`.
+#' @param do_chops A boolean that tells whether to perform the R and Y chops.
+#' @param psut_release The release we'll use from `pipeline_releases_folder`.
+#'                     See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
-#' @param pipeline_caches_folder The path to a folder where .zip files of the targets pipeline are saved.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
+#' @param pipeline_caches_folder The path to a folder where releases of pipeline caches are stored.
 #' @param release Boolean that tells whether to do a release of the results.
+#'                Default is `FALSE`.
 #'
 #' @return A list of `tar_target`s to be executed in a workflow.
 #'
 #' @export
 get_pipeline <- function(countries = "all",
                          years = "all",
+                         do_chops,
                          psut_release,
                          aggregation_maps_path,
-                         pipeline_caches_folder,
                          pipeline_releases_folder,
+                         pipeline_caches_folder,
                          release = FALSE) {
 
-  # Avoid notes when checking the package.
-  PSUT_with_continent_col <- NULL
-  PSUT <- NULL
-  AggregationMaps <- NULL
-  Continent <- NULL
-  PSUT_Re_all_by_country <- NULL
-  PSUT_Re_all <- NULL
+  # Avoid warnings for some target names
   Country <- NULL
-  PSUT_Re_all_St_pfu_by_country <- NULL
-  PSUT_Re_all_St_pfu <- NULL
+  Year <- NULL
+  PSUT <- NULL
+  PSUT_Re_all <- NULL
+  PSUT_Re_all_Chop_all_Ds_all_Gr_all <- NULL
 
-
-  # Create the pipeline
   list(
 
-    #####################
-    # Preliminary setup #
-    #####################
+    # Preliminary setup --------------------------------------------------------
 
     # Store some incoming data as targets
-    # targets::tar_target_raw("Countries", rlang::enexpr(my_countries)),
+    # These targets are invariant across incoming psut_releases
     targets::tar_target_raw("Countries", list(countries)),
     targets::tar_target_raw("Years", list(years)),
-    targets::tar_target_raw("PSUTRelease", psut_release),
     targets::tar_target_raw("AggregationMapsPath", aggregation_maps_path),
-    targets::tar_target_raw("PipelineCachesOutputFolder", pipeline_caches_folder),
     targets::tar_target_raw("PinboardFolder", pipeline_releases_folder),
+    targets::tar_target_raw("PipelineCachesFolder", pipeline_caches_folder),
+    targets::tar_target_raw("ExcelOutputFolder", file.path(pipeline_releases_folder, "eta_pfu_excel")),
+    targets::tar_target_raw("Release", release),
 
-    # Pull in the PSUT data frame
-    targets::tar_target_raw("PSUT", quote(pins::board_folder(PinboardFolder, versioned = TRUE) %>%
-                                            pins::pin_read("psut", version = PSUTRelease) %>%
-                                            filter_countries_and_years(countries = Countries, years = Years)),
-                            # Very important to assign storage and retrieval tasks to workers,
-                            # else the pipeline seemingly never finishes.
-                            storage = "worker",
-                            retrieval = "worker"),
-
-    # Gather the aggregation maps.
-    targets::tar_target_raw("AggregationMaps", quote(load_aggregation_maps(path = AggregationMapsPath))),
-
-
-    #########################
-    # Regional aggregations #
-    #########################
-
-    # Create a continents data frame, grouped by continent,
-    # so subsequent operations (region aggregation)
-    # will be performed in parallel, if desired.
-    tarchetypes::tar_group_by(
-      name = PSUT_with_continent_col,
-      command = join_psut_continents(PSUT = PSUT,
-                                     continent_aggregation_map = AggregationMaps$continent_aggregation,
-                                     continent = "Continent"),
-      # The columns to group by, as symbols.
-      Continent,
-      storage = "worker",
-      retrieval = "worker"
-    ),
-
-    # Aggregate by continent
+    # Gather the aggregation maps
     targets::tar_target_raw(
-      "PSUT_Re_continents",
-      quote(Recca::region_aggregates(PSUT_with_continent_col,
-                                     many_colname = IEATools::iea_cols$country,
-                                     few_colname = "Continent") %>%
-              # Eliminate the targets grouping on Continent
-              # so we can group by country later.
-              dplyr::mutate(
-                tar_group = NULL
-              )),
-      pattern = quote(map(PSUT_with_continent_col)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
+      "AggregationMaps",
+      quote(load_aggregation_maps(path = AggregationMapsPath))
     ),
 
-
-    # Aggregate to world
+    # Separate the product aggregation map
     targets::tar_target_raw(
-      "PSUT_Re_world",
-      quote(Recca::region_aggregates(PSUT_Re_continents %>%
-                                       dplyr::left_join(AggregationMaps$world_aggregation %>%
-                                                          matsbyname::agg_map_to_agg_table(many_colname = IEATools::iea_cols$country,
-                                                                                           few_colname = "World"),
-                                                        by = IEATools::iea_cols$country),
-                                     many_colname = IEATools::iea_cols$country, # Which actually holds continents
-                                     few_colname = "World"))
+      "ProductAggMap",
+      substitute(c(AggregationMaps[["ef_product_aggregation"]],
+                   AggregationMaps[["eu_product_aggregation"]]))
     ),
 
-    # Bind all region aggregations together
-    targets::tar_target_raw("PSUT_Re_all", quote(dplyr::bind_rows(PSUT, PSUT_Re_continents, PSUT_Re_world))),
-
-
-    ####################
-    # PFU aggregations #
-    ####################
-
-    # Set up a grouped-by-country data frame
-    # so all future calculations are parallelized across countries.
-    tarchetypes::tar_group_by(
-      name = PSUT_Re_all_by_country,
-      command = PSUT_Re_all,
-      # The columns to group by, as symbols.
-      Country,
-      storage = "worker",
-      retrieval = "worker"
+    # Separate the industry aggregation map
+    targets::tar_target_raw(
+      "IndustryAggMap",
+      substitute(AggregationMaps[["ef_sector_aggregation"]])
     ),
 
     # Establish prefixes for primary industries
-    targets::tar_target_raw("p_industry_prefixes", quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())),
-
-    # Aggregate primary energy/exergy by total (total energy supply (TES)), product, and flow
     targets::tar_target_raw(
-      "PSUT_Re_all_St_p",
-      quote(calculate_primary_ex_data(PSUT_Re_all_by_country, p_industry_prefixes = p_industry_prefixes)),
-      pattern = quote(map(PSUT_Re_all_by_country)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
+      "PIndustryPrefixes",
+      quote(IEATools::tpes_flows %>% unname() %>% unlist() %>% list())
     ),
 
     # Establish final demand sectors
-    targets::tar_target_raw("final_demand_sectors", quote(IEATools::fd_sectors)),
-
-    # Aggregate final and useful energy/exergy by total (total final consumption (TFC)), product, and sector
     targets::tar_target_raw(
-      "PSUT_Re_all_St_fu",
-      quote(calculate_finaluseful_ex_data(PSUT_Re_all_by_country,
-                                          fd_sectors = final_demand_sectors)),
-      pattern = quote(map(PSUT_Re_all_by_country)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
+      "FinalDemandSectors",
+      quote(create_fd_sectors_list(IEATools::fd_sectors, AggregationMaps$ef_sector_aggregation))
     ),
 
-    # Bring the aggregations together in a single data frame
-    targets::tar_target_raw("PSUT_Re_all_St_pfu", quote(dplyr::bind_rows(PSUT_Re_all_St_p, PSUT_Re_all_St_fu))),
+    # Identify the continents to which we'll aggregate
+    targets::tar_target_raw(
+      "Continents",
+      substitute(AggregationMaps$world_aggregation$World)
+    ),
+
+    targets::tar_target_raw(
+      "CountriesContinentsWorld",
+      substitute(c(Countries, Continents, "World"))
+    ),
+
+    # Set the pin and release as targets
+    targets::tar_target_raw(
+      "PSUTRelease",
+      unname(psut_release)
+    ),
 
 
-    ################
-    # Efficiencies #
-    ################
+    # PSUT ---------------------------------------------------------------------
+
+    # Pull in the PSUT data frame
+    targets::tar_target_raw(
+      "PSUT",
+      quote(pins::board_folder(PinboardFolder, versioned = TRUE) |>
+              pins::pin_read("psut", version = PSUTRelease) |>
+              PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
+    ),
 
     tarchetypes::tar_group_by(
-      name = PSUT_Re_all_St_pfu_by_country,
-      command = PSUT_Re_all_St_pfu %>%
-        dplyr::mutate(
-          tar_group = NULL
-        ),
-      # The columns to group by, as symbols.
-      Country,
-      storage = "worker",
-      retrieval = "worker"
+      name = "PSUTbyYear",
+      command = PSUT,
+      Year
     ),
 
-    targets::tar_target_raw(
-      "agg_eta_Re_all_St_pfu",
-      quote(calc_agg_etas(PSUT_Re_all_St_pfu_by_country)),
-      pattern = quote(map(PSUT_Re_all_St_pfu_by_country)),
-      iteration = "group",
-      storage = "worker",
-      retrieval = "worker"
-    ),
-
-    # Split the aggregations and efficiencies apart
-    # to enable easier saving of separate .csv files later.
-    targets::tar_target_raw(
-      "agg_Re_all_St_pfu",
-      quote(agg_eta_Re_all_St_pfu %>%
-              dplyr::mutate(
-                "{PFUAggDatabase::efficiency_cols$eta_pf}" := NULL,
-                "{PFUAggDatabase::efficiency_cols$eta_fu}" := NULL,
-                "{PFUAggDatabase::efficiency_cols$eta_pu}" := NULL,
-              )),
-      storage = "worker",
-      retrieval = "worker"
-    ),
+    # Regional aggregations ----------------------------------------------------
 
     targets::tar_target_raw(
-      "eta_Re_all_St_pfu",
-      quote(agg_eta_Re_all_St_pfu %>%
-              dplyr::mutate(
-                "{IEATools::all_stages$primary}" := NULL,
-                "{IEATools::all_stages$final}" := NULL,
-                "{IEATools::all_stages$useful}" := NULL,
-              )),
-      storage = "worker",
-      retrieval = "worker"
+      "PSUT_Re_all",
+      quote(PSUTbyYear |>
+              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
+                              world_aggregation_map = AggregationMaps$world_aggregation,
+                              continent = "Continent")),
+      pattern = quote(map(PSUTbyYear))
+    ),
+    tarchetypes::tar_group_size(
+      "PSUT_Re_all_grouped",
+      PSUT_Re_all,
+      size = 10
+    ),
+
+    # Chopping, despecifying, and grouping -------------------------------------
+
+    targets::tar_target_raw(
+      "PSUT_Re_all_Chop_all_Ds_all_Gr_all",
+      quote(PSUT_Re_all_grouped |>
+              pr_in_agg_pipeline(product_agg_map = ProductAggMap,
+                                 industry_agg_map = IndustryAggMap,
+                                 p_industries = unlist(PIndustryPrefixes),
+                                 do_chops = do_chops,
+                                 method = "SVD",
+                                 country = Recca::psut_cols$country,
+                                 year = Recca::psut_cols$year)) ,
+      pattern = quote(map(PSUT_Re_all_grouped))
+    ),
+    tarchetypes::tar_group_by(
+      "PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped",
+      PSUT_Re_all_Chop_all_Ds_all_Gr_all,
+      Country, Year
     ),
 
 
-    ################
-    # Save results #
-    ################
+    # --------------------------------------------------------------------------
+    # Product C ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a data frame of final demand sector efficiencies -------------------
 
-    # Pin the aggregates and efficiencies as an .rds file
+    # Final demand sector aggregates and efficiencies --------------------------
+
     targets::tar_target_raw(
-      "pin_agg_eta_Re_all_St_pfu",
+      "SectorAggEtaFU",
+      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
+              calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
+              PFUPipelineTools::tar_ungroup()),
+      pattern = quote(map(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped))
+    ),
+
+
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = agg_eta_Re_all_St_pfu,
-                                        targ_name = "agg_eta_Re_all_St_pfu",
-                                        release = release))
-      ),
+                                        targ = SectorAggEtaFU,
+                                        pin_name = "sector_agg_eta_fu",
+                                        release = Release))
+    ),
 
-    # Pin aggregates as a wide-by-years .csv file
+
+    # --------------------------------------------------------------------------
+    # Product D ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a CSV file of final demand sector efficiencies ---------------------
+
+    # Pivot SectorAggEtaFU in preparation for writing .csv file ----------------
+
     targets::tar_target_raw(
-      "pin_agg_csv",
+      "PivotedSectorAggEtaFU",
+      quote(pivot_for_csv(SectorAggEtaFU,
+                          val_cols = c("Final", "Useful", "eta_fu")))
+    ),
+
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaFUCSV",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = agg_Re_all_St_pfu%>%
-                                          pivot_agg_eta_wide_by_year(pivot_cols = c(IEATools::all_stages$primary,
-                                                                                    IEATools::all_stages$final,
-                                                                                    IEATools::all_stages$useful)),
-                                        targ_name = "agg_Re_all_St_pfu",
+                                        targ = PivotedSectorAggEtaFU,
+                                        pin_name = "sector_agg_eta_fu_csv",
                                         type = "csv",
-                                        release = release))
+                                        release = Release))
     ),
 
 
-    # Pin efficiencies as a wide-by-years .csv file
+    # --------------------------------------------------------------------------
+    # Product E ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Pin the EtaPFU data frame ------------------------------------------------
+
+    # PFU aggregates and efficiencies ------------------------------------------
+
     targets::tar_target_raw(
-      "pin_eta_csv",
+      "AggEtaPFU",
+      quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
+              efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
+                                  fd_sectors = unlist(FinalDemandSectors)) |>
+              PFUPipelineTools::tar_ungroup()),
+      pattern = quote(map(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped))
+    ),
+
+
+    targets::tar_target_raw(
+      "ReleaseAggEtaPFU",
       quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = eta_Re_all_St_pfu %>%
-                                          pivot_agg_eta_wide_by_year(pivot_cols = c(PFUAggDatabase::efficiency_cols$eta_pf,
-                                                                                    PFUAggDatabase::efficiency_cols$eta_fu,
-                                                                                    PFUAggDatabase::efficiency_cols$eta_pu)),
-                                        targ_name = "eta_Re_all_St_pfu",
-                                        type = "csv",
-                                        release = release))
+                                        targ = AggEtaPFU,
+                                        pin_name = "agg_eta_pfu",
+                                        release = Release))
     ),
 
-    # Save the cache for posterity.
+
+    # --------------------------------------------------------------------------
+    # Product F ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Write a CSV file of PFU efficiencies -------------------------------------
+
+    # Pivot AggEtaPFU in preparation for writing .csv file ---------------------
+
     targets::tar_target_raw(
-      "store_cache",
-      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesOutputFolder,
+      "PivotedAggEtaPFU",
+      quote(AggEtaPFU %>%
+              pivot_for_csv(val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")))
+    ),
+
+
+    targets::tar_target_raw(
+      "ReleaseAggEtaPFUCSV",
+      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
+                                        targ = PivotedAggEtaPFU,
+                                        pin_name = "agg_eta_pfu_csv",
+                                        type = "csv",
+                                        release = Release))),
+
+
+    # Zip the cache and store in the pipeline_caches_folder --------------------
+
+    targets::tar_target_raw(
+      "StoreCache",
+      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
                                      cache_folder = "_targets",
-                                     file_prefix = "pfu_agg_workflow_cache_",
-                                     dependency = c(agg_Re_all_St_pfu, eta_Re_all_St_pfu)))
+                                     file_prefix = "pfu_agg_pipeline_cache_",
+                                     dependency = EtaPFU,
+                                     release = Release))
     )
   )
 }
+
 

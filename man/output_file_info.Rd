@@ -7,16 +7,16 @@
 \format{
 A string list with 3 entries.
 \describe{
-\item{agg_eta_filename}{The name of the Excel file containing aggregate energy and exergy values and aggregate efficiencies.}
-\item{agg_tabname}{The name of the tab in \code{agg_eta_filename} containing aggregated energy and exergy values.}
-\item{eta_tabname}{The name of the tab in \code{agg_eta_filename} containing aggregated efficiencies.}
+\item{agg_eta_filename}{A string value of the output file name. "AggregateEfficiencyResults.xlsx".}
+\item{agg_tabname}{The string name of the aggregates tab. "Aggregates".}
+\item{eta_tabname}{The string name of the efficiency tab. "etas".}
 }
 }
 \usage{
 output_file_info
 }
 \description{
-A string list containing named names of files and tabs for outputs from this pipeline.
+A string list containing the filename and tabs for output files.
 }
 \examples{
 output_file_info

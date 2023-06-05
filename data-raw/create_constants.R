@@ -1,11 +1,11 @@
 #
-# Give the names of PFUWorkflow columns, this function compliments "IEATools::iea_cols".
+# Give the names of PFUDatabase columns, this function compliments "IEATools::iea_cols".
 #
 
 sea_cols <- list(stage_colname = "Stage",
                  gross_net_colname = "Gross.Net",
                  e_product_colname = "E.product",
-                 sector_colname = "Sector",
+                 e_sector_colname = "Sector",
                  flow_colname = "Flow",
                  agg_by_colname = "Aggregation.by",
                  fd_sectors_colname = "Fd.sectors",
@@ -61,12 +61,10 @@ usethis::use_data(output_file_info, overwrite = TRUE)
 #
 
 aggregation_file_tab_names <- list(continent_aggregation = "continent_aggregation",
-                                   world_aggregation = "world_aggregation"
-                                   # exiobase_region_aggregation = "exiobase_region_aggregation",
-                                   # eu.product_aggregation = "eu.product_aggregation",
-                                   # ef.product_aggregation = "ef.product_aggregation",
-                                   # destination_aggregation = "destination_aggregation"
-                                   )
+                                   world_aggregation = "world_aggregation",
+                                   ef_product_aggregation = "ef_product_aggregation",
+                                   eu_product_aggregation = "eu_product_aggregation",
+                                   ef_sector_aggregation = "ef_sector_aggregation")
 usethis::use_data(aggregation_file_tab_names, overwrite = TRUE)
 
 
@@ -74,3 +72,18 @@ aggregation_file_cols <- list(many_colname = "Many",
                               few_colname = "Few")
 usethis::use_data(aggregation_file_cols, overwrite = TRUE)
 
+
+#
+# Aggregation data frame columns
+#
+
+aggregation_df_cols <- list(product_aggregation = "Product.aggregation",
+                            industry_aggregation = "Industry.aggregation",
+                            specified = "Specified",
+                            despecified = "Despecified",
+                            ungrouped = "Ungrouped",
+                            grouped = "Grouped",
+                            chopped_mat = "Chopped.mat",
+                            chopped_var = "Chopped.var",
+                            product_sector = Recca::aggregate_cols$product_sector)
+usethis::use_data(aggregation_df_cols, overwrite = TRUE)

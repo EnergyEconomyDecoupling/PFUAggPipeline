@@ -3,21 +3,19 @@
 \docType{data}
 \name{gross_net_metadata}
 \alias{gross_net_metadata}
-\title{Gross or Net metadata information}
+\title{Gross and net metadata}
 \format{
 A string list with 2 entries.
 \describe{
-\item{gross_value}{The string "Gross" indicating that final demand was calculated for both EIOU and non-EIOU sectors. See \code{Recca::finaldemand_aggregates}.}
-\item{net_value}{The string "Net" indicating that final demand was calculated for only non-EIOU sectors. See \code{Recca::finaldemand_aggregates}.}
+\item{gross_value}{The string indicating gross aggregation. "Gross".}
+\item{net_value}{The string indicating net aggregation. "Net".}
 }
 }
 \usage{
 gross_net_metadata
 }
 \description{
-A string list containing values indicating whether the output of the functions \code{Recca::finaldemand_aggregates}, \code{PFUWorkflow::calculate_fu_ex_total},
-\code{PFUWorkflow::calculate_fu_ex_product}, \code{PFUWorkflow::calculate_fu_ex_sector}, and \code{PFUWorkflow::calculate_finaluseful_ex_data}
-are in Gross or Net terms. To be supplied to the metadata columns \code{PFUWorkflow::sea_cols$gross_net_colname}.
+A string list containing gross and net metadata.
 }
 \examples{
 gross_net_metadata

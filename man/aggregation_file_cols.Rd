@@ -3,19 +3,19 @@
 \docType{data}
 \name{aggregation_file_cols}
 \alias{aggregation_file_cols}
-\title{Aggregation table column names}
+\title{Aggregation file column names}
 \format{
 A string list with 2 entries.
 \describe{
-\item{many_colname}{The name of the many column in each tab.}
-\item{few_colname}{The name of the few column in each tab.}
+\item{many_colname}{The string name of the many column. "Many".}
+\item{few_colname}{The string name of the few column. "Few".}
 }
 }
 \usage{
 aggregation_file_cols
 }
 \description{
-A string list containing names of column names in aggregation tables.
+A string list containing aggregation file column names.
 }
 \examples{
 aggregation_file_cols

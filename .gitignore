@@ -29,3 +29,5 @@ vignettes/*.pdf
 _targets
 .Rproj.user
 docs
+.DS_Store
+inst/doc

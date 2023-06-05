@@ -7,10 +7,11 @@
 get_pipeline(
   countries = "all",
   years = "all",
+  do_chops,
   psut_release,
   aggregation_maps_path,
-  pipeline_caches_folder,
   pipeline_releases_folder,
+  pipeline_caches_folder,
   release = FALSE
 )
 }
@@ -21,26 +22,24 @@ Default is "all", meaning all available countries should be analyzed.}
 \item{years}{A numeric vector of years to be analyzed.
 Default is "all", meaning all available years should be analyzed.}
 
-\item{psut_release}{The release we'll use from \code{psut_releases_folder}.}
+\item{do_chops}{A boolean that tells whether to perform the R and Y chops.}
+
+\item{psut_release}{The release we'll use from \code{pipeline_releases_folder}.
+See details.}
 
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
 
-\item{pipeline_caches_folder}{The path to a folder where .zip files of the targets pipeline are saved.}
-
 \item{pipeline_releases_folder}{The path to a folder where releases of output targets are pinned.}
 
-\item{release}{Boolean that tells whether to do a release of the results.}
+\item{pipeline_caches_folder}{The path to a folder where releases of pipeline caches are stored.}
+
+\item{release}{Boolean that tells whether to do a release of the results.
+Default is \code{FALSE}.}
 }
 \value{
 A list of \code{tar_target}s to be executed in a workflow.
 }
 \description{
-Arguments to this function specify the details of a targets workflow to be executed.
-}
-\details{
-The exemplar table is assumed to be an Excel file with the following columns:
-"Region.code" and years (as numbers).
-The body of the table should contain 3-letter codes
-of countries.
-The exemplar table is assumed to be on the "exemplar_table" tab of the Excel file.
+This is a target factory whose arguments
+specify the details of a targets workflow to be constructed
 }
