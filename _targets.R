@@ -14,18 +14,18 @@ library(targets)
 # countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
-# countries <- c("GHA", "ZAF")
+countries <- c("GHA", "ZAF")
 # countries <- "all" # Run all countries in the PSUT target.
 # countries <- c(PFUDatabase::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
-countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
-               "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
-               "RUS", "USA", "WABK", "WMBK", "ZAF", "BEL", "TUR")
+# countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
+#                "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
+#                "RUS", "USA", "WABK", "WMBK", "ZAF", "BEL", "TUR")
 
 
 # Set the years to be analyzed.
-years <- 1960:2020
-# years <- 1971:1973
+# years <- 1960:2020
+years <- 1971:1973
 # years <- 1971:1978
 # years <- 1971
 # years <- 1960:1961
@@ -53,6 +53,24 @@ release <- FALSE
 
 # End user-adjustable parameters.
 
+#
+# Set up some machine-specific parameters,
+# mostly for input and output locations.
+#
+
+sys_info <- Sys.info()
+if (startsWith(sys_info[["nodename"]], "Mac")) {
+  setup <- PFUSetup::get_abs_paths()
+} else if (endsWith(sys_info[["nodename"]], "arc4.leeds.ac.uk")) {
+  uname <- sys_info[["user"]]
+  setup <- PFUSetup::get_abs_paths(home_path <- "/nobackup",
+                                   dropbox_path = uname)
+  # Set the location for the _targets folder.
+  targets::tar_config_set(store = setup[["output_data_path"]])
+} else {
+  stop("Unknown system in _targets.R for PFUAggDatabase. Can't set input and output locations.")
+}
+
 
 # Set up for multithreaded work on the local machine.
 future::plan(future.callr::callr)
@@ -78,13 +96,10 @@ PFUAggDatabase::get_pipeline(countries = countries,
                              years = years,
                              do_chops = do_chops,
                              psut_release = psut_release,
-                             aggregation_maps_path = PFUSetup::get_abs_paths()[["aggregation_mapping_path"]],
-                             pipeline_releases_folder = PFUSetup::get_abs_paths()[["pipeline_releases_folder"]],
-                             pipeline_caches_folder = PFUSetup::get_abs_paths()[["pipeline_caches_folder"]],
+                             aggregation_maps_path = setup[["aggregation_mapping_path"]],
+                             pipeline_releases_folder = setup[["pipeline_releases_folder"]],
+                             pipeline_caches_folder = setup[["pipeline_caches_folder"]],
                              release = release)
-
-
-
 
 
 
