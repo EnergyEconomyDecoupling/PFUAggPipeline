@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# PFUAggDatabase 0.1.1 (2022-06-05)
+# PFUAggDatabase 0.1.1 (2022-06-05) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8007869.svg)](https://doi.org/10.5281/zenodo.8007869)
 
 * Preparing pipeline for execution on ARC facilities at Leeds University.
 * Rearranged the order of operations for the pipeline.
