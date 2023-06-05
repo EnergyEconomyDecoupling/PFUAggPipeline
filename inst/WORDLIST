@@ -1,6 +1,8 @@
+AggregateEfficiencyResults
 al
 csv
 CMD
+colname
 coltypes
 Despecify
 Despecifying
@@ -12,8 +14,12 @@ ECC
 ECCs
 EIOU
 Exiobase
+ef
 et
+eu
 exergy
+Fd
+fu
 IEA
 lifecycle
 matsindf
@@ -24,6 +30,8 @@ PSUT
 parallelizing
 pinboard
 psut
+pu
+pur
 rds
 Readme
 Rmd
@@ -35,3 +43,4 @@ Ungrouped
 un
 WEEB
 WIP
+xlsx

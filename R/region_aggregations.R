@@ -130,7 +130,19 @@ world_aggregation <- function(PSUT_Chop_all_Re_continents,
 #'
 #' All regional aggregations have names that are 5 characters or longer.
 #'
-#' @param .psut_data
+#' @param .psut_data A data frame of PSUT information.
+#' @param continent_aggregation_map An aggregation map that shows how to
+#'                                  aggregate countries to continents.
+#' @param world_aggregation_map An aggregation map that shows how to
+#'                              aggregate continents to the world.
+#' @param country The name of the country column.
+#'                Default is `Recca::psut_cols$country`.
+#' @param year The name of the year column.
+#'             Default is `Recca::psut_cols$year`.
+#' @param continent The name of the continent column.
+#'                  Default is "Continent".
+#' @param world The name of the world column.
+#'              Default is "World".
 #'
 #' @return A data frame that includes new "Country"s for
 #'         continents and the World.

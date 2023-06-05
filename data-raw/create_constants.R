@@ -5,7 +5,7 @@
 sea_cols <- list(stage_colname = "Stage",
                  gross_net_colname = "Gross.Net",
                  e_product_colname = "E.product",
-                 sector_colname = "Sector",
+                 e_sector_colname = "Sector",
                  flow_colname = "Flow",
                  agg_by_colname = "Aggregation.by",
                  fd_sectors_colname = "Fd.sectors",

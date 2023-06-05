@@ -15,7 +15,7 @@ A string list with 9 entries.
 \item{grouped}{The value that indicates products or industries have been grouped. "Grouped"}
 \item{chopped_mat}{The value that indicates which matrix has been chopped. "Chopped.Mat"}
 \item{chopped_var}{The value that indicates the chopping product or industry. "Chop.Var"}
-\item{product_sector}{The column containing values for chopped_var. Default is \code{Recca::aggregate_cols$product_sector}.}
+\item{product_sector}{The column containing values for chopped_var. \code{Recca::aggregate_cols$product_sector}.}
 }
 }
 \usage{

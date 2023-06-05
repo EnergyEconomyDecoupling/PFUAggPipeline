@@ -15,7 +15,25 @@ region_pipeline(
 )
 }
 \arguments{
-\item{.psut_data}{}
+\item{.psut_data}{A data frame of PSUT information.}
+
+\item{continent_aggregation_map}{An aggregation map that shows how to
+aggregate countries to continents.}
+
+\item{world_aggregation_map}{An aggregation map that shows how to
+aggregate continents to the world.}
+
+\item{country}{The name of the country column.
+Default is \code{Recca::psut_cols$country}.}
+
+\item{year}{The name of the year column.
+Default is \code{Recca::psut_cols$year}.}
+
+\item{continent}{The name of the continent column.
+Default is "Continent".}
+
+\item{world}{The name of the world column.
+Default is "World".}
 }
 \value{
 A data frame that includes new "Country"s for
