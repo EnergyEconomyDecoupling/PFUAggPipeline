@@ -96,9 +96,9 @@ get_pipeline <- function(countries = "all",
     # Pull in the PSUT data frame
     targets::tar_target_raw(
       "PSUT",
-      substitute(pins::board_folder(PinboardFolder, versioned = TRUE) |>
-                   pins::pin_read("psut", version = PSUTRelease) |>
-                   PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
+      quote(pins::board_folder(PinboardFolder, versioned = TRUE) |>
+              pins::pin_read("psut", version = PSUTRelease) |>
+              PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
     ),
 
     tarchetypes::tar_group_by(
@@ -127,14 +127,14 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PSUT_Re_all_Chop_all_Ds_all_Gr_all",
-      substitute(PSUT_Re_all_grouped |>
-                   pr_in_agg_pipeline(product_agg_map = ProductAggMap,
-                                      industry_agg_map = IndustryAggMap,
-                                      p_industries = unlist(PIndustryPrefixes),
-                                      do_chops = do_chops,
-                                      method = "SVD",
-                                      country = Recca::psut_cols$country,
-                                      year = Recca::psut_cols$year)) ,
+      quote(PSUT_Re_all_grouped |>
+              pr_in_agg_pipeline(product_agg_map = ProductAggMap,
+                                 industry_agg_map = IndustryAggMap,
+                                 p_industries = unlist(PIndustryPrefixes),
+                                 do_chops = do_chops,
+                                 method = "SVD",
+                                 country = Recca::psut_cols$country,
+                                 year = Recca::psut_cols$year)) ,
       pattern = quote(map(PSUT_Re_all_grouped))
     ),
     tarchetypes::tar_group_by(
@@ -227,8 +227,8 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PivotedAggEtaPFU",
-      substitute(AggEtaPFU %>%
-                   pivot_for_csv(val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")))
+      quote(AggEtaPFU %>%
+              pivot_for_csv(val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")))
     ),
 
 
