@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+# PFUAggDatabase 0.1.1 (2022-06-05)
+
 * Preparing pipeline for execution on ARC facilities at Leeds University.
 * Rearranged the order of operations for the pipeline.
   Now, chopping happens first.
