@@ -10,6 +10,12 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/articles/access_via_pins.html</loc>
+  </url>
+  <url>
+    <loc>/articles/index.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -22,6 +28,9 @@
     <loc>/reference/agg_metadata.html</loc>
   </url>
   <url>
+    <loc>/reference/aggregation_df_cols.html</loc>
+  </url>
+  <url>
     <loc>/reference/aggregation_file_cols.html</loc>
   </url>
   <url>
@@ -29,6 +38,9 @@
   </url>
   <url>
     <loc>/reference/calc_agg_etas.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_finaldemand_aggregates.html</loc>
   </url>
   <url>
     <loc>/reference/calculate_finaluseful_ex_data.html</loc>
@@ -52,7 +64,25 @@
     <loc>/reference/calculate_p_ex_total.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_pfu_aggregates.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_pfu_efficiencies.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_primary_aggregates.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_primary_ex_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_sector_agg_eta_fu.html</loc>
+  </url>
+  <url>
+    <loc>/reference/chopRY.html</loc>
+  </url>
+  <url>
+    <loc>/reference/continent_aggregation.html</loc>
   </url>
   <url>
     <loc>/reference/continent_aggregation_map.html</loc>
@@ -64,7 +94,13 @@
     <loc>/reference/data.html</loc>
   </url>
   <url>
+    <loc>/reference/despecified_aggregations.html</loc>
+  </url>
+  <url>
     <loc>/reference/efficiency_cols.html</loc>
+  </url>
+  <url>
+    <loc>/reference/efficiency_pipeline.html</loc>
   </url>
   <url>
     <loc>/reference/filter_countries.html</loc>
@@ -77,6 +113,9 @@
   </url>
   <url>
     <loc>/reference/gross_net_metadata.html</loc>
+  </url>
+  <url>
+    <loc>/reference/grouped_aggregations.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -97,10 +136,37 @@
     <loc>/reference/pivot_agg_eta_wide_by_year.html</loc>
   </url>
   <url>
+    <loc>/reference/pivot_for_csv.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pr_in_agg_pipeline.html</loc>
+  </url>
+  <url>
     <loc>/reference/quasi-quote-assign.html</loc>
   </url>
   <url>
+    <loc>/reference/region_pipeline.html</loc>
+  </url>
+  <url>
+    <loc>/reference/rename_prime_psut_columns.html</loc>
+  </url>
+  <url>
+    <loc>/reference/rename_suffixed_psut_columns.html</loc>
+  </url>
+  <url>
     <loc>/reference/sea_cols.html</loc>
+  </url>
+  <url>
+    <loc>/reference/stack_chopped_ECCs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/stack_despecification_aggregations.html</loc>
+  </url>
+  <url>
+    <loc>/reference/stack_group_aggregations.html</loc>
+  </url>
+  <url>
+    <loc>/reference/world_aggregation.html</loc>
   </url>
   <url>
     <loc>/reference/write_agg_etas_xlsx.html</loc>
