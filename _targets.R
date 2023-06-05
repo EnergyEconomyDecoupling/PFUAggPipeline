@@ -70,6 +70,9 @@ if (startsWith(sys_info[["nodename"]], "Mac")) {
   stop("Unknown system in _targets.R for PFUAggDatabase. Can't set input and output locations.")
 }
 
+print(setup)
+stop()
+
 
 # Set up for multithreaded work on the local machine.
 future::plan(future.callr::callr)
