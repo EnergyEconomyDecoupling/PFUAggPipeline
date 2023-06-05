@@ -28,6 +28,13 @@ get_pipeline <- function(countries = "all",
                          pipeline_caches_folder,
                          release = FALSE) {
 
+  # Avoid warnings for some target names
+  Country <- NULL
+  Year <- NULL
+  PSUT <- NULL
+  PSUT_Re_all <- NULL
+  PSUT_Re_all_Chop_all_Ds_all_Gr_all <- NULL
+
   list(
 
     # Preliminary setup --------------------------------------------------------
@@ -102,8 +109,8 @@ get_pipeline <- function(countries = "all",
     ),
 
     tarchetypes::tar_group_by(
-      PSUTbyYear,
-      PSUT,
+      name = "PSUTbyYear",
+      command = PSUT,
       Year
     ),
 
@@ -118,7 +125,7 @@ get_pipeline <- function(countries = "all",
       pattern = quote(map(PSUTbyYear))
     ),
     tarchetypes::tar_group_size(
-      PSUT_Re_all_grouped,
+      "PSUT_Re_all_grouped",
       PSUT_Re_all,
       size = 10
     ),
@@ -138,7 +145,7 @@ get_pipeline <- function(countries = "all",
       pattern = quote(map(PSUT_Re_all_grouped))
     ),
     tarchetypes::tar_group_by(
-      PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped,
+      "PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped",
       PSUT_Re_all_Chop_all_Ds_all_Gr_all,
       Country, Year
     ),
