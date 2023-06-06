@@ -65,7 +65,7 @@ if (startsWith(sys_info[["nodename"]], "Mac")) {
   setup <- PFUSetup::get_abs_paths(home_path <- "/nobackup",
                                    dropbox_path = uname)
   # Set the location for the _targets folder.
-  targets::tar_config_set(store = file.path(setup[["output_data_path"]], "_targets"))
+  targets::tar_config_set(store = file.path(setup[["output_data_path"]], "_targets/"))
 } else {
   stop("Unknown system in _targets.R for PFUAggDatabase. Can't set input and output locations.")
 }
