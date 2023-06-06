@@ -169,10 +169,10 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "ReleaseSectorAggEtaFU",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = SectorAggEtaFU,
-                                        pin_name = "sector_agg_eta_fu",
-                                        release = Release))
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = SectorAggEtaFU,
+                                             pin_name = "sector_agg_eta_fu",
+                                             release = Release))
     ),
 
 
@@ -191,11 +191,11 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "ReleaseSectorAggEtaFUCSV",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = PivotedSectorAggEtaFU,
-                                        pin_name = "sector_agg_eta_fu_csv",
-                                        type = "csv",
-                                        release = Release))
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = PivotedSectorAggEtaFU,
+                                             pin_name = "sector_agg_eta_fu_csv",
+                                             type = "csv",
+                                             release = Release))
     ),
 
 
@@ -218,10 +218,10 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "ReleaseAggEtaPFU",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = AggEtaPFU,
-                                        pin_name = "agg_eta_pfu",
-                                        release = Release))
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = AggEtaPFU,
+                                             pin_name = "agg_eta_pfu",
+                                             release = Release))
     ),
 
 
@@ -241,22 +241,22 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "ReleaseAggEtaPFUCSV",
-      quote(PFUDatabase::release_target(pipeline_releases_folder = PinboardFolder,
-                                        targ = PivotedAggEtaPFU,
-                                        pin_name = "agg_eta_pfu_csv",
-                                        type = "csv",
-                                        release = Release))),
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = PivotedAggEtaPFU,
+                                             pin_name = "agg_eta_pfu_csv",
+                                             type = "csv",
+                                             release = Release))),
 
 
     # Zip the cache and store in the pipeline_caches_folder --------------------
 
     targets::tar_target_raw(
       "StoreCache",
-      quote(PFUDatabase::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
-                                     cache_folder = "_targets",
-                                     file_prefix = "pfu_agg_pipeline_cache_",
-                                     dependency = EtaPFU,
-                                     release = Release))
+      quote(PFUPipelineTools::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
+                                          cache_folder = "_targets",
+                                          file_prefix = "pfu_agg_pipeline_cache_",
+                                          dependency = EtaPFU,
+                                          release = Release))
     )
   )
 }
