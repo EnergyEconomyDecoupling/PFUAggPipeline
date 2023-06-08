@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# PFUAggDatabase 0.1.2 (2022-06-06)
+# PFUAggDatabase 0.1.2 (2022-06-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8011597.svg)](https://doi.org/10.5281/zenodo.8011597)
 
 * Updated targets store location.
 
