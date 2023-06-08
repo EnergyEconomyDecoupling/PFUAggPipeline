@@ -16,7 +16,7 @@ library(targets)
 # countries <- "CHNM"
 # countries <- c("GHA", "ZAF")
 # countries <- "all" # Run all countries in the PSUT target.
-countries <- c(PFUDatabase::canonical_countries, "WRLD") |> as.character()
+countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
 #                "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
