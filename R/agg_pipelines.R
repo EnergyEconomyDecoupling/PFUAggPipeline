@@ -153,7 +153,7 @@ get_pipeline <- function(countries = "all",
     # --------------------------------------------------------------------------
     # Product C ----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    # Write a data frame of final demand sector efficiencies -------------------
+    # A data frame of final demand sector efficiencies -------------------
 
     # Final demand sector aggregates and efficiencies --------------------------
 
