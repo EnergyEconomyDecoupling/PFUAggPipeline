@@ -143,11 +143,11 @@ get_pipeline <- function(countries = "all",
                                  year = Recca::psut_cols$year)) ,
       pattern = quote(map(PSUT_Re_all_grouped))
     ),
-    # tarchetypes::tar_group_by(
-    #   "PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped",
-    #   PSUT_Re_all_Chop_all_Ds_all_Gr_all,
-    #   Country
-    # ),
+    tarchetypes::tar_group_by(
+      "PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped",
+      PSUT_Re_all_Chop_all_Ds_all_Gr_all,
+      Country
+    ),
 
 
     # --------------------------------------------------------------------------
