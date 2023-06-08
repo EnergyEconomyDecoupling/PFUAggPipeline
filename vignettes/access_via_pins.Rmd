@@ -40,15 +40,15 @@ The folder containing PFU Database products is called `PipelineReleases`.
 
 ## (4) Become familiar with the `pins` package
 
-The [pins](https://pins.rstudio.com) package is the mechanism by which versions of the PFU Database and its products are stored and maintained. Please review that package before accessing the PFU database data.
+The [pins](https://pins.rstudio.com) package is the mechanism by which versions of the PFU Database and its products are stored, maintained, and distributed. Please review the `pins` package before accessing the PFU database data.
 
 ## (5) Become familiar with the PFU Database and products
 
-Strictly speaking, the PFU Database consists of only primary, final, and useful energy and exergy data for all countries and all years available in the IEA WEEB data. The data are arranged in Physical Supply Use Table (PSUT) format as described in the paper by [Heun et al.](https://doi.org/10.1016/j.apenergy.2018.05.109). entitled "A physical supply-use table framework for energy analysis on the energy conversion chain." The data are stored in the Dropbox folder as `.rds` files in [matsindf](https://cran.r-project.org/web/packages/matsindf/index.html) format.
+Strictly speaking, the PFU Database consists of only primary, final, and useful energy and exergy data for all countries and all years available in the IEA WEEB data. The data are arranged in Physical Supply Use Table (PSUT) format as described in the paper by [Heun et al.](https://doi.org/10.1016/j.apenergy.2018.05.109) entitled "A physical supply-use table framework for energy analysis on the energy conversion chain." The data are stored in the Dropbox folder as `.rds` files in [matsindf](https://cran.r-project.org/web/packages/matsindf/index.html) format.
 
-In addition to the database itself, there are several data products available, most of which are aggregations, subsets, or other calculations made from the database. For example, primary, final, and useful energy and exergy aggregations are available for each country and each year (data product B). Primary-to-final, final-to-useful, and primary-to-final efficiencies are also available for each country and each year (data product C).
+In addition to the database itself, there are several data products available, most of which are aggregations, subsets, or other calculations made from the database. For example, primary, final, and useful energy and exergy aggregations are available for each country and each year (data product C). Primary-to-final, final-to-useful, and primary-to-final efficiencies are also available for each country and each year (data product D).
 
-The database, its versions, and its data products are described in the file named `versions and products.xlsx` at the top level of the `PipelineReleases` folder. Look through that file to determine which PFU Database products are needed for your research. In particular, note the "Pin name" and the "Pin version" of the data products that you desire.
+The database, its versions, and its data products are documented in the file named `versions and products.xlsx` at the top level of the `PipelineReleases` folder. Look through that file to determine which PFU Database products are needed for your research. In particular, note the "Pin name" and the "Pin version" of the data products that you desire.
 
 Note: there may be other versions of pins in the Dropbox folder. Ignore all versions of pins except those identified in the `versions and products.xlsx` file.
 
@@ -68,16 +68,14 @@ Because the database contains a large amount of data, it may take a minute or tw
 Although we recommend against it, you may load the *latest* version of the same pin by not specifying the version string.
 
 ```{r, eval=FALSE}
-library(pins)
 psut_data_frame_latest <- pins::pin_read(board = pfu_pinboard, name = "psut")
 ```
 
 The procedure is the same to load any data product in the database. For example, data product **A** is a subset of the database that contains "USA" only. Product A may be useful for testing, because it is much smaller in memory than the full database and loads much faster. To load product A for version 1 of the database, use the following code.
 
 ```{r, eval=FALSE}
-library(pins)
-psut_data_frame <- pins::pin_read(board = pfu_pinboard, name = "psut_usa", 
-                                  version = "20230217T182459Z-287a0")
+psut_data_frame_usa <- pins::pin_read(board = pfu_pinboard, name = "psut_usa", 
+                                      version = "20230217T182459Z-287a0")
 ```
 
 To select only a single year of data, 
