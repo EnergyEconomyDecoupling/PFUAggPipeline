@@ -107,7 +107,6 @@ get_pipeline <- function(countries = "all",
               pins::pin_read("psut", version = PSUTRelease) |>
               PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
     ),
-
     tarchetypes::tar_group_by(
       name = "PSUTbyYear",
       command = PSUT,
@@ -124,10 +123,10 @@ get_pipeline <- function(countries = "all",
                               continent = "Continent")),
       pattern = quote(map(PSUTbyYear))
     ),
-    tarchetypes::tar_group_size(
+    tarchetypes::tar_group_by(
       "PSUT_Re_all_grouped",
       PSUT_Re_all,
-      size = 10
+      Country,
     ),
 
     # Chopping, despecifying, and grouping -------------------------------------
@@ -144,11 +143,11 @@ get_pipeline <- function(countries = "all",
                                  year = Recca::psut_cols$year)) ,
       pattern = quote(map(PSUT_Re_all_grouped))
     ),
-    tarchetypes::tar_group_by(
-      "PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped",
-      PSUT_Re_all_Chop_all_Ds_all_Gr_all,
-      Country, Year
-    ),
+    # tarchetypes::tar_group_by(
+    #   "PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped",
+    #   PSUT_Re_all_Chop_all_Ds_all_Gr_all,
+    #   Country
+    # ),
 
 
     # --------------------------------------------------------------------------
