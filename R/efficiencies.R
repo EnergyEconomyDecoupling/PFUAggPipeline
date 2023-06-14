@@ -163,5 +163,12 @@ efficiency_pipeline <- function(.psut_data,
         "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]],
         "{eta_fu}" := .data[[ex_u]] / .data[[ex_f]],
         "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]]
-      )
+      ) |>
+      # Reorder columns
+      # dplyr::select(dplyr::everything(), .data[[ex_p]], .data[[ex_f]], .data[[ex_u]],
+      #               .data[[eta_pf]], .data[[eta_fu]], .data[[eta_pu]])
+      dplyr::select(-ex_p, -ex_f, -ex_u,
+                    -eta_pf, -eta_fu, -eta_pu,
+                    dplyr::everything(), ex_p, ex_f, ex_u,
+                    eta_pf, eta_fu, eta_pu)
 }
