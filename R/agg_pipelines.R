@@ -178,7 +178,7 @@ get_pipeline <- function(countries = "all",
     # --------------------------------------------------------------------------
     # Product D ----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    # Write a CSV file of final demand sector efficiencies ---------------------
+    # CSV file of final demand sector efficiencies -----------------------------
 
     # Pivot SectorAggEtaFU in preparation for writing .csv file ----------------
 
