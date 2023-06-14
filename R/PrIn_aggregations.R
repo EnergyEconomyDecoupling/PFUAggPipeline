@@ -381,7 +381,7 @@ rename_suffixed_psut_columns <- function(.psut_data,
 #' @param Y_matname,R_matname Matrix names for the `chopped_mat` and `chopped_var` columns.
 #'                            Default values are from `Recca::psut_cols$R` and `Recca::psut_cols$Y`.
 #' @param none The string to specify no aggregations.
-#'             Default is "None".
+#'             Default is `PFUAggDatabase::agg_metadata$none`.
 #'
 #' @return A data frame of efficiencies for the original, despecified, and grouped versions
 #'         of `.psut_data`.
@@ -437,7 +437,7 @@ pr_in_agg_pipeline <- function(.psut_data,
                                Y_matname = Recca::psut_cols$Y,
                                R_matname = Recca::psut_cols$R,
                                product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-                               none = "None") {
+                               none = PFUAggDatabase::agg_metadata$none) {
 
   # filtered_data <- .psut_data |>
   #   dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)

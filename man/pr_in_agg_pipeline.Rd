@@ -48,7 +48,7 @@ pr_in_agg_pipeline(
   Y_matname = Recca::psut_cols$Y,
   R_matname = Recca::psut_cols$R,
   product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-  none = "None"
+  none = PFUAggDatabase::agg_metadata$none
 )
 }
 \arguments{
@@ -106,7 +106,7 @@ Default values are from \code{PFUAggDatabase::aggregation_df_cols}.}
 Default values are from \code{Recca::psut_cols$R} and \code{Recca::psut_cols$Y}.}
 
 \item{none}{The string to specify no aggregations.
-Default is "None".}
+Default is \code{PFUAggDatabase::agg_metadata$none}.}
 }
 \value{
 A data frame of efficiencies for the original, despecified, and grouped versions

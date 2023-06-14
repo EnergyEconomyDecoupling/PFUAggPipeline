@@ -21,13 +21,20 @@ efficiency_pipeline(
   Y = Recca::psut_cols$Y,
   S_units = Recca::psut_cols$S_units,
   country = Recca::psut_cols$country,
+  method = Recca::psut_cols$method,
+  energy_type = Recca::psut_cols$energy_type,
+  ieamw = PFUDatabase::ieamw_cols$ieamw,
   year = Recca::psut_cols$year,
   gross = Recca::efficiency_cols$gross,
   net = Recca::efficiency_cols$net,
   gross_net = Recca::efficiency_cols$gross_net,
   last_stage = Recca::psut_cols$last_stage,
+  primary = IEATools::all_stages$primary,
   final = IEATools::all_stages$final,
   useful = IEATools::all_stages$useful,
+  chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+  chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+  none = PFUAggDatabase::agg_metadata$none,
   ex_p = Recca::aggregate_cols$aggregate_primary,
   ex_f = IEATools::aggregate_cols$aggregate_final,
   ex_u = IEATools::aggregate_cols$aggregate_useful,
@@ -36,7 +43,11 @@ efficiency_pipeline(
   ex_fd = Recca::aggregate_cols$aggregate_demand,
   eta_pf = Recca::efficiency_cols$eta_pf,
   eta_fu = Recca::efficiency_cols$eta_fu,
-  eta_pu = Recca::efficiency_cols$eta_pu
+  eta_pu = Recca::efficiency_cols$eta_pu,
+  tol = 1e-06,
+  .primary_aggs_ok = ".primary_aggs_OK",
+  .final_aggs_ok = ".final_aggs_OK",
+  .useful_aggs_ok = ".useful_aggs_OK"
 )
 }
 \arguments{
@@ -64,11 +75,25 @@ Default is \code{RCLabels::prepositions_list}.}
 
 \item{final, useful}{See \code{IEATools::all_stages}.}
 
+\item{chopped_mat, chopped_var}{Column names identifying choped matrices and variables.
+See \code{PFUAggDatabase::aggregation_df_cols}}
+
+\item{none}{A string signifying no aggregation is present.
+Default is \code{PFUAggDatabase::agg_metadata$none}.}
+
 \item{ex_p, ex_fd_gross, ex_fd_net, ex_fd}{See \code{Recca::aggregate_cols}.}
 
 \item{ex_f, ex_u}{See \code{IEATools::aggregate_cols}.}
 
 \item{eta_pf, eta_fu, eta_pu}{See \code{Recca::efficiency_cols}.}
+
+\item{tol}{The amount by which aggregate primary, final, and useful values
+can be different before an error is thrown.
+Default is \code{1e-6}.}
+
+\item{.primary_aggs_ok, .final_aggs_ok, .useful_aggs_ok}{Names of columns used internally
+to assess whether primary, final, and useful
+aggregations are all same.}
 }
 \value{
 A data frame of metadata columns and efficiencies
