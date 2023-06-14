@@ -69,13 +69,15 @@ Default is "exact".}
 \item{prepositions}{A list of prepositions for row and column labels.
 Default is \code{RCLabels::prepositions_list}.}
 
-\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, country, year, last_stage}{See \code{Recca::psut_cols}.}
+\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, country, method, energy_type, year, last_stage}{See \code{Recca::psut_cols}.}
+
+\item{ieamw}{See \code{PFUDatabase::ieamw_cols}.}
 
 \item{gross, net, gross_net}{See \code{Recca::efficiency_cols}.}
 
-\item{final, useful}{See \code{IEATools::all_stages}.}
+\item{primary, final, useful}{See \code{IEATools::all_stages}.}
 
-\item{chopped_mat, chopped_var}{Column names identifying choped matrices and variables.
+\item{chopped_mat, chopped_var}{Column names identifying chopped matrices and variables.
 See \code{PFUAggDatabase::aggregation_df_cols}}
 
 \item{none}{A string signifying no aggregation is present.

@@ -56,10 +56,11 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
 #'                     Default is "exact".
 #' @param prepositions A list of prepositions for row and column labels.
 #'                     Default is `RCLabels::prepositions_list`.
-#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units,country,year,last_stage See `Recca::psut_cols`.
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units,country,method,energy_type,year,last_stage See `Recca::psut_cols`.
+#' @param ieamw See `PFUDatabase::ieamw_cols`.
 #' @param gross,net,gross_net See `Recca::efficiency_cols`.
-#' @param final,useful See `IEATools::all_stages`.
-#' @param chopped_mat,chopped_var Column names identifying choped matrices and variables.
+#' @param primary,final,useful See `IEATools::all_stages`.
+#' @param chopped_mat,chopped_var Column names identifying chopped matrices and variables.
 #'                                See `PFUAggDatabase::aggregation_df_cols`
 #' @param none A string signifying no aggregation is present.
 #'             Default is `PFUAggDatabase::agg_metadata$none`.
