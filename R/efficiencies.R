@@ -186,9 +186,27 @@ efficiency_pipeline <- function(.psut_data,
           "{.final_aggs_ok}" := abs(max(.data[[ex_f]]) - min(.data[[ex_f]])) < tol,
           "{.useful_aggs_ok}" := abs(max(.data[[ex_u]]) - min(.data[[ex_u]])) < tol,
           .by = dplyr::any_of(c(country, method, energy_type, ieamw, year, gross_net)))
-      assertthat::assert_that(all(within_tol[[.primary_aggs_ok]]), msg = "Not all primary aggregates sum to same value.")
-      assertthat::assert_that(all(within_tol[[.final_aggs_ok]]), msg = "Not all final aggregates sum to same value.")
-      assertthat::assert_that(all(within_tol[[.useful_aggs_ok]]), msg = "Not all useful aggregates sum to same value.")
+      if (!all(within_tol[[.primary_aggs_ok]])) {
+        msg <- paste("Not all primary aggregates sum to same value. \n",
+                     within_tol |>
+                       dplyr::filter(!.data[[.primary_aggs_ok]]) |>
+                       matsindf::df_to_msg())
+        stop(msg)
+      }
+      if (!all(within_tol[[.final_aggs_ok]])) {
+        msg <- paste("Not all final aggregates sum to same value. \n",
+                     within_tol |>
+                       dplyr::filter(!.data[[.final_aggs_ok]]) |>
+                       matsindf::df_to_msg())
+        stop(msg)
+      }
+      if (!all(within_tol[[.useful_aggs_ok]])) {
+        msg <- paste("Not all useful aggregates sum to same value. \n",
+                     within_tol |>
+                       dplyr::filter(!.data[[.useful_aggs_ok]]) |>
+                       matsindf::df_to_msg())
+        stop(msg)
+      }
     }
 
     # Calculate efficiencies and return
