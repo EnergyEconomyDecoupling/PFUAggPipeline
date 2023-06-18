@@ -244,7 +244,8 @@ get_pipeline <- function(countries = "all",
 
 
 
-    # Code below here does chops for the world only
+    # Code below here does chops for the World only.
+    # This is temporary code
 
 
 
@@ -276,7 +277,7 @@ get_pipeline <- function(countries = "all",
     # World sector agg eta with chops
     targets::tar_target_raw(
       "SectorAggEtaFUWorld",
-      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all_grouped |>
+      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
               calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
               PFUPipelineTools::tar_ungroup())
     ),
@@ -294,7 +295,7 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "AggEtaPFUWorld",
-      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all_grouped |>
+      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
               efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
                                   fd_sectors = unlist(FinalDemandSectors)) |>
               PFUPipelineTools::tar_ungroup())
