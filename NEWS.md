@@ -3,6 +3,9 @@ title: "Release notes for `PFUAggDatabase`"
 output: html_document
 ---
 
+* New function `rename_prime_cols()` deletes original matrices and 
+  renames "*_prime" to original names.
+  Used in the chopping process.
 * Now testing for primary, final, and useful
   aggregations that should be equal.
   An nicely formatted error is thrown if they are not.

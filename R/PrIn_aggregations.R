@@ -371,6 +371,8 @@ rename_suffixed_psut_columns <- function(.psut_data,
 #' @param product_type,industry_type See `Recca::row_col_types`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units,country,year The names of input columns in `.psut_data`.
 #'                                             Default values are from `Recca::psut_cols`.
+#' @param .prime The suffix for the columns containing chopped ECC matrices.
+#'               Default is "_prime".
 #' @param aggregated_suffix The suffix for aggregated column names.
 #'                          See `Recca::aggregate_cols`.
 #' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_eiou_aggregated_colname,U_eiou_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname The names of output aggregated columns.
@@ -411,6 +413,7 @@ pr_in_agg_pipeline <- function(.psut_data,
                                U_eiou = Recca::psut_cols$U_eiou,
                                U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
+                               .prime = "_prime",
                                # Country and year columns
                                country = Recca::psut_cols$country,
                                year = Recca::psut_cols$year,
@@ -458,7 +461,11 @@ pr_in_agg_pipeline <- function(.psut_data,
                     pattern_type = "literal",
                     unnest = TRUE,
                     method = method,
-                    tol_invert = tol_invert)
+                    tol_invert = tol_invert,
+                    R = R, U = U, V = V, Y = Y, U_feed = U_feed, S_units = S_units,
+                    .prime = .prime) |>
+      # Eliminate the original matrices and rename the "_prime" column names.
+      rename_prime_cols()
     PSUT_chop_Y <- .psut_data |>
       Recca::chop_Y(calc_pfd_aggs = FALSE,
                     piece = "noun",
@@ -467,8 +474,10 @@ pr_in_agg_pipeline <- function(.psut_data,
                     unnest = TRUE,
                     method = method,
                     tol_invert = tol_invert,
-                    R = R, U = U, V = V, Y = Y, U_feed = U_feed, S_units = S_units)
-
+                    R = R, U = U, V = V, Y = Y, U_feed = U_feed, S_units = S_units,
+                    .prime = .prime) |>
+      # Eliminate the original matrices and rename the "_prime" column names.
+      rename_prime_cols()
   } else {
     PSUT_chop_R <- NULL
     PSUT_chop_Y <- NULL
@@ -577,4 +586,63 @@ pr_in_agg_pipeline <- function(.psut_data,
                    PSUT_Chop_all_Ds_InPr_Gr_Pr,
                    PSUT_Chop_all_Ds_InPr_Gr_In,
                    PSUT_Chop_all_Ds_InPr_Gr_PrIn)
+}
+
+
+#' Rename chopped matrices and replace full matrices
+#'
+#' During the chopping process,
+#' [Recca::chop_R()] and [Recca::chop_Y()]
+#' create a data frame with both the original matrices
+#' (in `matsindf` columns with standard RUVY names) and
+#' ECC matrices representing chopped **R** and **Y** matrices
+#' named with `.prime` suffixes.
+#' This function deletes the original ECC matrices
+#' and replaces with renamed `.prime` matrices.
+#' For example, the column of **R** matrices is deleted, and
+#' the **R_prime** column is renamed "R".
+#'
+#' @param .chopped_eccs A data frame of chopped energy conversion chain matrices, wide by matrices.
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units The names of input columns in `.psut_data`.
+#'                                             Default values are from `Recca::psut_cols`.
+#' @param .prime The string suffix of the matrices representing the chopped ECC.
+#'               Default is "_prime".
+#'
+#' @return `.chopped_eccs` with modified columns and column names.
+#'
+#' @export
+rename_prime_cols <- function(.chopped_eccs,
+                              R = Recca::psut_cols$R,
+                              U = Recca::psut_cols$U,
+                              U_feed = Recca::psut_cols$U_feed,
+                              U_eiou = Recca::psut_cols$U_eiou,
+                              r_eiou = Recca::psut_cols$r_eiou,
+                              V = Recca::psut_cols$V,
+                              Y = Recca::psut_cols$Y,
+                              S_units = Recca::psut_cols$S_units,
+                              .prime = "_prime") {
+  non_prime_names <- c(R, U, U_feed, U_eiou, r_eiou, V = V, Y = Y, S_units = S_units)
+  prime_names <- non_prime_names |>
+    paste0(.prime) |>
+    magrittr::set_names(non_prime_names)
+
+  .chopped_eccs |>
+    dplyr::mutate(
+      "{R}" := NULL,
+      "{U}" := NULL,
+      "{U_feed}" := NULL,
+      "{U_eiou}" := NULL,
+      "{r_eiou}" := NULL,
+      "{V}" := NULL,
+      "{Y}" := NULL
+    ) |>
+    dplyr::rename(
+      "{R}" := .data[[prime_names[[R]] ]],
+      "{U}" := .data[[prime_names[[U]] ]],
+      "{U_feed}" := .data[[prime_names[[U_feed]] ]],
+      "{U_eiou}" := .data[[prime_names[[U_eiou]] ]],
+      "{r_eiou}" := .data[[prime_names[[r_eiou]] ]],
+      "{V}" := .data[[prime_names[[V]] ]],
+      "{Y}" := .data[[prime_names[[Y]] ]]
+    )
 }
