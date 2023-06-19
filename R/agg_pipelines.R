@@ -247,6 +247,8 @@ get_pipeline <- function(countries = "all",
     # Code below here does chops for the World only.
     # This is temporary code that can be deleted when
     # chops are working for all countries.
+    # Probably best to parameterize this code (eventually)
+    # to chop only on selected countries.
 
     # PSUT_Re_World ------------------------------------------------------------
 
