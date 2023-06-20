@@ -452,6 +452,14 @@ pr_in_agg_pipeline <- function(.psut_data,
     return(NULL)
   }
 
+  # Grab the names of the R and Y columns here,
+  # because referring to R and Y in the context of
+  # dplyr::mutate() below will grab the
+  # column itself,
+  # rather than the name of the column.
+  R_colname <- R
+  Y_colname <- Y
+
   # Chop the R and Y matrices, if desired
   if (do_chops) {
     PSUT_chop_R <- .psut_data |>
@@ -463,9 +471,18 @@ pr_in_agg_pipeline <- function(.psut_data,
                     method = method,
                     tol_invert = tol_invert,
                     R = R, U = U, V = V, Y = Y, U_feed = U_feed, S_units = S_units,
+                    product_sector = product_sector,
                     .prime = .prime) |>
       # Eliminate the original matrices and rename the "_prime" column names.
-      rename_prime_cols()
+      # rename_prime_cols() |>
+      rename_suffixed_psut_columns(suffix = .prime,
+                                   R = R, U = U, V = V, Y = Y,
+                                   r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units) |>
+      dplyr::mutate(
+        "{chopped_mat}" := R_colname,
+        "{chopped_var}" := .data[[product_sector]],
+        "{product_sector}" := NULL
+      )
     PSUT_chop_Y <- .psut_data |>
       Recca::chop_Y(calc_pfd_aggs = FALSE,
                     piece = "noun",
@@ -475,20 +492,32 @@ pr_in_agg_pipeline <- function(.psut_data,
                     method = method,
                     tol_invert = tol_invert,
                     R = R, U = U, V = V, Y = Y, U_feed = U_feed, S_units = S_units,
+                    product_sector = product_sector,
                     .prime = .prime) |>
       # Eliminate the original matrices and rename the "_prime" column names.
-      rename_prime_cols()
+      # rename_prime_cols() |>
+      rename_suffixed_psut_columns(suffix = .prime,
+                                   R = R, U = U, V = V, Y = Y,
+                                   r_eiou = r_eiou, U_eiou = U_eiou, U_feed = U_feed, S_units = S_units) |>
+      dplyr::mutate(
+        "{chopped_mat}" := Y_colname,
+        "{chopped_var}" := .data[[product_sector]],
+        "{product_sector}" := NULL
+      )
   } else {
     PSUT_chop_R <- NULL
     PSUT_chop_Y <- NULL
   }
 
+
+  # Bind all chopped ECCs together with the original data
+  # for later processing.
   PSUT_chop_all <- dplyr::bind_rows(.psut_data |>
                                       dplyr::mutate(
                                         "{chopped_mat}" := none,
                                         "{chopped_var}" := none
                                       ),
-                                    PSUT_chop_R,
+                                    PSUT_chop_R ,
                                     PSUT_chop_Y)
 
   # Despecify and aggregate both Product and Industry dimensions

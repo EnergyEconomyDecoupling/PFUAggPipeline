@@ -255,7 +255,13 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_World",
       quote(PSUT_Re_all |>
-              dplyr::filter(Country == "World"))
+              # dplyr::filter(Country == "World"))
+              dplyr::filter(Country == "World", Energy.type == "E", Last.stage == "Final", IEAMW == "MW"))
+    ),
+    tarchetypes::tar_group_by(
+      name = "PSUT_Re_WorldbyYear",
+      command = PSUT_Re_World,
+      Year
     ),
 
 
@@ -263,14 +269,15 @@ get_pipeline <- function(countries = "all",
 
     targets::tar_target_raw(
       "PSUT_Re_World_Chop_all_Ds_all_Gr_all",
-      quote(PSUT_Re_World |>
+      quote(PSUT_Re_WorldbyYear |>
               pr_in_agg_pipeline(product_agg_map = ProductAggMap,
                                  industry_agg_map = IndustryAggMap,
                                  p_industries = unlist(PIndustryPrefixes),
                                  do_chops = TRUE,
                                  method = "SVD",
                                  country = Recca::psut_cols$country,
-                                 year = Recca::psut_cols$year))
+                                 year = Recca::psut_cols$year)),
+      pattern = quote(map(PSUT_Re_WorldbyYear))
     ),
 
 
