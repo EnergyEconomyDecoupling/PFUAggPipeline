@@ -91,14 +91,6 @@ calculate_sector_agg_eta_fu <- function(.psut_data,
                                         useful = IEATools::all_stages$useful,
                                         eta_fu = Recca::efficiency_cols$eta_fu) {
 
-  # filtered_data <- .psut_data |>
-  #   dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
-  # rm(.psut_data)
-  # gc()
-#
-#   if (nrow(filtered_data) == 0) {
-#     return(NULL)
-#   }
     if (nrow(.psut_data) == 0) {
       return(NULL)
     }
