@@ -180,8 +180,10 @@ get_pipeline <- function(countries = "all",
     # Pivot SectorAggEtaFU in preparation for writing .csv file ----------------
     targets::tar_target_raw(
       "PivotedSectorAggEtaFU",
-      quote(pivot_for_csv(SectorAggEtaFU,
-                          val_cols = c("Final", "Useful", "eta_fu")))
+      quote(SectorAggEtaFU |>
+              # Release only exergy data for people who do not have access to IEA WEEB
+              dplyr::filter(Energy.type == "X") |>
+              pivot_for_csv(val_cols = c("Final", "Useful", "eta_fu")))
     ),
 
     targets::tar_target_raw(
@@ -222,7 +224,9 @@ get_pipeline <- function(countries = "all",
     # Pivot AggEtaPFU in preparation for writing .csv file
     targets::tar_target_raw(
       "PivotedAggEtaPFU",
-      quote(AggEtaPFU %>%
+      quote(AggEtaPFU |>
+              # Release only exergy data for people who do not have access to IEA WEEB
+              dplyr::filter(Energy.type == "X") |>
               pivot_for_csv(val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")))
     ),
 
@@ -241,7 +245,7 @@ get_pipeline <- function(countries = "all",
     # Product G ----------------------------------------------------------------
     # A data frame of PSUT matrices with all aggregations
 
-    targets::tartarget_raw(
+    targets::tar_target_raw(
       "ReleasePSUT_Re_all_Chop_all_Ds_all_Gr_all",
       quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
                                              targ = PSUT_Re_all_Chop_all_Ds_all_Gr_all,
@@ -266,69 +270,69 @@ get_pipeline <- function(countries = "all",
 
     # PSUT_Re_World ------------------------------------------------------------
 
-    targets::tar_target_raw(
-      "PSUT_Re_World",
-      quote(PSUT_Re_all |>
-              # dplyr::filter(Country == "World"))
-              dplyr::filter(Country == "World", Energy.type == "E", IEAMW == "MW"))
-    ),
-    tarchetypes::tar_group_by(
-      name = "PSUT_Re_WorldbyYear",
-      command = PSUT_Re_World,
-      Year
-    ),
+    # targets::tar_target_raw(
+    #   "PSUT_Re_World",
+    #   quote(PSUT_Re_all |>
+    #           # dplyr::filter(Country == "World"))
+    #           dplyr::filter(Country == "World", Energy.type == "E", IEAMW == "MW"))
+    # ),
+    # tarchetypes::tar_group_by(
+    #   name = "PSUT_Re_WorldbyYear",
+    #   command = PSUT_Re_World,
+    #   Year
+    # ),
 
 
     # PSUT_Re_World_Chop_all_Ds_all_Gr_all -------------------------------------
 
-    targets::tar_target_raw(
-      "PSUT_Re_World_Chop_all_Ds_all_Gr_all",
-      quote(PSUT_Re_WorldbyYear |>
-              pr_in_agg_pipeline(product_agg_map = ProductAggMap,
-                                 industry_agg_map = IndustryAggMap,
-                                 p_industries = unlist(PIndustryPrefixes),
-                                 do_chops = TRUE,
-                                 method = "SVD",
-                                 country = Recca::psut_cols$country,
-                                 year = Recca::psut_cols$year)),
-      pattern = quote(map(PSUT_Re_WorldbyYear))
-    ),
+    # targets::tar_target_raw(
+    #   "PSUT_Re_World_Chop_all_Ds_all_Gr_all",
+    #   quote(PSUT_Re_WorldbyYear |>
+    #           pr_in_agg_pipeline(product_agg_map = ProductAggMap,
+    #                              industry_agg_map = IndustryAggMap,
+    #                              p_industries = unlist(PIndustryPrefixes),
+    #                              do_chops = TRUE,
+    #                              method = "SVD",
+    #                              country = Recca::psut_cols$country,
+    #                              year = Recca::psut_cols$year)),
+    #   pattern = quote(map(PSUT_Re_WorldbyYear))
+    # ),
 
 
     # Product H ----------------------------------------------------------------
     # World sector agg eta with chops
-    targets::tar_target_raw(
-      "SectorAggEtaFUWorld",
-      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
-              calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
-              PFUPipelineTools::tar_ungroup())
-    ),
-
-    targets::tar_target_raw(
-      "ReleaseSectorAggEtaFUWorld",
-      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
-                                             targ = SectorAggEtaFUWorld,
-                                             pin_name = "sector_agg_eta_fu_world",
-                                             release = Release))),
+    # targets::tar_target_raw(
+    #   "SectorAggEtaFUWorld",
+    #   quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
+    #           calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
+    #           PFUPipelineTools::tar_ungroup())
+    # ),
+    #
+    # targets::tar_target_raw(
+    #   "ReleaseSectorAggEtaFUWorld",
+    #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+    #                                          targ = SectorAggEtaFUWorld,
+    #                                          pin_name = "sector_agg_eta_fu_world",
+    #                                          release = Release))),
 
 
     # Product I ----------------------------------------------------------------
     # World PFU aggregates and efficiencies with chops -------------------------
 
-    targets::tar_target_raw(
-      "AggEtaPFUWorld",
-      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
-              efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
-                                  fd_sectors = unlist(FinalDemandSectors)) |>
-              PFUPipelineTools::tar_ungroup())
-    ),
-
-    targets::tar_target_raw(
-      "ReleaseAggEtaPFUWorld",
-      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
-                                             targ = AggEtaPFUWorld,
-                                             pin_name = "agg_eta_pfu_world",
-                                             release = Release))),
+    # targets::tar_target_raw(
+    #   "AggEtaPFUWorld",
+    #   quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
+    #           efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
+    #                               fd_sectors = unlist(FinalDemandSectors)) |>
+    #           PFUPipelineTools::tar_ungroup())
+    # ),
+    #
+    # targets::tar_target_raw(
+    #   "ReleaseAggEtaPFUWorld",
+    #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+    #                                          targ = AggEtaPFUWorld,
+    #                                          pin_name = "agg_eta_pfu_world",
+    #                                          release = Release))),
 
 
     # Zip the cache and store in the pipeline_caches_folder --------------------
@@ -338,12 +342,13 @@ get_pipeline <- function(countries = "all",
       quote(PFUPipelineTools::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
                                           cache_folder = "_targets",
                                           file_prefix = "pfu_agg_pipeline_cache_",
-                                          dependency = c(ReleaseSectorAggEtaFU,      # Product C
-                                                         ReleaseSectorAggEtaFUCSV,   # Product D
-                                                         ReleaseAggEtaPFU,           # Product E
-                                                         ReleaseAggEtaPFUCSV,        # Product F
-                                                         ReleaseSectorAggEtaFUWorld, # Product G
-                                                         ReleaseAggEtaPFUWorld),     # Product H
+                                          dependency = c(ReleasePSUT_Re_all_Chop_all_Ds_all_Gr_all, # The RUVY matrices for ECCs
+                                                         ReleaseSectorAggEtaFU,                     # Product C
+                                                         ReleaseSectorAggEtaFUCSV,                  # Product D
+                                                         ReleaseAggEtaPFU,                          # Product E
+                                                         ReleaseAggEtaPFUCSV,                       # Product F
+                                                         ReleaseSectorAggEtaFUWorld,                # Product G
+                                                         ReleaseAggEtaPFUWorld),                    # Product H
                                           release = Release))
     )
   )

@@ -14,9 +14,9 @@ library(targets)
 # countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
-countries <- "GHA"
+# countries <- "GHA"
 # countries <- "all" # Run all countries in the PSUT target.
-# countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
+countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
 #                "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
@@ -24,10 +24,10 @@ countries <- "GHA"
 
 
 # Set the years to be analyzed.
-# years <- 1960:2020
+years <- 1960:2020
 # years <- 1971:1973
 # years <- 1971:1978
-years <- 1971
+# years <- 1971
 # years <- 1960:1961
 
 # Tells whether to do the R and Y chops.
@@ -43,7 +43,7 @@ psut_release <- "20230618T131003Z-4c70f"    # v1.1 (with Matrix objects)
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
 # Should we release the results?
-release <- FALSE
+release <- TRUE
 
 
 
