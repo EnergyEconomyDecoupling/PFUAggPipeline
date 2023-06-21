@@ -238,6 +238,20 @@ get_pipeline <- function(countries = "all",
 
 
 
+    # Product G ----------------------------------------------------------------
+    # A data frame of PSUT matrices with all aggregations
+
+    targets::tartarget_raw(
+      "ReleasePSUT_Re_all_Chop_all_Ds_all_Gr_all",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = PSUT_Re_all_Chop_all_Ds_all_Gr_all,
+                                             pin_name = "psut_re_all_chop_all_ds_all_gr_all",
+                                             release = Release))),
+
+
+
+
+
 
 
 
@@ -256,7 +270,7 @@ get_pipeline <- function(countries = "all",
       "PSUT_Re_World",
       quote(PSUT_Re_all |>
               # dplyr::filter(Country == "World"))
-              dplyr::filter(Country == "World", Energy.type == "E", Last.stage == "Final", IEAMW == "MW"))
+              dplyr::filter(Country == "World", Energy.type == "E", IEAMW == "MW"))
     ),
     tarchetypes::tar_group_by(
       name = "PSUT_Re_WorldbyYear",
@@ -281,7 +295,7 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Product G ----------------------------------------------------------------
+    # Product H ----------------------------------------------------------------
     # World sector agg eta with chops
     targets::tar_target_raw(
       "SectorAggEtaFUWorld",
@@ -298,7 +312,7 @@ get_pipeline <- function(countries = "all",
                                              release = Release))),
 
 
-    # Product H ----------------------------------------------------------------
+    # Product I ----------------------------------------------------------------
     # World PFU aggregates and efficiencies with chops -------------------------
 
     targets::tar_target_raw(

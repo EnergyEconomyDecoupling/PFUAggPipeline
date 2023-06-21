@@ -640,38 +640,38 @@ pr_in_agg_pipeline <- function(.psut_data,
 #' @return `.chopped_eccs` with modified columns and column names.
 #'
 #' @export
-rename_prime_cols <- function(.chopped_eccs,
-                              R = Recca::psut_cols$R,
-                              U = Recca::psut_cols$U,
-                              U_feed = Recca::psut_cols$U_feed,
-                              U_eiou = Recca::psut_cols$U_eiou,
-                              r_eiou = Recca::psut_cols$r_eiou,
-                              V = Recca::psut_cols$V,
-                              Y = Recca::psut_cols$Y,
-                              S_units = Recca::psut_cols$S_units,
-                              .prime = "_prime") {
-  non_prime_names <- c(R, U, U_feed, U_eiou, r_eiou, V = V, Y = Y, S_units = S_units)
-  prime_names <- non_prime_names |>
-    paste0(.prime) |>
-    magrittr::set_names(non_prime_names)
-
-  .chopped_eccs |>
-    dplyr::mutate(
-      "{R}" := NULL,
-      "{U}" := NULL,
-      "{U_feed}" := NULL,
-      "{U_eiou}" := NULL,
-      "{r_eiou}" := NULL,
-      "{V}" := NULL,
-      "{Y}" := NULL
-    ) |>
-    dplyr::rename(
-      "{R}" := .data[[prime_names[[R]] ]],
-      "{U}" := .data[[prime_names[[U]] ]],
-      "{U_feed}" := .data[[prime_names[[U_feed]] ]],
-      "{U_eiou}" := .data[[prime_names[[U_eiou]] ]],
-      "{r_eiou}" := .data[[prime_names[[r_eiou]] ]],
-      "{V}" := .data[[prime_names[[V]] ]],
-      "{Y}" := .data[[prime_names[[Y]] ]]
-    )
-}
+# rename_prime_cols <- function(.chopped_eccs,
+#                               R = Recca::psut_cols$R,
+#                               U = Recca::psut_cols$U,
+#                               U_feed = Recca::psut_cols$U_feed,
+#                               U_eiou = Recca::psut_cols$U_eiou,
+#                               r_eiou = Recca::psut_cols$r_eiou,
+#                               V = Recca::psut_cols$V,
+#                               Y = Recca::psut_cols$Y,
+#                               S_units = Recca::psut_cols$S_units,
+#                               .prime = "_prime") {
+#   non_prime_names <- c(R, U, U_feed, U_eiou, r_eiou, V = V, Y = Y, S_units = S_units)
+#   prime_names <- non_prime_names |>
+#     paste0(.prime) |>
+#     magrittr::set_names(non_prime_names)
+#
+#   .chopped_eccs |>
+#     dplyr::mutate(
+#       "{R}" := NULL,
+#       "{U}" := NULL,
+#       "{U_feed}" := NULL,
+#       "{U_eiou}" := NULL,
+#       "{r_eiou}" := NULL,
+#       "{V}" := NULL,
+#       "{Y}" := NULL
+#     ) |>
+#     dplyr::rename(
+#       "{R}" := .data[[prime_names[[R]] ]],
+#       "{U}" := .data[[prime_names[[U]] ]],
+#       "{U_feed}" := .data[[prime_names[[U_feed]] ]],
+#       "{U_eiou}" := .data[[prime_names[[U_eiou]] ]],
+#       "{r_eiou}" := .data[[prime_names[[r_eiou]] ]],
+#       "{V}" := .data[[prime_names[[V]] ]],
+#       "{Y}" := .data[[prime_names[[Y]] ]]
+#     )
+# }
