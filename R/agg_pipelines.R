@@ -270,44 +270,43 @@ get_pipeline <- function(countries = "all",
 
     # PSUT_Re_World ------------------------------------------------------------
 
-    # targets::tar_target_raw(
-    #   "PSUT_Re_World",
-    #   quote(PSUT_Re_all |>
-    #           # dplyr::filter(Country == "World"))
-    #           dplyr::filter(Country == "World", Energy.type == "E", IEAMW == "MW"))
-    # ),
-    # tarchetypes::tar_group_by(
-    #   name = "PSUT_Re_WorldbyYear",
-    #   command = PSUT_Re_World,
-    #   Year
-    # ),
+    targets::tar_target_raw(
+      "PSUT_Re_World",
+      quote(PSUT_Re_all |>
+              # dplyr::filter(Country == "World"))
+              dplyr::filter(Country == "World", Energy.type == "E", IEAMW == "MW"))
+    ),
+    tarchetypes::tar_group_by(
+      name = "PSUT_Re_WorldbyYear",
+      command = PSUT_Re_World,
+      Year
+    ),
 
 
     # PSUT_Re_World_Chop_all_Ds_all_Gr_all -------------------------------------
 
-    # targets::tar_target_raw(
-    #   "PSUT_Re_World_Chop_all_Ds_all_Gr_all",
-    #   quote(PSUT_Re_WorldbyYear |>
-    #           pr_in_agg_pipeline(product_agg_map = ProductAggMap,
-    #                              industry_agg_map = IndustryAggMap,
-    #                              p_industries = unlist(PIndustryPrefixes),
-    #                              do_chops = TRUE,
-    #                              method = "SVD",
-    #                              country = Recca::psut_cols$country,
-    #                              year = Recca::psut_cols$year)),
-    #   pattern = quote(map(PSUT_Re_WorldbyYear))
-    # ),
+    targets::tar_target_raw(
+      "PSUT_Re_World_Chop_all_Ds_all_Gr_all",
+      quote(PSUT_Re_WorldbyYear |>
+              pr_in_agg_pipeline(product_agg_map = ProductAggMap,
+                                 industry_agg_map = IndustryAggMap,
+                                 p_industries = unlist(PIndustryPrefixes),
+                                 do_chops = TRUE,
+                                 method = "SVD",
+                                 country = Recca::psut_cols$country,
+                                 year = Recca::psut_cols$year)),
+      pattern = quote(map(PSUT_Re_WorldbyYear))
+    ),
 
 
     # Product H ----------------------------------------------------------------
     # World sector agg eta with chops
-    # targets::tar_target_raw(
-    #   "SectorAggEtaFUWorld",
-    #   quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
-    #           calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
-    #           PFUPipelineTools::tar_ungroup())
-    # ),
-    #
+    targets::tar_target_raw(
+      "SectorAggEtaFUWorld",
+      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
+              calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
+              PFUPipelineTools::tar_ungroup())
+    ),
     # targets::tar_target_raw(
     #   "ReleaseSectorAggEtaFUWorld",
     #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
@@ -324,9 +323,9 @@ get_pipeline <- function(countries = "all",
     #   quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
     #           efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
     #                               fd_sectors = unlist(FinalDemandSectors)) |>
-    #           PFUPipelineTools::tar_ungroup())
+    #           PFUPipelineTools::tar_ungroup()),
+    #   pattern = quote(map(PSUT_Re_World_Chop_all_Ds_all_Gr_all))
     # ),
-    #
     # targets::tar_target_raw(
     #   "ReleaseAggEtaPFUWorld",
     #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
