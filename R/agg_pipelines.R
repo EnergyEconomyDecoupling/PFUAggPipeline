@@ -305,33 +305,34 @@ get_pipeline <- function(countries = "all",
       "SectorAggEtaFUWorld",
       quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
               calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
-              PFUPipelineTools::tar_ungroup())
+              PFUPipelineTools::tar_ungroup()),
+      pattern = quote(map(PSUT_Re_World_Chop_all_Ds_all_Gr_all))
     ),
-    # targets::tar_target_raw(
-    #   "ReleaseSectorAggEtaFUWorld",
-    #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
-    #                                          targ = SectorAggEtaFUWorld,
-    #                                          pin_name = "sector_agg_eta_fu_world",
-    #                                          release = Release))),
+    targets::tar_target_raw(
+      "ReleaseSectorAggEtaFUWorld",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = SectorAggEtaFUWorld,
+                                             pin_name = "sector_agg_eta_fu_world",
+                                             release = Release))),
 
 
     # Product I ----------------------------------------------------------------
     # World PFU aggregates and efficiencies with chops -------------------------
 
-    # targets::tar_target_raw(
-    #   "AggEtaPFUWorld",
-    #   quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
-    #           efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
-    #                               fd_sectors = unlist(FinalDemandSectors)) |>
-    #           PFUPipelineTools::tar_ungroup()),
-    #   pattern = quote(map(PSUT_Re_World_Chop_all_Ds_all_Gr_all))
-    # ),
-    # targets::tar_target_raw(
-    #   "ReleaseAggEtaPFUWorld",
-    #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
-    #                                          targ = AggEtaPFUWorld,
-    #                                          pin_name = "agg_eta_pfu_world",
-    #                                          release = Release))),
+    targets::tar_target_raw(
+      "AggEtaPFUWorld",
+      quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
+              efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
+                                  fd_sectors = unlist(FinalDemandSectors)) |>
+              PFUPipelineTools::tar_ungroup()),
+      pattern = quote(map(PSUT_Re_World_Chop_all_Ds_all_Gr_all))
+    ),
+    targets::tar_target_raw(
+      "ReleaseAggEtaPFUWorld",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = AggEtaPFUWorld,
+                                             pin_name = "agg_eta_pfu_world",
+                                             release = Release))),
 
 
     # Zip the cache and store in the pipeline_caches_folder --------------------

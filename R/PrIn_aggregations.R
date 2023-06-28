@@ -442,12 +442,6 @@ pr_in_agg_pipeline <- function(.psut_data,
                                product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
                                none = PFUAggDatabase::agg_metadata$none) {
 
-  # filtered_data <- .psut_data |>
-  #   dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
-  #
-  # rm(.psut_data)
-  # gc()
-
   if (nrow(.psut_data) == 0) {
     return(NULL)
   }
