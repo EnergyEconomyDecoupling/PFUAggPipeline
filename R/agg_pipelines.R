@@ -273,8 +273,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_World",
       quote(PSUT_Re_all |>
-              # dplyr::filter(Country == "World"))
-              dplyr::filter(Country == "World", Energy.type == "E", IEAMW == "MW"))
+              dplyr::filter(Country == "World"))
     ),
     tarchetypes::tar_group_by(
       name = "PSUT_Re_WorldbyYear",
