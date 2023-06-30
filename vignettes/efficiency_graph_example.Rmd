@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+library(ggplot2)
 library(PFUSetup)
 library(pins)
 ```
@@ -113,6 +114,10 @@ Finally, we come to the columns of interest for this graph.
 The columns names "eta_pf", "eta_fu", and "eta_pu" contain
 primary-to-final, final-to-useful, and primary-to-useful efficiencies.
 
+
+```{r}
+```
+
 In the code below, we select and filter the data frame
 to focus on the data of interest for this graph.
 Comments in the code narrate the process.
@@ -160,4 +165,77 @@ agg_eta_pfu_prepared <- agg_eta_pfu_data |>
     Var.name = factor(Var.name, levels = c("eta[pf]", "eta[fu]", "eta[pu]"))
   )
 agg_eta_pfu_prepared
+```
+
+
+
+## Create an initial version of graph
+
+At this point, 
+`agg_eta_pfu_prepared` is a data frame that contains
+we need to make the graph.
+We use the `ggplot2` package to make the graph.
+
+```{r}
+agg_eta_pfu_prepared |> 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = Year,
+                                         y = Value,
+                                         group = Country)) +
+  ggplot2::geom_line(linewidth = 0.05) +
+  ggplot2::scale_x_continuous(breaks = c(1970, 1990, 2010)) +
+  ggplot2::labs(x = NULL,
+                y = expression(eta),
+                colour = NULL) +
+  ggplot2::facet_grid(rows = ggplot2::vars(Energy.type),
+                      cols = ggplot2::vars(Var.name),
+                      labeller = ggplot2::label_parsed) +
+  MKHthemes::xy_theme()
+```
+
+
+
+
+Now join the continent information to the 
+efficiency data so continent data are available
+when we make the graph.
+
+
+
+
+
+To color the individual country lines by continent,
+we load a data frame containing mapping of 
+countries to continents and 
+join it to the efficiency data frame.
+
+
+
+
+
+```{r}
+# The continents file is an input to the pipeline that creates the database.
+# Users can create their own continent mapping
+# or ask for ours.
+continents_file <- PFUSetup::get_abs_paths()[["aggregation_mapping_path"]]
+continents_file
+continents_agg_map <- continents_file |>
+  readxl::read_excel(sheet = "continent_aggregation") |>
+  # Adjust some of the column names
+  dplyr::rename(
+    Country = Many,
+    Continent = Few
+  ) |>
+  dplyr::mutate(
+    # Fix "Asia_" --> "Asia"
+    # to match the efficiency data frame.
+    Continent = dplyr::case_when(
+      Continent == "Asia_" ~ "Asia",
+      TRUE ~ Continent
+    )
+  )
+head(continents_agg_map)
+# Join to the efficiency data
+agg_eta_pfu_with_continents <- agg_eta_pfu_prepared |>
+  dplyr::left_join(continents_agg_map, by = "Country")
+agg_eta_pfu_with_continents
 ```
