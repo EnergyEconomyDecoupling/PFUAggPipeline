@@ -1,0 +1,163 @@
+---
+title: "Efficiency graph example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{efficiency_graph_example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(PFUSetup)
+library(pins)
+```
+
+
+## Introduction
+
+This vignette shows how to create a graph of country efficiencies first presented 
+at the International Exergy Economics Workshop in 2023 (IEEW2023) 
+by Matthew Kuerpus Heun (Calvin University). 
+The steps involved are:
+
+1. create the pinboard,
+2. read efficiency data
+3. prepare the data, including filtering, 
+4. create an initial version of graph, and
+5. refine the graph with colors and other details.
+
+
+## Create the pinboard
+
+The first step is to establish the pinboard for the `pins` package.
+Someone from the PFUDatabase team will have shared the "PipelineReleases"
+folder if you have access to IEA data. 
+The `PFUSetup` package is helpful to find the correct folder.
+Install the package with the following code.
+
+```{r, eval = FALSE}
+devtools::install_github("EnergyEconomyDecoupling/PFUSetup")
+```
+
+Next, create the pinboard from the correct Dropbox folder.
+Your `pinboard_folder` might be different from this, 
+due to a different location on your computer.
+
+```{r}
+pinboard_folder <- PFUSetup::get_abs_paths()[["pipeline_releases_folder"]]
+pinboard_folder
+pinboard <- pins::board_folder(pinboard_folder, versioned = TRUE)
+pinboard
+```
+
+
+## Read efficiency data
+
+Next, users can consult the `versions and products.xlsx` file
+located in the "PipelineReleases" folder.
+to find the desired database product.
+For this example, 
+we want data for `pf`, `fu`, and `pu` efficiencies, 
+which can be found in the product whose pin is named "agg_eta_pfu".
+The "versions and products.xlsx" file indicates that
+the pin version of the "agg_eta_pfu" product for database v1.1 is
+"20230619T051304Z-f653c".
+Putting it all together, 
+the following code reads the desired version of the desired data 
+for v1.1 of the PFU database.
+
+```{r}
+agg_eta_pfu_data <- pins::pin_read(board = pinboard,
+                                   name = "agg_eta_pfu",
+                                   version = "20230619T051304Z-f653c")
+```
+
+
+## Prepare the data, including filtering
+
+`agg_eta_pfu_data` is an `R` data frame with the following columns:
+
+```{r}
+colnames(agg_eta_pfu_data)
+```
+
+"Country" contains 3-letter country abbreviations.
+"Method" contains only "PCM", inducating that the
+"physical content method" is used for all data.
+"Energy.type" contains either "E" (for energy) or "X" (for exergy).
+"Year" is between 1960 and 2020, inclusive.
+"IEAMW" contains one of "IEA" (IEA data), 
+"MW" (muscle work), or "Both" (for both IEA and muscle work data).
+"Chopped.mat" and "Chopped.var" are reserved for future use in the database.
+In this object, both are always "None."
+"Product.aggregation" and "Industry.aggregation" 
+tell how energy carriers and industries 
+are aggregated were aggregated prior to 
+summing to primary, final, and useful energy stages.
+For this example, primary, final, and useful aggregations should be 
+the same, regardless of the value of 
+"Product.aggregation" or "Industry.aggregation." 
+"GrossNet" contains either "Gross" or "Net"
+telling whether energy industry own use is included in 
+final and useful aggregations.
+"EX.p", "EX.f", and "EX.u" contain primary, final, and useful stage 
+energy and exergy aggregations. 
+Finally, we come to the columns of interest for this graph.
+The columns names "eta_pf", "eta_fu", and "eta_pu" contain
+primary-to-final, final-to-useful, and primary-to-useful efficiencies.
+
+In the code below, we select and filter the data frame
+to focus on the data of interest for this graph.
+Comments in the code narrate the process.
+
+```{r}
+agg_eta_pfu_prepared <- agg_eta_pfu_data |> 
+  # Select only those rows where we have both IEA and MW data, 
+  # where gross energy production is provided, and
+  # where aggregations were calculated from fully specified data.
+  dplyr::filter(IEAMW == "Both",
+                GrossNet == "Gross", 
+                Product.aggregation == "Specified",
+                Industry.aggregation == "Specified") |> 
+  # Select only the columns of interest to us
+  dplyr::select(Country, Energy.type, Year, eta_pf, eta_fu, eta_pu) |> 
+  # Pivot the data to create a value column
+  tidyr::pivot_longer(cols = c(eta_pf, eta_fu, eta_pu),
+                      names_to = "Var.name",
+                      values_to = "Value") |>
+  # Make changes to the data
+  dplyr::mutate(
+    # We use the string "Asia_" to indicate
+    # our aggregation for Asia.
+    # Change to "Asia" (without the trailing "_").
+    Country = dplyr::case_when(
+      Country == "Asia_" ~ "Asia",
+      TRUE ~ Country
+    ),
+    # Change "E" and "X" to "Energy" and "Exergy"
+    Energy.type = dplyr::case_match(
+      Energy.type,
+      "E" ~ "Energy",
+      "X" ~ "Exergy"
+    ),
+    Var.name = dplyr::case_match(
+      Var.name,
+      # Change names of efficiencies
+      # for later subscripting of "pf", "fu", and "pu"
+      "eta_pf" ~ "eta[pf]",
+      "eta_fu" ~ "eta[fu]",
+      "eta_pu" ~ "eta[pu]"
+    ),
+    # Set ordering for efficiency variables
+    # so they look nice in our graph
+    Var.name = factor(Var.name, levels = c("eta[pf]", "eta[fu]", "eta[pu]"))
+  )
+agg_eta_pfu_prepared
+```
