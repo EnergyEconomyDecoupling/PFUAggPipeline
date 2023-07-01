@@ -11,36 +11,70 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  # Set several aspects of graph chunks
+  fig.retina=4,
+  fig.align='center', 
+  fig.height=4,
+  fig.width=6
 )
-```
-
-```{r setup}
-library(ggplot2)
-library(MKHthemes)
-library(PFUSetup)
-library(pins)
 ```
 
 
 ## Introduction
 
-This vignette shows how to create a graph of country efficiencies first presented 
-at the International Exergy Economics Workshop in 2023 (IEEW2023) 
-by Matthew Kuerpus Heun (Calvin University). 
-The steps involved are:
+The PFU Database contains primary, final, and useful 
+energy and exergy data for all countries covered 
+by the International Energy Agency (IEA).
+Aggregations are also available. 
 
-1. create the pinboard,
-2. read efficiency data
-3. prepare the data, including filtering, 
-4. create an initial version of graph, and
-5. refine the graph with colors and other details.
+But it can be a challenge to get started with the PFU Database
+if you are unfamiliar with some types of `R` programming. 
+This vignette provides a detailed example of working with PFU Database information
+to help users get over that hurdle.
+
+In particular, 
+this vignette shows how to create a graph of country 
+energy and exergy efficiencies first presented 
+at the International Exergy Economics Workshop in 2023 (IEEW2023) 
+by Matthew Kuperus Heun (Calvin University).
+In the process, 
+important concepts for accessing and working with the data 
+are demonstrated, 
+including 
+
+1. creating a pinboard,
+2. reading efficiency data
+3. preparing the data, including filtering, 
+4. creating an initial version of graph, and
+5. refining the graph for presentation.
+
+Most `R` programs use packages that are loaded at the beginning.
+The following packages are used in this vignette. 
+
+```{r setup, message=FALSE}
+library(devtools)
+library(dplyr)
+library(ggplot2)
+library(MKHthemes)
+library(PFUSetup)
+library(pins)
+library(readxl)
+library(tidyr)
+```
+
+All packages are available on the 
+Comprehensive R Archive Network (CRAN),
+except `MKHthemes` and `PFUSetup`. 
+Instructions for loading 
+`MKHthemes` and `PFUSetup`
+are given below.
 
 
 ## Create the pinboard
 
-The first step is to establish the pinboard for the `pins` package.
-Someone from the PFUDatabase team will have shared the "PipelineReleases"
+The first step is to establish a "pinboard" for the `pins` package.
+Someone from the PFU Database team will have shared the "PipelineReleases"
 folder if you have access to IEA data. 
 The `PFUSetup` package is helpful to find the correct folder.
 Install the package with the following code.
@@ -49,7 +83,7 @@ Install the package with the following code.
 devtools::install_github("EnergyEconomyDecoupling/PFUSetup")
 ```
 
-Next, create the pinboard from the correct Dropbox folder.
+Create the pinboard from the correct Dropbox folder.
 Your `pinboard_folder` might be different from this, 
 due to a different location on your computer.
 
@@ -58,14 +92,6 @@ pinboard_folder <- PFUSetup::get_abs_paths()[["pipeline_releases_folder"]]
 pinboard_folder
 pinboard <- pins::board_folder(pinboard_folder, versioned = TRUE)
 pinboard
-```
-
-Later, we will use the package `MKHthemes`
-to make nice-looking graphs. 
-It can be loaded with the following code.
-
-```{r, eval=FALSE}
-devtools::install_github("MatthewHeun/MKHthemes")
 ```
 
 
@@ -126,7 +152,8 @@ energy and exergy aggregations.
 The columns names "eta_pf", "eta_fu", and "eta_pu" contain
 primary-to-final, final-to-useful, and primary-to-useful efficiencies.
 
-In the code below, we select and filter the data frame
+In the code below, we prepare the data 
+by selecting and filtering the `agg_eta_pfu_data` data frame
 to focus on the data of interest for this graph.
 Comments in the code narrate the process.
 
@@ -144,8 +171,71 @@ agg_eta_pfu_prepared <- agg_eta_pfu_data |>
   # Pivot the data to create a value column
   tidyr::pivot_longer(cols = c(eta_pf, eta_fu, eta_pu),
                       names_to = "Var.name",
-                      values_to = "Value") |>
-  # Make changes to the data
+                      values_to = "Value")
+# Here is the prepared data
+agg_eta_pfu_prepared
+```
+
+
+
+## Create an initial version of graph
+
+At this point, 
+`agg_eta_pfu_prepared` is a data frame that contains
+everything we need to make the graph.
+We use the `ggplot2` package to make the graph.
+
+```{r}
+agg_eta_pfu_prepared |> 
+  # Set the x and y axes
+  ggplot2::ggplot(mapping = ggplot2::aes(x = Year,
+                                         y = Value,
+                                         # Group by Country 
+                                         # to make individual lines
+                                         group = Country)) +
+  # Show the data with lines
+  ggplot2::geom_line() +
+  # Put mini-graphs for energy type in rows and efficiency type in columns
+  ggplot2::facet_grid(rows = ggplot2::vars(Energy.type),
+                      cols = ggplot2::vars(Var.name))
+```
+
+
+
+## Refine the graph with colors and other details
+
+The initial version of the graph provides confidence that we can 
+use the data, but it is not attractive.
+
+* Line widths should be reduced so we can see 
+  individual countries instead of an undifferentiated 
+  mass of lines for all countries.
+* Lines could be coloured by continent. 
+* A world average line should be added and distinguished
+  from other lines.
+* The column labels ("eta_pf", "eta_fu", and "eta_pu") 
+  should be changed to Greek letters with subscripts
+  ($\eta_{pf}$, $\eta_{fu}$, and $\eta_{pu}$).
+* The left-to-right order of efficiencies should be changed to
+  "eta_pf", "eta_fu", "eta_pu".
+* "E" and "X" on the rows of the graph should be changed to
+  "Energy" and "Exergy" for clarity.
+* Change "Asia_" to "Asia" in the "Country" and "Continent" column
+  (to be added later).
+* The word "Value" on the $y$-axis should be changed to 
+  they symbol for efficiency ($\eta$).
+* There is no need for the word "Year" on the $x$-axis. 
+  Everyone knows those are years.
+* The year labels run into each other.
+* The gray background is ugly.
+
+Many of these changes are made by adjusting the 
+values in the metadata columns 
+of the `agg_eta_pfu_prepared` data frame.
+The code below shows those adjustments.
+
+```{r}
+agg_eta_pfu_nice <- agg_eta_pfu_prepared |> 
   dplyr::mutate(
     # We use the string "Asia_" to indicate
     # our aggregation for Asia.
@@ -163,7 +253,7 @@ agg_eta_pfu_prepared <- agg_eta_pfu_data |>
     Var.name = dplyr::case_match(
       Var.name,
       # Change names of efficiencies
-      # for later subscripting of "pf", "fu", and "pu"
+      # for later subscripts of "pf", "fu", and "pu"
       "eta_pf" ~ "eta[pf]",
       "eta_fu" ~ "eta[fu]",
       "eta_pu" ~ "eta[pu]"
@@ -172,53 +262,10 @@ agg_eta_pfu_prepared <- agg_eta_pfu_data |>
     # so they look nice in our graph
     Var.name = factor(Var.name, levels = c("eta[pf]", "eta[fu]", "eta[pu]"))
   )
-# Here is the prepared data
-agg_eta_pfu_prepared
 ```
 
-
-
-## Create an initial version of graph
-
-At this point, 
-`agg_eta_pfu_prepared` is a data frame that contains
-everything we need to make the graph.
-We use the `ggplot2` package to make the graph.
-
-```{r, fig.retina=4, fig.align='center', fig.height=4, fig.width=6}
-agg_eta_pfu_prepared |> 
-  # Set the x and y axes
-  ggplot2::ggplot(mapping = ggplot2::aes(x = Year,
-                                         y = Value,
-                                         # Group by Country 
-                                         # to make individual lines
-                                         group = Country)) +
-  # Set a fine line width
-  ggplot2::geom_line(linewidth = 0.05) +
-  # Set the years to appear on the x axis
-  ggplot2::scale_x_continuous(breaks = c(1980, 2000, 2020)) +
-  # Set labels on each axis
-  ggplot2::labs(x = NULL,
-                y = expression(eta)) +
-  # Separate data into mini-graphs by 
-  # energy type (rows) and efficiency (columns)
-  ggplot2::facet_grid(rows = ggplot2::vars(Energy.type),
-                      cols = ggplot2::vars(Var.name),
-                      # label_parsed gives 
-                      # greek letters and subscripts
-                      labeller = ggplot2::label_parsed) +
-  # Make a nice gray border, no gridlines, inward-pointing ticks, 
-  # and attractive spacing between axis labels and the graphs
-  MKHthemes::xy_theme()
-```
-
-
-
-## Refine the graph with colors and other details
-
-The graph contains all the data we want but has no pizzazz.
-To improve its appearance,
-we can to colour the individual
+To further improve appearance,
+we can colour the individual
 country lines by continent.
 And, we can highlight the world as a thick line 
 atop all countries.
@@ -227,16 +274,19 @@ The first step is to join continent information to the
 efficiency data, thereby making continent
 data available for the graph.
 We can load a data frame of countries and continents
-and join it ot the efficiency data frame.
+and join it to the efficiency data frame.
 
 ```{r}
-# The continents file is an input to the pipeline that creates the database.
-# Users can create their own continent mapping
+# The continents file is an input 
+# to the calculation pipeline 
+# that created the database.
+# Users can create their own 
+# continent mapping data frame
 # or ask for ours.
 continents_file <- PFUSetup::get_abs_paths()[["aggregation_mapping_path"]]
 continents_file
 continents_agg_map <- continents_file |>
-  # Read the Excel file
+  # Read the continent_aggregation tab of the Excel file
   readxl::read_excel(sheet = "continent_aggregation") |>
   # Adjust some of the column names
   dplyr::rename(
@@ -253,15 +303,13 @@ continents_agg_map <- continents_file |>
   )
 continents_agg_map
 # Join to the efficiency data
-agg_eta_pfu_with_continents <- agg_eta_pfu_prepared |>
+agg_eta_pfu_with_continents <- agg_eta_pfu_nice |>
   dplyr::left_join(continents_agg_map, by = "Country")
+# Notice the Continent column
 agg_eta_pfu_with_continents
 ```
 
-The following code creates another version of the graph,
-this time with colors for continents.
-
-First, establish the colors and graphical details we want.
+Establish the continent colors.
 
 ```{r}
 continent_colours <- c(Africa = "orange", Asia = "gray",
@@ -272,46 +320,75 @@ continent_colours <- c(Africa = "orange", Asia = "gray",
                        World = "black")
 ```
 
+To create a specific World-average line, 
+we need to separate the World data from 
+all countries.
+Also, continent averages should be removed
+from the data frame that contains country lines.
+
+```{r}
+# Create a data frame of only World information
+# for years >- 1971 
+# (the first year when all countries are in IEA data).
+# This data frame will be used to create the 
+# World-average line
+agg_eta_pfu_World <- agg_eta_pfu_with_continents |> 
+  dplyr::filter(Country == "World", Year >= 1971)
+# Create a data frame of countries only, 
+# eliminating continent and world averages
+agg_eta_pfu_countries <- agg_eta_pfu_with_continents |> 
+  dplyr::filter(!(Country %in% c("Africa", "Asia", "Bunkers", "Europe", 
+                                 "MidEast", "NoAmr", "Oceania", "SoCeAmr", 
+                                 "World", "WRLD")))
+```
+
+We will use the package `MKHthemes`
+to make nice-looking graphs with a white background
+and tick marks that point inward, not outward. 
+`MKHthemes` can be loaded with the following code.
+
+```{r, eval=FALSE}
+devtools::install_github("MatthewHeun/MKHthemes")
+```
+
+
 Now make the graph.
 Details different from the previous version are
 identified by comments.
 
-```{r, fig.retina=4, fig.align='center', fig.height=4, fig.width=6}
-# Create a data frame of only World information
-# for years >- 1971 
-# (the first year when all countries are in IEA data)
-agg_eta_pfu_World <- agg_eta_pfu_with_continents |> 
-  dplyr::filter(Country == "World", Year >= 1971)
-# Create a data frame of countries only
-agg_eta_pfu_countries_only <- agg_eta_pfu_with_continents |> 
-  dplyr::filter(!(Country %in% c("Africa", "Asia", "Bunkers", "Europe", 
-                                 "MidEast", "NoAmr", "Oceania", "SoCeAmr", 
-                                 "World", "WRLD")))
-
+```{r}
 ggplot2::ggplot(mapping = ggplot2::aes(x = Year,
                                        y = Value,
                                        group = Country, 
                                        # Set country colours by continent
                                        colour = Continent)) +
   # Create two different line layers.
-  # The first has countries only.
-  ggplot2::geom_line(data = agg_eta_pfu_countries_only,
+  # The first has countries only and a narrow linewidth.
+  ggplot2::geom_line(data = agg_eta_pfu_countries,
                      linewidth = 0.05) +
-  # The second (upper) layer has World only.
+  # The second (upper) layer has World only, 
+  # a larger linewidth and black colour.
   ggplot2::geom_line(data = agg_eta_pfu_World, 
                      linewidth = 1, 
                      colour = "black") +
+  # Set only a few years on the x-axis so the labels
+  # don't collide
   ggplot2::scale_x_continuous(breaks = c(1980, 2000, 2020)) +
   # Use the continent_colours for the lines
   ggplot2::scale_colour_manual(values = continent_colours) +
+  # Eliminate the x-axis label ("Year"); 
+  # everyone knows those are years.
+  # Eliminate the colour label, "Continent";
+  # everyone knows these are continent names.
   ggplot2::labs(x = NULL,
                 y = expression(eta), 
-                # Eliminate the colour label, "Continent".
-                # We all know these are continents.
                 colour = NULL) +
   ggplot2::facet_grid(rows = ggplot2::vars(Energy.type),
                       cols = ggplot2::vars(Var.name),
                       labeller = ggplot2::label_parsed) +
+  # Set pleasant aesthetics such as white background, 
+  # gray border lines, and 
+  # inward-pointing tick marks.
   MKHthemes::xy_theme() +
   ggplot2::guides(
     colour = ggplot2::guide_legend(
@@ -322,6 +399,9 @@ ggplot2::ggplot(mapping = ggplot2::aes(x = Year,
   )
 ```
 
+The graph above is aesthetically pleasing and conveys more information
+that the initial attempt.
+
 
 ## Conclusion
 
@@ -330,6 +410,6 @@ such as primary-to-final,
 final-to-useful, and
 primary-to-useful efficiencies.
 This vignette shows details of 
-how to read and clean database information, 
+how to read and clean data, 
 how to make such graphs, and 
-how to prettify the graphs.
+how to make the graphs more aesthetically pleasing.
