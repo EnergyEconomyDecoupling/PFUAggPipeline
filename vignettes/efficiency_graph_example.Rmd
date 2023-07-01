@@ -44,7 +44,7 @@ are demonstrated,
 including 
 
 1. creating a pinboard,
-2. reading efficiency data
+2. reading efficiency data,
 3. preparing the data, including filtering, 
 4. creating an initial version of graph, and
 5. refining the graph for presentation.
@@ -77,7 +77,7 @@ The first step is to establish a "pinboard" for the `pins` package.
 Someone from the PFU Database team will have shared the "PipelineReleases"
 folder if you have access to IEA data. 
 The `PFUSetup` package is helpful to find the correct folder.
-Install the package with the following code.
+Install the `PFUSetup` package with the following code.
 
 ```{r, eval = FALSE}
 devtools::install_github("EnergyEconomyDecoupling/PFUSetup")
@@ -288,7 +288,7 @@ continents_file
 continents_agg_map <- continents_file |>
   # Read the continent_aggregation tab of the Excel file
   readxl::read_excel(sheet = "continent_aggregation") |>
-  # Adjust some of the column names
+  # Adjust the column names
   dplyr::rename(
     Country = Many,
     Continent = Few
@@ -399,8 +399,9 @@ ggplot2::ggplot(mapping = ggplot2::aes(x = Year,
   )
 ```
 
-The graph above is aesthetically pleasing and conveys more information
-that the initial attempt.
+The new version of the graph 
+is aesthetically pleasing and conveys more information
+than the initial attempt.
 
 
 ## Conclusion
