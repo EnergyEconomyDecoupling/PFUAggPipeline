@@ -104,7 +104,8 @@ located in the "PipelineReleases" folder.
 to find the desired database product.
 For this example, 
 we want data for `pf`, `fu`, and `pu` efficiencies, 
-which can be found in the product whose pin is named "agg_eta_pfu".
+which can be found in Product E,
+whose pin is named "agg_eta_pfu".
 The "versions and products.xlsx" file indicates that
 the pin version of the "agg_eta_pfu" product for database v1.1 is
 "20230619T051304Z-f653c".
