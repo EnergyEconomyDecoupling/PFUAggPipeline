@@ -31,13 +31,13 @@ Aggregations are also available.
 
 But it can be a challenge to get started with the MR-PFU Database
 if you are unfamiliar with some types of `R` programming. 
-This vignette provides a detailed example of working with PFU Database information
+This vignette provides a detailed example of working with MR-PFU Database information
 to help users get over that hurdle.
 
 In particular, 
-this vignette shows how to create a graph of country 
+this vignette shows how to create a graph of country-level
 energy and exergy efficiencies first presented 
-at the International Exergy Economics Workshop in 2023 (IEEW2023) 
+at the International Exergy Economics Workshop in July 2023 (IEEW2023) 
 by Matthew Kuperus Heun (Calvin University).
 In the process, 
 important concepts for accessing and working with the data 
@@ -67,16 +67,22 @@ library(tidyr)
 
 All packages are available on the 
 Comprehensive R Archive Network (CRAN),
-except `MKHthemes` and `PFUSetup`. 
+except
+[MKHthemes](https://github.com/MatthewHeun/MKHthemes/)
+and
+[PFUSetup](https://github.com/EnergyEconomyDecoupling/PFUSetup/). 
 Instructions for loading 
-`MKHthemes` and `PFUSetup`
+[MKHthemes](https://github.com/MatthewHeun/MKHthemes/) 
+and
+[PFUSetup](https://github.com/EnergyEconomyDecoupling/PFUSetup/)
 are given below.
 
 
 ## Create the pinboard
 
-The first step is to establish a "pinboard" for the `pins` package.
-Someone from the PFU Database team will have shared the "PipelineReleases"
+The first step is to establish a "pinboard" 
+for the [pins](https://pins.rstudio.com) package.
+Someone from the MR-PFU Database team will have shared the "PipelineReleases"
 folder if you have access to IEA data. 
 The `PFUSetup` package is helpful to find the correct folder.
 Install the `PFUSetup` package with the following code.
@@ -86,7 +92,7 @@ devtools::install_github("EnergyEconomyDecoupling/PFUSetup")
 ```
 
 Create the pinboard from the correct Dropbox folder.
-Your `pinboard_folder` might be different from this, 
+Your `pinboard_folder` might be different from this example, 
 due to a different location on your computer.
 
 ```{r}
@@ -118,9 +124,6 @@ agg_eta_pfu_data <- pins::pin_read(board = pinboard,
                                    name = "agg_eta_pfu",
                                    version = "20230619T051304Z-f653c")
 ```
-
-
-## Prepare the data, including filtering
 
 `agg_eta_pfu_data` is an `R` data frame as shown below:
 
@@ -155,8 +158,12 @@ energy and exergy aggregations.
 The columns names "eta_pf", "eta_fu", and "eta_pu" contain
 primary-to-final, final-to-useful, and primary-to-useful efficiencies.
 
+
+## Prepare the data, including filtering
+
 In the code below, we prepare the data 
-by selecting and filtering the `agg_eta_pfu_data` data frame
+by filtering rows and selecting columns
+of the `agg_eta_pfu_data` data frame
 to focus on the data of interest for this graph.
 Comments in the code narrate the process.
 
@@ -180,13 +187,12 @@ agg_eta_pfu_prepared
 ```
 
 
-
 ## Create an initial version of graph
 
-At this point, 
 `agg_eta_pfu_prepared` is a data frame that contains
 everything we need to make the graph.
-We use the `ggplot2` package to make the graph.
+We use the [ggplot2](https://ggplot2.tidyverse.org)
+package to make the graph.
 
 ```{r}
 agg_eta_pfu_prepared |> 
@@ -345,10 +351,11 @@ agg_eta_pfu_countries <- agg_eta_pfu_with_continents |>
                                  "World", "WRLD")))
 ```
 
-We will use the package `MKHthemes`
+We will use the [MKHthemes](https://github.com/MatthewHeun/MKHthemes/) package
 to make nice-looking graphs with a white background
 and tick marks that point inward, not outward. 
-`MKHthemes` can be loaded with the following code.
+[MKHthemes](https://github.com/MatthewHeun/MKHthemes/)
+can be loaded with the following code.
 
 ```{r, eval=FALSE}
 devtools::install_github("MatthewHeun/MKHthemes")
