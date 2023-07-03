@@ -3,6 +3,9 @@ title: "Release notes for `PFUAggDatabase`"
 output: html_document
 ---
 
+* Added a new vignette that shows how to 
+  read data from pins and make a graph of 
+  country efficiencies coloured by continent.
 * Now testing for primary, final, and useful
   aggregations that should be equal.
   An nicely formatted error is thrown if they are not.
