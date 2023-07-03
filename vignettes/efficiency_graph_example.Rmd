@@ -81,7 +81,7 @@ folder if you have access to IEA data.
 The `PFUSetup` package is helpful to find the correct folder.
 Install the `PFUSetup` package with the following code.
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 devtools::install_github("EnergyEconomyDecoupling/PFUSetup")
 ```
 
