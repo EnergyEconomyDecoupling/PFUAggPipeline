@@ -1,7 +1,8 @@
 ---
 title: "Efficiency graph example"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-# output: pdf_document
 vignette: >
   %\VignetteIndexEntry{efficiency_graph_example}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,12 +24,12 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The PFU Database contains primary, final, and useful 
+The MR-PFU Database contains primary, final, and useful 
 energy and exergy data for all countries covered 
 by the International Energy Agency (IEA).
 Aggregations are also available. 
 
-But it can be a challenge to get started with the PFU Database
+But it can be a challenge to get started with the MR-PFU Database
 if you are unfamiliar with some types of `R` programming. 
 This vignette provides a detailed example of working with PFU Database information
 to help users get over that hurdle.
@@ -49,7 +50,8 @@ including
 4. creating an initial version of graph, and
 5. refining the graph for presentation.
 
-Most `R` programs use packages that are loaded at the beginning.
+Most `R` programs use packages that are loaded at the beginning
+of a session.
 The following packages are used in this vignette. 
 
 ```{r setup, message=FALSE}
@@ -332,7 +334,7 @@ from the data frame that contains country lines.
 # (the first year when all countries are in IEA data).
 # This data frame will be used to create the 
 # World-average line
-agg_eta_pfu_World <- agg_eta_pfu_with_continents |> 
+agg_eta_pfu_world <- agg_eta_pfu_with_continents |> 
   dplyr::filter(Country == "World", Year >= 1971)
 # Create a data frame of countries only, 
 # eliminating continent and world averages
@@ -368,7 +370,7 @@ ggplot2::ggplot(mapping = ggplot2::aes(x = Year,
                      linewidth = 0.05) +
   # The second (upper) layer has World only, 
   # a larger linewidth and black colour.
-  ggplot2::geom_line(data = agg_eta_pfu_World, 
+  ggplot2::geom_line(data = agg_eta_pfu_world, 
                      linewidth = 1, 
                      colour = "black") +
   # Set only a few years on the x-axis so the labels
