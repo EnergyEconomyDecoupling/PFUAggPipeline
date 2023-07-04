@@ -25,7 +25,7 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
                                        eta_pu = Recca::efficiency_cols$eta_pu) {
 
   filtered_data <- .eta_pfu_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   if (nrow(filtered_data) == 0) {
     return(NULL)

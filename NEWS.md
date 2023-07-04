@@ -3,6 +3,9 @@ title: "Release notes for `PFUAggDatabase`"
 output: html_document
 ---
 
+* Added a new vignette that shows how to 
+  read data from pins and make a graph of 
+  country efficiencies coloured by continent.
 * New function `rename_prime_cols()` deletes original matrices and 
   renames "*_prime" to original names.
   Used in the chopping process.

@@ -78,7 +78,7 @@ psut_data_frame_usa <- pins::pin_read(board = pfu_pinboard, name = "psut_usa",
                                       version = "20230217T182459Z-287a0")
 ```
 
-To select only a single year of data, 
+To select only a single country of data, 
 use the following code.
 
 ```{r, eval=FALSE}

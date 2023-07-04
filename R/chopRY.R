@@ -42,7 +42,7 @@ chop_R_eccs <- function(.psut_data,
   }
 
   filtered_data <- .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   rm(.psut_data)
   gc()
@@ -74,7 +74,7 @@ chop_Y_eccs <- function(.psut_data,
   }
 
   filtered_data <- .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   rm(.psut_data)
   gc()

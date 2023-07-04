@@ -34,6 +34,7 @@ get_pipeline <- function(countries = "all",
   PSUT <- NULL
   PSUT_Re_all <- NULL
   PSUT_Re_all_Chop_all_Ds_all_Gr_all <- NULL
+  PSUT_Re_World <- NULL
 
   list(
 

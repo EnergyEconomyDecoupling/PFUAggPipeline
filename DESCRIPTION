@@ -19,7 +19,6 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
-    assertthat,
     dplyr,
     IEATools, 
     magrittr,
@@ -36,7 +35,11 @@ Imports:
     targets,
     tidyr
 Suggests: 
+    devtools,
+    ggplot2,
     knitr,
+    MKHthemes,
+    PFUSetup,
     rmarkdown,
     spelling,
     testthat (>= 3.0.0),
