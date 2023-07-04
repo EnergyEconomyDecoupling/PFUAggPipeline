@@ -35,6 +35,7 @@ Imports:
     targets,
     tidyr
 Suggests: 
+    devtools,
     ggplot2,
     knitr,
     MKHthemes,

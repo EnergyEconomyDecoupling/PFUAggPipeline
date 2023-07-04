@@ -41,7 +41,7 @@ despecified_aggregations <- function(.psut_data,
                                      aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
 
   filtered_data <- .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   rm(.psut_data)
   gc()
@@ -122,7 +122,7 @@ grouped_aggregations <- function(.psut_data,
                                  # The suffix added to the name of the columns of aggregated matrices.
                                  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
   filtered_data <- .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   rm(.psut_data)
   gc()

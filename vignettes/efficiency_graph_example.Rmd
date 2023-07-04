@@ -134,7 +134,7 @@ agg_eta_pfu_data
 The columns have the following meanings:
 
 * "Country" contains 3-letter country abbreviations.
-* "Method" contains only "PCM", inducating that the
+* "Method" contains only "PCM", indicating that the
 "physical content method" is used for all data.
 * "Energy.type" contains either "E" (for energy) or "X" (for exergy).
 * "Year" is between 1960 and 2020, inclusive.
