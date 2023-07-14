@@ -201,8 +201,9 @@ agg_eta_pfu_prepared |>
                                          y = Value,
                                          # Group by Country 
                                          # to make individual lines
+                                         # for each country
                                          group = Country)) +
-  # Show the data with lines
+  # Create a line graph
   ggplot2::geom_line() +
   # Put mini-graphs for energy type in rows and efficiency type in columns
   ggplot2::facet_grid(rows = ggplot2::vars(Energy.type),
