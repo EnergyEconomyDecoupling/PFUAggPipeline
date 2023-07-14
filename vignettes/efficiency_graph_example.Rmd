@@ -424,4 +424,4 @@ primary-to-useful efficiencies.
 This vignette shows details of 
 how to read and clean data, 
 how to make such graphs, and 
-how to make the graphs more aesthetically pleasing.
+how to modify the graphs to be aesthetically pleasing.
