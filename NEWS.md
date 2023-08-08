@@ -3,6 +3,10 @@ title: "Release notes for `PFUAggDatabase`"
 output: html_document
 ---
 
+Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zenodo.6409759), 
+which always resolves to the latest release.
+
+
 * Added a new vignette that shows how to 
   read data from pins and make a graph of 
   country efficiencies coloured by continent.
