@@ -102,7 +102,7 @@ calculate_sector_agg_eta_fu <- function(.psut_data,
                                   notation = notation,
                                   pattern_type = pattern_type,
                                   prepositions = prepositions,
-                                  U = U, U_feed = U_feed, Y = Y,
+                                  U_eiou = U_eiou, Y = Y,
                                   by = "Sector",
                                   net_aggregate_demand = net_aggregate_demand,
                                   gross_aggregate_demand = gross_aggregate_demand) |>
