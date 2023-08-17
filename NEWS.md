@@ -6,7 +6,8 @@ output: html_document
 Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zenodo.6409759), 
 which always resolves to the latest release.
 
-
+* Fixed a bug where U_eiou wasn't in argument list 
+  for a call to `Recca::finaldemand_aggregates()`.
 * Added a new vignette that shows how to 
   read data from pins and make a graph of 
   country efficiencies coloured by continent.
