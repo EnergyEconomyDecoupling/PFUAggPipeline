@@ -6,6 +6,8 @@ output: html_document
 Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zenodo.6409759), 
 which always resolves to the latest release.
 
+# PFUAggDatabase 0.1.3 (2023-08-19)
+
 * Fixed a bug where U_eiou wasn't in argument list 
   for a call to `Recca::finaldemand_aggregates()`.
 * Added a new vignette that shows how to 
@@ -19,7 +21,7 @@ which always resolves to the latest release.
   An nicely formatted error is thrown if they are not.
 
 
-# PFUAggDatabase 0.1.2 (2022-06-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8011597.svg)](https://doi.org/10.5281/zenodo.8011597)
+# PFUAggDatabase 0.1.2 (2023-06-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8011597.svg)](https://doi.org/10.5281/zenodo.8011597)
 
 * Updated targets store location.
 
