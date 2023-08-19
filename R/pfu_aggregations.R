@@ -30,7 +30,7 @@ calculate_primary_aggregates <- function(.psut_data,
                                          prepositions = RCLabels::prepositions_list) {
 
   filtered_data <- .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   rm(.psut_data)
   gc()
@@ -78,7 +78,7 @@ calculate_finaldemand_aggregates <- function(.psut_data,
                                              prepositions = RCLabels::prepositions_list) {
 
   filtered_data <- .psut_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   if (nrow(filtered_data) == 0) {
     # return(filtered_data)
@@ -143,7 +143,7 @@ calculate_pfu_aggregates <- function(.agg_data,
                                      ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
                                      ex_fd = Recca::aggregate_cols$aggregate_demand) {
   filtered_data <- .agg_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years) %>%
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years) %>%
     dplyr::mutate(
       "{R}" := NULL,
       "{U}" := NULL,

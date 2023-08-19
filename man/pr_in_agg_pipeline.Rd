@@ -27,6 +27,7 @@ pr_in_agg_pipeline(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
+  .prime = "_prime",
   country = Recca::psut_cols$country,
   year = Recca::psut_cols$year,
   R_aggregated_colname = paste0(R, aggregated_suffix),
@@ -48,7 +49,7 @@ pr_in_agg_pipeline(
   Y_matname = Recca::psut_cols$Y,
   R_matname = Recca::psut_cols$R,
   product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-  none = "None"
+  none = PFUAggDatabase::agg_metadata$none
 )
 }
 \arguments{
@@ -91,6 +92,9 @@ Default is \code{.Machine$double.eps}.}
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units, country, year}{The names of input columns in \code{.psut_data}.
 Default values are from \code{Recca::psut_cols}.}
 
+\item{.prime}{The suffix for the columns containing chopped ECC matrices.
+Default is "_prime".}
+
 \item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_eiou_aggregated_colname, U_eiou_aggregated_colname, U_feed_aggregated_colname, S_units_aggregated_colname}{The names of output aggregated columns.
 Defaults are the matrix names with \code{aggregated_suffix} appended.}
 
@@ -106,7 +110,7 @@ Default values are from \code{PFUAggDatabase::aggregation_df_cols}.}
 Default values are from \code{Recca::psut_cols$R} and \code{Recca::psut_cols$Y}.}
 
 \item{none}{The string to specify no aggregations.
-Default is "None".}
+Default is \code{PFUAggDatabase::agg_metadata$none}.}
 }
 \value{
 A data frame of efficiencies for the original, despecified, and grouped versions

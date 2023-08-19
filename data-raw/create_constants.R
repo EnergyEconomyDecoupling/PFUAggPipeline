@@ -23,7 +23,8 @@ agg_metadata <- list(total_value = "Total",
                      all_value = "All",
                      product_value = "Product",
                      sector_value = "Sector",
-                     flow_value = "Flow")
+                     flow_value = "Flow",
+                     none = "None")
 usethis::use_data(agg_metadata, overwrite = TRUE)
 
 

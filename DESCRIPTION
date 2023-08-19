@@ -1,7 +1,7 @@
 Package: PFUAggDatabase
 Title: Calculate Aggregations and Efficiencies For Energy Conversion Chains in PSUT Format
-Version: 0.1.2
-Date: 2022-06-06
+Version: 0.1.3
+Date: 2022-08-19
 Authors@R: 
     c(person(given = "Matthew",
              family = "Heun",
@@ -35,7 +35,11 @@ Imports:
     targets,
     tidyr
 Suggests: 
+    devtools,
+    ggplot2,
     knitr,
+    MKHthemes,
+    PFUSetup,
     rmarkdown,
     spelling,
     testthat (>= 3.0.0),

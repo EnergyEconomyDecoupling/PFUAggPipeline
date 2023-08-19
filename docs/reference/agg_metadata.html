@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">PFUAggDatabase</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,6 +25,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/access_via_pins.html">Access PFU Database Products Via `Pins`</a>
+    <a class="dropdown-item" href="../articles/efficiency_graph_example.html">Efficiency graph example</a>
   </div>
 </li>
 <li class="nav-item">
@@ -56,7 +57,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A string list with 5 entries.</p><dl><dt>total_value</dt>
+    <p>A string list with 6 entries.</p><dl><dt>total_value</dt>
 <dd><p>The string indicating aggregation totals. "Total".</p></dd>
 
 <dt>all_value</dt>
@@ -70,6 +71,9 @@
 
 <dt>flow_value</dt>
 <dd><p>The string indicating that flows are aggregated. "Flow".</p></dd>
+
+<dt>none</dt>
+<dd><p>The string indicating that no aggregations are present. "None".</p></dd>
 
 
 </dl></div>
@@ -91,6 +95,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flow_value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Flow"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $none</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "None"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

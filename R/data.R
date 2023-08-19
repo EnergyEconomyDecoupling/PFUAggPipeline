@@ -33,6 +33,7 @@
 #' \item{product_value}{The string indicating that products are aggregated. "Product".}
 #' \item{sector_value}{The string indicating that sectors are aggregated. "Sector".}
 #' \item{flow_value}{The string indicating that flows are aggregated. "Flow".}
+#' \item{none}{The string indicating that no aggregations are present. "None".}
 #' }
 #'
 #' @examples

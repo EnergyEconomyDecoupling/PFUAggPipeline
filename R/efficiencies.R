@@ -25,7 +25,7 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
                                        eta_pu = Recca::efficiency_cols$eta_pu) {
 
   filtered_data <- .eta_pfu_data %>%
-    PFUDatabase::filter_countries_years(countries = countries, years = years)
+    PFUPipelineTools::filter_countries_years(countries = countries, years = years)
 
   if (nrow(filtered_data) == 0) {
     return(NULL)
@@ -56,12 +56,23 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
 #'                     Default is "exact".
 #' @param prepositions A list of prepositions for row and column labels.
 #'                     Default is `RCLabels::prepositions_list`.
-#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units,country,year,last_stage See `Recca::psut_cols`.
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units,country,method,energy_type,year,last_stage See `Recca::psut_cols`.
+#' @param ieamw See `PFUDatabase::ieamw_cols`.
 #' @param gross,net,gross_net See `Recca::efficiency_cols`.
-#' @param final,useful See `IEATools::all_stages`.
+#' @param primary,final,useful See `IEATools::all_stages`.
+#' @param chopped_mat,chopped_var Column names identifying chopped matrices and variables.
+#'                                See `PFUAggDatabase::aggregation_df_cols`
+#' @param none A string signifying no aggregation is present.
+#'             Default is `PFUAggDatabase::agg_metadata$none`.
 #' @param ex_p,ex_fd_gross,ex_fd_net,ex_fd See `Recca::aggregate_cols`.
 #' @param ex_f,ex_u See `IEATools::aggregate_cols`.
 #' @param eta_pf,eta_fu,eta_pu See `Recca::efficiency_cols`.
+#' @param tol The amount by which aggregate primary, final, and useful values
+#'            can be different before an error is thrown.
+#'            Default is `1e-6`.
+#' @param .primary_aggs_ok,.final_aggs_ok,.useful_aggs_ok Names of columns used internally
+#'                                                        to assess whether primary, final, and useful
+#'                                                        aggregations are all same.
 #'
 #' @return A data frame of metadata columns and efficiencies
 #'
@@ -85,14 +96,21 @@ efficiency_pipeline <- function(.psut_data,
                                 S_units = Recca::psut_cols$S_units,
                                 # Country and year columns
                                 country = Recca::psut_cols$country,
+                                method = Recca::psut_cols$method,
+                                energy_type = Recca::psut_cols$energy_type,
+                                ieamw = PFUDatabase::ieamw_cols$ieamw,
                                 year = Recca::psut_cols$year,
                                 # Key names
                                 gross = Recca::efficiency_cols$gross,
                                 net = Recca::efficiency_cols$net,
                                 gross_net = Recca::efficiency_cols$gross_net,
                                 last_stage = Recca::psut_cols$last_stage,
+                                primary = IEATools::all_stages$primary,
                                 final = IEATools::all_stages$final,
                                 useful = IEATools::all_stages$useful,
+                                chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
+                                chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+                                none = PFUAggDatabase::agg_metadata$none,
                                 ex_p = Recca::aggregate_cols$aggregate_primary,
                                 ex_f = IEATools::aggregate_cols$aggregate_final,
                                 ex_u = IEATools::aggregate_cols$aggregate_useful,
@@ -101,12 +119,11 @@ efficiency_pipeline <- function(.psut_data,
                                 ex_fd = Recca::aggregate_cols$aggregate_demand,
                                 eta_pf = Recca::efficiency_cols$eta_pf,
                                 eta_fu = Recca::efficiency_cols$eta_fu,
-                                eta_pu = Recca::efficiency_cols$eta_pu) {
-
-  # filtered_data <- .psut_data |>
-  #   dplyr::filter(.data[[country]] %in% countries, .data[[year]] %in% years)
-  # rm(.psut_data)
-  # gc()
+                                eta_pu = Recca::efficiency_cols$eta_pu,
+                                tol = 1e-6,
+                                .primary_aggs_ok = ".primary_aggs_OK",
+                                .final_aggs_ok = ".final_aggs_OK",
+                                .useful_aggs_ok = ".useful_aggs_OK") {
 
   if (nrow(.psut_data) == 0) {
     return(NULL)
@@ -157,11 +174,53 @@ efficiency_pipeline <- function(.psut_data,
         "{ex_u}" := .data[[useful]]
       )
 
+    # Verify that all non-chopped values are the same.
+    # This is a strong test on the aggregations performed
+    # above.
+    if (chopped_mat %in% names(PFU_aggregates) & chopped_var %in% names(PFU_aggregates)) {
+      within_tol <- PFU_aggregates |>
+        dplyr::filter(.data[[chopped_mat]] == none, .data[[chopped_var]] == none) |>
+        # Each group of without_chops should have exactly same ex_p, ex_f, and ex_u
+        dplyr::summarise(
+          "{.primary_aggs_ok}" := abs(max(.data[[ex_p]]) - min(.data[[ex_p]])) < tol,
+          "{.final_aggs_ok}" := abs(max(.data[[ex_f]]) - min(.data[[ex_f]])) < tol,
+          "{.useful_aggs_ok}" := abs(max(.data[[ex_u]]) - min(.data[[ex_u]])) < tol,
+          .by = dplyr::any_of(c(country, method, energy_type, ieamw, year, gross_net)))
+      if (!all(within_tol[[.primary_aggs_ok]])) {
+        msg <- paste("Not all primary aggregates sum to same value. \n",
+                     within_tol |>
+                       dplyr::filter(!.data[[.primary_aggs_ok]]) |>
+                       matsindf::df_to_msg())
+        stop(msg)
+      }
+      if (!all(within_tol[[.final_aggs_ok]])) {
+        msg <- paste("Not all final aggregates sum to same value. \n",
+                     within_tol |>
+                       dplyr::filter(!.data[[.final_aggs_ok]]) |>
+                       matsindf::df_to_msg())
+        stop(msg)
+      }
+      if (!all(within_tol[[.useful_aggs_ok]])) {
+        msg <- paste("Not all useful aggregates sum to same value. \n",
+                     within_tol |>
+                       dplyr::filter(!.data[[.useful_aggs_ok]]) |>
+                       matsindf::df_to_msg())
+        stop(msg)
+      }
+    }
+
     # Calculate efficiencies and return
     PFU_aggregates |>
       dplyr::mutate(
         "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]],
         "{eta_fu}" := .data[[ex_u]] / .data[[ex_f]],
         "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]]
-      )
+      ) |>
+      # Reorder columns
+      # dplyr::select(dplyr::everything(), .data[[ex_p]], .data[[ex_f]], .data[[ex_u]],
+      #               .data[[eta_pf]], .data[[eta_fu]], .data[[eta_pu]])
+      dplyr::select(-ex_p, -ex_f, -ex_u,
+                    -eta_pf, -eta_fu, -eta_pu,
+                    dplyr::everything(), ex_p, ex_f, ex_u,
+                    eta_pf, eta_fu, eta_pu)
 }
