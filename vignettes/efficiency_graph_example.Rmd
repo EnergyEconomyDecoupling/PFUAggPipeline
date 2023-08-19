@@ -201,8 +201,9 @@ agg_eta_pfu_prepared |>
                                          y = Value,
                                          # Group by Country 
                                          # to make individual lines
+                                         # for each country
                                          group = Country)) +
-  # Show the data with lines
+  # Create a line graph
   ggplot2::geom_line() +
   # Put mini-graphs for energy type in rows and efficiency type in columns
   ggplot2::facet_grid(rows = ggplot2::vars(Energy.type),
@@ -423,4 +424,4 @@ primary-to-useful efficiencies.
 This vignette shows details of 
 how to read and clean data, 
 how to make such graphs, and 
-how to make the graphs more aesthetically pleasing.
+how to modify the graphs to be aesthetically pleasing.
