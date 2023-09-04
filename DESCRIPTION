@@ -24,6 +24,7 @@ Imports:
     magrittr,
     matsbyname,
     matsindf,
+    PFUSetup,
     PFUDatabase,
     PFUPipelineTools,
     pins,
