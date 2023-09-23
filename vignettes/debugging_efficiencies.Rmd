@@ -49,7 +49,7 @@ pinboard <- PFUSetup::get_abs_paths()[["pipeline_releases_folder"]] |>
 ```
 
 
-## Problem 1
+## Problem 1: Efficiency jump
 
 We observe a slight jump in the world final-to-useful efficiency ($\eta_{fu}$)
 for the world in 1990, 
@@ -106,7 +106,7 @@ are included in the CL-PFU database.
 I will sleep better at night!
 
 
-## Problem 2
+## Problem 2: $\eta_{pf} > 1$
 
 As of September 2023, 
 the following graph shows a few countries with efficiencies
