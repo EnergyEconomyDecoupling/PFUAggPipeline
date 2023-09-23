@@ -1,0 +1,156 @@
+---
+title: "Debugging Efficiencies"
+output: rmarkdown::html_vignette
+author: Matthew Kuperus Heun
+vignette: >
+  %\VignetteIndexEntry{debugging_efficiencies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  # Set several aspects of graph chunks
+  fig.retina=4,
+  fig.align='center', 
+  fig.height=4,
+  fig.width=6
+)
+```
+
+
+## Introduction
+
+As of September 2023, a few countries 
+in the CL-PFU Database exhibit 
+primary-to-final efficiencies ($\eta_{E,pf}$)
+that unexpectedly exceed 100 %. 
+Because primary and final data come from the IEA, 
+the IEA data need to be investigated.
+This vignette digs into the IEA data to look at the problem.
+It remains to be seen whether we can solve the issue,
+given that the data are not ours. 
+But it is worth investigating, nonetheless.
+If there is a solution,
+this vignette will, in the future,
+show reasonable efficiencies. 
+
+
+## Establish the pinboard
+
+First, we need to establish the pinboard for the CL-PFU Database.
+
+```{r, cache=TRUE}
+# Create the pinboard from the correct Dropbox folder.
+pinboard <- PFUSetup::get_abs_paths()[["pipeline_releases_folder"]] |> 
+  pins::board_folder(versioned = TRUE)
+```
+
+
+## Problem 1
+
+We observe a slight jump in the world final-to-useful efficiency ($\eta_{fu}$)
+for the world in 1990, 
+around the time of the breakup of the Soviet Union.
+One theory for the cause of the jump
+is that we are inadvertently including 
+the former Soviet Union or 
+the former Yugoslavia in the CL-PFU database.
+Let's test this theory.
+
+First, we show the problem
+by graphing the world's $\eta_{X,fu}$.
+
+
+```{r}
+# Read efficiency data
+agg_eta_pfu_data <- pins::pin_read(board = pinboard,
+                                   name = "agg_eta_pfu",
+                                   version = "20230918T145318Z-2dcf1")
+# Graph the world final-to-useful exergy efficiency
+agg_eta_pfu_data |> 
+  dplyr::filter(Country == "World", 
+                Year >= 1971,
+                IEAMW == "IEA",
+                Energy.type == "X", 
+                GrossNet == "Gross", 
+                Product.aggregation == "Specified",
+                Industry.aggregation == "Specified") |> 
+  # Select only the columns of interest to us
+  dplyr::select(Country, Energy.type, Year, eta_fu) |> 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_fu)) +
+  ggplot2::geom_line() + 
+  ggplot2::geom_vline(xintercept = c(1989, 1990), linewidth = 0.2) +
+  ggplot2::scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
+  ggplot2::labs(x = NULL, y = expression(eta[X*","*fu])) +
+  MKHthemes::xy_theme()
+```
+
+Now, let's look into the CL-PFU Database to see if FSU or FYU are present.
+
+```{r, eval=FALSE}
+psut_data <- pins::pin_read(board = pinboard, 
+                            name = "psut", 
+                            version = "20230915T185731Z-c48a0")
+countries <- psut_data$Country |> 
+  unique()
+countries
+"FSU" %in% countries
+"FYG" %in% countries
+```
+
+So, neither the Former Soviet Union nor the Former Yugoslavia
+are included in the CL-PFU database.
+I will sleep better at night!
+
+
+## Problem 2
+
+As of September 2023, 
+the following graph shows a few countries with efficiencies
+greater than 100 %.
+
+```{r setup, message=FALSE}
+library(devtools)
+library(dplyr)
+library(ggplot2)
+library(MKHthemes)
+library(PFUSetup)
+library(pins)
+library(readxl)
+library(tidyr)
+```
+
+
+```{r}
+agg_eta_pf_data_prepred <- agg_eta_pfu_data |> 
+  dplyr::filter(IEAMW == "IEA",
+                Energy.type == "E", 
+                GrossNet == "Net", 
+                Product.aggregation == "Specified",
+                Industry.aggregation == "Specified") |> 
+  dplyr::select(Country, Energy.type, Year, eta_pf)
+agg_eta_pf_data_prepred |> 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_pf, group = Country)) + 
+  ggplot2::geom_line(linewidth = 0.1) + 
+  ggplot2::geom_hline(yintercept = 1, colour = "red", linewidth = 0.2) +
+  ggplot2::scale_y_continuous(limits = c(0, 1.25), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
+  ggplot2::labs(x = NULL, y = expression(eta[E*","*pf])) +
+  MKHthemes::xy_theme()  
+```
+
+
+### Countries where $\eta_{pf} > 1$
+
+Let's find out which countries have primary-to-final efficiencies 
+greater than 1.
+
+```{r}
+# Find the countries where eta_pf > 1
+eta_gt_1 <- agg_eta_pf_data_prepred |> 
+  dplyr::filter(eta_pf > 1) |> 
+  dplyr::arrange(Year)
+eta_gt_1
+```
