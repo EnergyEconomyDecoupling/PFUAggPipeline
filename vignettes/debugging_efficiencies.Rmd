@@ -83,14 +83,14 @@ agg_eta_pfu_data |>
   ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_fu)) +
   ggplot2::geom_line() + 
   ggplot2::geom_vline(xintercept = c(1989, 1990), linewidth = 0.2) +
-  ggplot2::scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
+  ggplot2::scale_y_continuous(limits = c(0, 0.4), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
   ggplot2::labs(x = NULL, y = expression(eta[X*","*fu])) +
   MKHthemes::xy_theme()
 ```
 
 Now, let's look into the CL-PFU Database to see if FSU or FYU are present.
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 psut_data <- pins::pin_read(board = pinboard, 
                             name = "psut", 
                             version = "20230915T185731Z-c48a0")
