@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -30,6 +30,8 @@ library(PFUSetup)
 library(pins)
 library(readxl)
 library(tidyr)
+
+eval_psut_chunks <- TRUE
 ```
 
 
@@ -102,7 +104,7 @@ agg_eta_pfu_data |>
 
 Now, let's look into the CL-PFU Database to see if FSU or FYU are present.
 
-```{r, eval=TRUE}
+```{r, eval=eval_psut_chunks}
 psut_data <- pins::pin_read(board = pinboard, 
                             name = "psut", 
                             version = "20230915T185731Z-c48a0")
@@ -190,3 +192,20 @@ These results point to problems with
 "Oil refineries", and 
 "Transfers".
 
+Output the OAMR energy conversion chain for 2002.
+
+```{r, eval=eval_psut_chunks}
+psut_data |> 
+  dplyr::filter(Country == "OAMR", 
+                Year == 2002,
+                Energy.type == "E",
+                IEAMW == "IEA", 
+                Last.stage == "Final") |> 
+  Recca::write_ecc_to_excel(file.path("~", "Desktop", "OAMR2002.xlsx"), overwrite_file = TRUE)
+```
+
+As expected, reviewing the OAMR **U** matrix reveals that
+Charcoal production plants do not use any energy, 
+but they make Charcoal in the **V** matrix. 
+To fix this problem, we need to add upstream primary energy 
+that will be consumed by Charcoal production plants.
