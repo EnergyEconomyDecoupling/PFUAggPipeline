@@ -68,15 +68,8 @@ pinboard <- PFUSetup::get_abs_paths()[["pipeline_releases_folder"]] |>
 We observe a slight jump in the world final-to-useful efficiency ($\eta_{fu}$)
 for the world in 1990, 
 around the time of the breakup of the Soviet Union.
-One theory for the cause of the jump
-is that we are inadvertently including 
-the former Soviet Union or 
-the former Yugoslavia in the CL-PFU database.
-Let's test this theory.
-
-First, we show the problem
-by graphing the world's $\eta_{X,fu}$.
-
+To see the problem, 
+we graph the world's final-to-useful exergetic efficiency ($\eta_{X,fu}$).
 
 ```{r}
 # Read aggregate PFU efficiency data
@@ -102,7 +95,23 @@ agg_eta_pfu_data |>
   MKHthemes::xy_theme()
 ```
 
-Now, let's look into the CL-PFU Database to see if FSU or FYU are present.
+We have two theories for the cause of this jump:
+(1) we are inadvertently including the former Soviet Union (FSU) or
+    the former Yugoslavia (FYG)
+    in the database and 
+(2) a change of exemplar from World to CHNM in 1990.
+We investigate both of these theories in subsections below.
+
+
+### Theory 1: Inadvertently including FSU and FYG in the CL-PFU Database
+
+One theory for the cause of the jump
+is that we are inadvertently including 
+the former Soviet Union (FSU) or 
+the former Yugoslavia (FYG) in the CL-PFU database.
+
+Let's test this theory by looking
+into the CL-PFU Database to see if FSU or FYU are present.
 
 ```{r, eval=eval_psut_chunks}
 psut_data <- pins::pin_read(board = pinboard, 
@@ -118,6 +127,33 @@ countries
 So, neither the Former Soviet Union nor the Former Yugoslavia
 are included in the CL-PFU database.
 I will sleep better at night!
+
+
+### 2nd theory: RUS exemplar changes from World to CHNM in 1990.
+
+RUS appears as a country only in 1990. 
+Prior to 1990, SUN looks to the World as its exemplar.
+(Well, actually, prior to 1990, SUN's exemplar chain is RUS, ASIA, and World, 
+but RUS doesn't yet exist and ASIA has very little data.
+So effectively, SUN's exemplar is World.)
+RUS's exemplar chain was CHNM, ASIA, and World. 
+
+To test this theory, I removed CHNM as an exemplar for RUS and
+re-ran the `PFUDatbase` and `PFUAggDatabase` workflows.
+The results are shown in the following figure
+
+............................
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Problem 2: $\eta_{E,pf} > 1$
@@ -237,10 +273,10 @@ eta_i_data |>
   MKHthemes::xy_theme()
 ```
 
-So we see that $\eta_{i, Charcoal production plants}$ values are $\infty$ 
-for 1971--2010, far more years than OAMR has overall $\eta_{pf} > 1$.
+So we see that $\eta_{Charcoal production plants, OAMR} = \infty$ 
+for 1971--2010, far more years than OAMR has aggregate $\eta_{pf} > 1$.
 
-To investigate further, let's look at the ECC for 2011, 
+To investigate further, let's look at the OAMR ECC for 2011, 
 the first year where Charcoal production plants
 have efficiency in a reasonable range.
 
@@ -274,5 +310,30 @@ Primary solid biofuels.
 We should probably also report this data irregularity to the IEA.
 </span>
 
+
+### Oil refineries
+
+Inspection of the **U** and **V** matrices for OAMR in 2002
+shows that Oil refineries use (**U**) 337878.26 TJ of Crude oil
+and make (**V**) 373257.1 TJ of various products
+for an efficiency of 1.104709, as shown above.
+This is likely an accounting error by the IEA or
+[processing gain](https://www.eia.gov/energyexplained/oil-and-petroleum-products/refining-crude-oil-inputs-and-outputs.php).
+I suggest taking no further action on the irregularities associated with
+Oil refineries.
+
+
+### Transfers
+
+Inspection of the **U** and **V** matrices for OAMR in 2002
+shows that Transfers consume (**U**) 42.71 TJ of Natural gas liquids
+and make (**V**) 47.3 TJ of Liquefied petroleum gases (LPG)
+for an efficiency of 1.107469, as shown above.
+This is likely an accounting error by the IEA who say that 
+"[t]he net balance of interproduct transfers is zero"
+in the 2023 edition of the Database Documentation 
+for the World Energy Statistics database.
+I suggest taking no further action on the irregularities associated with
+Transfers.
 
 
