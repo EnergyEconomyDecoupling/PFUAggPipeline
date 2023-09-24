@@ -31,7 +31,7 @@ library(pins)
 library(readxl)
 library(tidyr)
 
-eval_psut_chunks <- TRUE
+eval_psut_chunks <- FALSE
 ```
 
 
@@ -79,7 +79,7 @@ by graphing the world's $\eta_{X,fu}$.
 
 
 ```{r}
-# Read efficiency data
+# Read aggregate PFU efficiency data
 agg_eta_pfu_data <- pins::pin_read(board = pinboard,
                                    name = "agg_eta_pfu",
                                    version = "20230918T145318Z-2dcf1")
@@ -192,6 +192,11 @@ These results point to problems with
 "Oil refineries", and 
 "Transfers".
 
+
+### Charcoal production plants
+
+Let's look at Charcoal production plants in OAMR first.
+
 Output the OAMR energy conversion chain for 2002.
 
 ```{r, eval=eval_psut_chunks}
@@ -204,8 +209,70 @@ psut_data |>
   Recca::write_ecc_to_excel(file.path("~", "Desktop", "OAMR2002.xlsx"), overwrite_file = TRUE)
 ```
 
-As expected, reviewing the OAMR **U** matrix reveals that
+Reviewing the OAMR **U** matrix reveals that
 Charcoal production plants do not use any energy, 
 but they make Charcoal in the **V** matrix. 
-To fix this problem, we need to add upstream primary energy 
-that will be consumed by Charcoal production plants.
+
+Look at all years of the efficiency of Charcoal production plants in OAMR.
+
+```{r}
+eta_i_data |> 
+  dplyr::filter(Country == "OAMR", Energy.type == "E",
+                Last.stage == "Final", IEAMW == "IEA") |> 
+  dplyr::select(Country, Year, eta_i) |>
+  tidyr::pivot_longer(cols = "eta_i", names_to = "matnames", values_to = "matvals") |>
+  matsindf::expand_to_tidy() |> 
+  dplyr::mutate(
+    colnames = NULL, 
+    matnames = NULL
+  ) |> 
+  dplyr::rename(Machine = "rownames", eta_i = matvals) |> 
+  dplyr::filter(Machine == "Charcoal production plants") |> 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_i)) + 
+  ggplot2::geom_hline(yintercept = c(0.0, 1.0), linewidth = 0.2) +
+  ggplot2::geom_point() + 
+  ggplot2::scale_y_continuous(limits = c(-0.5, 1.5)) + 
+  ggplot2::labs(x = NULL, 
+                y = expression(eta[Charcoal~production~plants*","*~OAMR])) +
+  MKHthemes::xy_theme()
+```
+
+So we see that $\eta_{i, Charcoal production plants}$ values are $\infty$ 
+for 1971--2010, far more years than OAMR has overall $\eta_{pf} > 1$.
+
+To investigate further, let's look at the ECC for 2011, 
+the first year where Charcoal production plants
+have efficiency in a reasonable range.
+
+```{r, eval=eval_psut_chunks}
+psut_data |> 
+  dplyr::filter(Country == "OAMR", 
+                Year == 2011,
+                Energy.type == "E",
+                IEAMW == "IEA", 
+                Last.stage == "Final") |> 
+  Recca::write_ecc_to_excel(file.path("~", "Desktop", "OAMR2011.xlsx"), overwrite_file = TRUE)
+```
+
+Inspection of the OAMR **U** and **V** matrices
+for 2011 shows that
+Charcoal production plants use (**U**)
+521 TJ of Primary solid biofuels to make (**V**)
+338.8 TJ of Charcoal, for an efficiency of
+65 %.
+
+<span style="color: red;">
+To solve this problem, we could add Primary solid biofuel
+production and consumption to OAMR for each year 
+that Charcoal production plants consume no energy
+(1971--2010), 
+consistent with an efficiency of 65 %.
+This "fix" should also be applied 
+to all combinations of country and year where 
+Charcoal production plants make Charcoal without consuming
+Primary solid biofuels.
+We should probably also report this data irregularity to the IEA.
+</span>
+
+
+
