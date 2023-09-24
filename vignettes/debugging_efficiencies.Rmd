@@ -2,6 +2,7 @@
 title: "Debugging Efficiencies"
 output: rmarkdown::html_vignette
 author: Matthew Kuperus Heun
+date: "`r Sys.Date()`"
 vignette: >
   %\VignetteIndexEntry{Debugging Efficiencies}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,6 +19,17 @@ knitr::opts_chunk$set(
   fig.height=4,
   fig.width=6
 )
+```
+
+```{r setup, message=FALSE, include=FALSE}
+library(devtools)
+library(dplyr)
+library(ggplot2)
+library(MKHthemes)
+library(PFUSetup)
+library(pins)
+library(readxl)
+library(tidyr)
 ```
 
 
@@ -42,7 +54,7 @@ show reasonable efficiencies.
 
 First, we need to establish the pinboard for the CL-PFU Database.
 
-```{r, cache=TRUE}
+```{r}
 # Create the pinboard from the correct Dropbox folder.
 pinboard <- PFUSetup::get_abs_paths()[["pipeline_releases_folder"]] |> 
   pins::board_folder(versioned = TRUE)
@@ -90,7 +102,7 @@ agg_eta_pfu_data |>
 
 Now, let's look into the CL-PFU Database to see if FSU or FYU are present.
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 psut_data <- pins::pin_read(board = pinboard, 
                             name = "psut", 
                             version = "20230915T185731Z-c48a0")
@@ -111,17 +123,6 @@ I will sleep better at night!
 As of September 2023, 
 the following graph shows a few countries with efficiencies
 greater than 100 %.
-
-```{r setup, message=FALSE}
-library(devtools)
-library(dplyr)
-library(ggplot2)
-library(MKHthemes)
-library(PFUSetup)
-library(pins)
-library(readxl)
-library(tidyr)
-```
 
 
 ```{r}
