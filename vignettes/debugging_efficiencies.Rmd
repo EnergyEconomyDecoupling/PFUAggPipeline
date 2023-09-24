@@ -3,7 +3,7 @@ title: "Debugging Efficiencies"
 output: rmarkdown::html_vignette
 author: Matthew Kuperus Heun
 vignette: >
-  %\VignetteIndexEntry{debugging_efficiencies}
+  %\VignetteIndexEntry{Debugging Efficiencies}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
