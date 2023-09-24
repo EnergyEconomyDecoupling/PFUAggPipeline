@@ -90,7 +90,7 @@ agg_eta_pfu_data |>
 
 Now, let's look into the CL-PFU Database to see if FSU or FYU are present.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 psut_data <- pins::pin_read(board = pinboard, 
                             name = "psut", 
                             version = "20230915T185731Z-c48a0")
@@ -106,7 +106,7 @@ are included in the CL-PFU database.
 I will sleep better at night!
 
 
-## Problem 2: $\eta_{pf} > 1$
+## Problem 2: $\eta_{E,pf} > 1$
 
 As of September 2023, 
 the following graph shows a few countries with efficiencies
@@ -154,3 +154,38 @@ eta_gt_1 <- agg_eta_pf_data_prepred |>
   dplyr::arrange(Year)
 eta_gt_1
 ```
+
+### Machine efficiencies when $\eta_{E,pf} > 1$
+
+Load machine efficiency data to examine for any $\eta_i > 1$.
+
+```{r}
+eta_i_data <- pins::pin_read(board = pinboard,
+                             name = "eta_i",
+                             version = "20230913T144420Z-7cc22")
+eta_i_filtered <- eta_i_data |> 
+  dplyr::filter(Energy.type == "E", Last.stage == "Final", IEAMW == "IEA") |> 
+  dplyr::select(Country, Year, eta_i) |>
+  dplyr::filter((Country == "ISL" & Year == 1962) | 
+                  (Country == "ALB" & Year == 1979) |
+                  (Country == "SWZ" & Year %in% c(1995, 1996)) |
+                  (Country == "OAMR" & Year >= 2002 & Year <= 2009) |
+                  (Country == "OMN" & Year == 2019)) |> 
+  tidyr::pivot_longer(cols = "eta_i", names_to = "matnames", values_to = "matvals") |> 
+  matsindf::expand_to_tidy() |> 
+  dplyr::mutate(
+    colnames = NULL, 
+    matnames = NULL
+  ) |> 
+  dplyr::rename(Machine = "rownames", eta_i = matvals)
+# How many efficiencies are > 1?
+eta_i_gt_1 <- eta_i_filtered |> 
+  dplyr::filter(eta_i > 1)
+as.data.frame(eta_i_gt_1)
+```
+
+These results point to problems with
+"Charcoal production plants", 
+"Oil refineries", and 
+"Transfers".
+
