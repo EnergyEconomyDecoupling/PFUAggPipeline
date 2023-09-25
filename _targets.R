@@ -38,7 +38,8 @@ do_chops <- FALSE
 # psut_release <- "20221109T152414Z-7d7ad"  # v1.0 (with matrix objects)
 # psut_release <- "20230312T211924Z-007da"  # v1.0 (with Matrix objects)
 # psut_release <- "20230618T131003Z-4c70f"  # v1.1 (with Matrix objects)
-psut_release <- "20230915T185731Z-c48a0"    # v1.2a1 (Lacks new phi values and updated IEA data)
+# psut_release <- "20230915T185731Z-c48a0"  # v1.2a1 (Lacks new phi values and updated IEA data)
+psut_release <- "20230924T185331Z-13381"    # v1.2a2 (Includes new phi values, removes CHNM as RUS exemplar. Lacks updated IEA data)
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
