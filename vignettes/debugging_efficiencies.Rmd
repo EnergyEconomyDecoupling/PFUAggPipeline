@@ -1,0 +1,361 @@
+---
+title: "Debugging Efficiencies"
+output: rmarkdown::html_vignette
+author: Matthew Kuperus Heun
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{Debugging Efficiencies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  # Set several aspects of graph chunks
+  fig.retina=4,
+  fig.align='center', 
+  fig.height=4,
+  fig.width=6
+)
+```
+
+```{r setup, message=FALSE, include=FALSE}
+library(devtools)
+library(dplyr)
+library(ggplot2)
+library(MKHthemes)
+library(PFUSetup)
+library(pins)
+library(readxl)
+library(tidyr)
+
+eval_psut_chunks <- FALSE
+```
+
+
+## Introduction
+
+As of September 2023, a few countries 
+in the CL-PFU Database exhibit 
+primary-to-final efficiencies ($\eta_{E,pf}$)
+that unexpectedly exceed 100 %. 
+Because primary and final data come from the IEA, 
+the IEA data need to be investigated.
+This vignette digs into the IEA data to look at the problem.
+It remains to be seen whether we can solve the issue,
+given that the data are not ours. 
+But it is worth investigating, nonetheless.
+If there is a solution,
+this vignette will, in the future,
+show reasonable efficiencies. 
+
+
+## Establish the pinboard
+
+First, we need to establish the pinboard for the CL-PFU Database.
+
+```{r}
+# Create the pinboard from the correct Dropbox folder.
+pinboard <- PFUSetup::get_abs_paths()[["pipeline_releases_folder"]] |> 
+  pins::board_folder(versioned = TRUE)
+```
+
+
+## Problem 1: Efficiency jump
+
+We observe a slight jump in the world final-to-useful efficiency ($\eta_{fu}$)
+for the world in 1990, 
+around the time of the breakup of the Soviet Union.
+To see the problem, 
+we graph the world's final-to-useful exergetic efficiency ($\eta_{X,fu}$).
+
+```{r}
+# Read aggregate PFU efficiency data
+agg_eta_pfu_data <- pins::pin_read(board = pinboard,
+                                   name = "agg_eta_pfu",
+                                   # version = "20230619T051304Z-f653c") # v1.1
+                                   version = "20230918T145318Z-2dcf1") # v1.2a1
+all_countries_efficiency_graph <- function(agg_eta_pfu_df) {
+  agg_eta_pfu_df |> 
+    dplyr::filter(Country == "World", 
+                  Year >= 1971,
+                  IEAMW == "IEA",
+                  Energy.type == "X", 
+                  GrossNet == "Gross", 
+                  Product.aggregation == "Specified",
+                  Industry.aggregation == "Specified") |> 
+    # Select only the columns of interest to us
+    dplyr::select(Country, Energy.type, Year, eta_fu) |> 
+    ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_fu)) +
+    ggplot2::geom_line() + 
+    ggplot2::geom_vline(xintercept = c(1989, 1990), linewidth = 0.2) +
+    ggplot2::scale_y_continuous(limits = c(0, 0.4), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
+    ggplot2::labs(x = NULL, y = expression(eta[X*","*fu])) +
+    MKHthemes::xy_theme()
+}
+# Graph the world final-to-useful exergy efficiency
+all_countries_efficiency_graph(agg_eta_pfu_data)
+
+agg_eta_pfu_data |> 
+  dplyr::filter(Country == "World", Year %in% c(1989, 1990), IEAMW == "IEA", 
+                Energy.type == "X", GrossNet == "Gross", 
+                Product.aggregation == "Specified",
+                Industry.aggregation == "Specified") |> 
+  magrittr::extract2("eta_fu") |> 
+  diff()
+```
+
+We have two theories for the cause of this jump:
+(1) we are inadvertently including the former Soviet Union (FSU) or
+    the former Yugoslavia (FYG)
+    in the database and 
+(2) a change of exemplar from World to CHNM in 1990.
+We investigate both of these theories in subsections below.
+
+
+### Theory 1: Inadvertently including FSU and FYG in the CL-PFU Database
+
+One theory for the cause of the jump
+is that we are inadvertently including 
+the former Soviet Union (FSU) or 
+the former Yugoslavia (FYG) in the CL-PFU database.
+
+Let's test this theory by looking
+into the CL-PFU Database to see if FSU or FYU are present.
+
+```{r, eval=eval_psut_chunks}
+psut_data <- pins::pin_read(board = pinboard, 
+                            name = "psut", 
+                            version = "20230915T185731Z-c48a0")
+countries <- psut_data$Country |> 
+  unique()
+countries
+"FSU" %in% countries
+"FYG" %in% countries
+```
+
+So, neither the Former Soviet Union nor the Former Yugoslavia
+are included in the CL-PFU database.
+I will sleep better at night!
+
+
+### 2nd theory: RUS exemplar changes from World to CHNM in 1990.
+
+RUS appears as a country only in 1990. 
+Prior to 1990, SUN looks to the World as its exemplar.
+(Well, actually, prior to 1990, SUN's exemplar chain is RUS, ASIA, and World, 
+but RUS doesn't yet exist and ASIA has very little data.
+So effectively, SUN's exemplar is World.)
+RUS's exemplar chain was CHNM, ASIA, and World. 
+
+To test this theory, I removed CHNM as an exemplar for RUS and
+re-ran the `PFUDatbase` and `PFUAggDatabase` workflows.
+The results are shown in the following figure
+
+```{r}
+# Read aggregate PFU efficiency data
+agg_eta_pfu_data_v1.2a2 <- pins::pin_read(board = pinboard,
+                                          name = "agg_eta_pfu",
+                                          version = "20230925T113027Z-c707c") # v1.2a2
+all_countries_efficiency_graph(agg_eta_pfu_data_v1.2a2)
+agg_eta_pfu_data_v1.2a2 |> 
+  dplyr::filter(Country == "World", Year %in% c(1989, 1990), IEAMW == "IEA", 
+                Energy.type == "X", GrossNet == "Gross", 
+                Product.aggregation == "Specified",
+                Industry.aggregation == "Specified") |> 
+  magrittr::extract2("eta_fu") |> 
+  diff()
+```
+
+So removing CHNM as a RUS exemplar provided 
+some reduction to size of the bump,
+but not much.
+It appears that we are seeing an efficiency jump in 1990
+due to structural differences
+in the use of energy as we move from the Soviet era (1989)
+to the post-Soviet era (1990).
+
+
+## Problem 2: $\eta_{E,pf} > 1$
+
+As of September 2023, 
+the following graph shows a few countries with efficiencies
+greater than 100 %.
+
+
+```{r}
+agg_eta_pf_data_prepred <- agg_eta_pfu_data |> 
+  dplyr::filter(IEAMW == "IEA",
+                Energy.type == "E", 
+                GrossNet == "Net", 
+                Product.aggregation == "Specified",
+                Industry.aggregation == "Specified") |> 
+  dplyr::select(Country, Energy.type, Year, eta_pf)
+agg_eta_pf_data_prepred |> 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_pf, group = Country)) + 
+  ggplot2::geom_line(linewidth = 0.1) + 
+  ggplot2::geom_hline(yintercept = 1, colour = "red", linewidth = 0.2) +
+  ggplot2::scale_y_continuous(limits = c(0, 1.25), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
+  ggplot2::labs(x = NULL, y = expression(eta[E*","*pf])) +
+  MKHthemes::xy_theme()  
+```
+
+
+### Countries where $\eta_{pf} > 1$
+
+Let's find out which countries have primary-to-final efficiencies 
+greater than 1.
+
+```{r}
+# Find the countries where eta_pf > 1
+eta_gt_1 <- agg_eta_pf_data_prepred |> 
+  dplyr::filter(eta_pf > 1) |> 
+  dplyr::arrange(Year)
+eta_gt_1
+```
+
+### Machine efficiencies when $\eta_{E,pf} > 1$
+
+Load machine efficiency data to examine for any $\eta_i > 1$.
+
+```{r}
+eta_i_data <- pins::pin_read(board = pinboard,
+                             name = "eta_i",
+                             version = "20230913T144420Z-7cc22")
+eta_i_filtered <- eta_i_data |> 
+  dplyr::filter(Energy.type == "E", Last.stage == "Final", IEAMW == "IEA") |> 
+  dplyr::select(Country, Year, eta_i) |>
+  dplyr::filter((Country == "ISL" & Year == 1962) | 
+                  (Country == "ALB" & Year == 1979) |
+                  (Country == "SWZ" & Year %in% c(1995, 1996)) |
+                  (Country == "OAMR" & Year >= 2002 & Year <= 2009) |
+                  (Country == "OMN" & Year == 2019)) |> 
+  tidyr::pivot_longer(cols = "eta_i", names_to = "matnames", values_to = "matvals") |> 
+  matsindf::expand_to_tidy() |> 
+  dplyr::mutate(
+    colnames = NULL, 
+    matnames = NULL
+  ) |> 
+  dplyr::rename(Machine = "rownames", eta_i = matvals)
+# How many efficiencies are > 1?
+eta_i_gt_1 <- eta_i_filtered |> 
+  dplyr::filter(eta_i > 1)
+as.data.frame(eta_i_gt_1)
+```
+
+These results point to problems with
+"Charcoal production plants", 
+"Oil refineries", and 
+"Transfers".
+
+
+### Charcoal production plants
+
+Let's look at Charcoal production plants in OAMR first.
+
+Output the OAMR energy conversion chain for 2002.
+
+```{r, eval=eval_psut_chunks}
+psut_data |> 
+  dplyr::filter(Country == "OAMR", 
+                Year == 2002,
+                Energy.type == "E",
+                IEAMW == "IEA", 
+                Last.stage == "Final") |> 
+  Recca::write_ecc_to_excel(file.path("~", "Desktop", "OAMR2002.xlsx"), overwrite_file = TRUE)
+```
+
+Reviewing the OAMR **U** matrix reveals that
+Charcoal production plants do not use any energy, 
+but they make Charcoal in the **V** matrix. 
+
+Look at all years of the efficiency of Charcoal production plants in OAMR.
+
+```{r}
+eta_i_data |> 
+  dplyr::filter(Country == "OAMR", Energy.type == "E",
+                Last.stage == "Final", IEAMW == "IEA") |> 
+  dplyr::select(Country, Year, eta_i) |>
+  tidyr::pivot_longer(cols = "eta_i", names_to = "matnames", values_to = "matvals") |>
+  matsindf::expand_to_tidy() |> 
+  dplyr::mutate(
+    colnames = NULL, 
+    matnames = NULL
+  ) |> 
+  dplyr::rename(Machine = "rownames", eta_i = matvals) |> 
+  dplyr::filter(Machine == "Charcoal production plants") |> 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_i)) + 
+  ggplot2::geom_hline(yintercept = c(0.0, 1.0), linewidth = 0.2) +
+  ggplot2::geom_point() + 
+  ggplot2::scale_y_continuous(limits = c(-0.5, 1.5)) + 
+  ggplot2::labs(x = NULL, 
+                y = expression(eta[Charcoal~production~plants*","*~OAMR])) +
+  MKHthemes::xy_theme()
+```
+
+So we see that $\eta_{Charcoal production plants, OAMR} = \infty$ 
+for 1971--2010, far more years than OAMR has aggregate $\eta_{pf} > 1$.
+
+To investigate further, let's look at the OAMR ECC for 2011, 
+the first year where Charcoal production plants
+have efficiency in a reasonable range.
+
+```{r, eval=eval_psut_chunks}
+psut_data |> 
+  dplyr::filter(Country == "OAMR", 
+                Year == 2011,
+                Energy.type == "E",
+                IEAMW == "IEA", 
+                Last.stage == "Final") |> 
+  Recca::write_ecc_to_excel(file.path("~", "Desktop", "OAMR2011.xlsx"), overwrite_file = TRUE)
+```
+
+Inspection of the OAMR **U** and **V** matrices
+for 2011 shows that
+Charcoal production plants use (**U**)
+521 TJ of Primary solid biofuels to make (**V**)
+338.8 TJ of Charcoal, for an efficiency of
+65 %.
+
+<span style="color: red;">
+To solve this problem, we could add Primary solid biofuel
+production and consumption to OAMR for each year 
+that Charcoal production plants consume no energy
+(1971--2010), 
+consistent with an efficiency of 65 %.
+This "fix" should also be applied 
+to all combinations of country and year where 
+Charcoal production plants make Charcoal without consuming
+Primary solid biofuels.
+We should probably also report this data irregularity to the IEA.
+</span>
+
+
+### Oil refineries
+
+Inspection of the **U** and **V** matrices for OAMR in 2002
+shows that Oil refineries use (**U**) 337878.26 TJ of Crude oil
+and make (**V**) 373257.1 TJ of various products
+for an efficiency of 1.104709, as shown above.
+This is likely an accounting error by the IEA or
+[processing gain](https://www.eia.gov/energyexplained/oil-and-petroleum-products/refining-crude-oil-inputs-and-outputs.php).
+I suggest taking no further action on the irregularities associated with
+Oil refineries.
+
+
+### Transfers
+
+Inspection of the **U** and **V** matrices for OAMR in 2002
+shows that Transfers consume (**U**) 42.71 TJ of Natural gas liquids
+and make (**V**) 47.3 TJ of Liquefied petroleum gases (LPG)
+for an efficiency of 1.107469, as shown above.
+This is likely an accounting error by the IEA who say that 
+"[t]he net balance of interproduct transfers is zero"
+in the 2023 edition of the Database Documentation 
+for the World Energy Statistics database.
+I suggest taking no further action on the irregularities associated with
+Transfers.
+
+
