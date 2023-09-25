@@ -75,24 +75,35 @@ we graph the world's final-to-useful exergetic efficiency ($\eta_{X,fu}$).
 # Read aggregate PFU efficiency data
 agg_eta_pfu_data <- pins::pin_read(board = pinboard,
                                    name = "agg_eta_pfu",
-                                   version = "20230918T145318Z-2dcf1")
+                                   # version = "20230619T051304Z-f653c") # v1.1
+                                   version = "20230918T145318Z-2dcf1") # v1.2a1
+all_countries_efficiency_graph <- function(agg_eta_pfu_df) {
+  agg_eta_pfu_df |> 
+    dplyr::filter(Country == "World", 
+                  Year >= 1971,
+                  IEAMW == "IEA",
+                  Energy.type == "X", 
+                  GrossNet == "Gross", 
+                  Product.aggregation == "Specified",
+                  Industry.aggregation == "Specified") |> 
+    # Select only the columns of interest to us
+    dplyr::select(Country, Energy.type, Year, eta_fu) |> 
+    ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_fu)) +
+    ggplot2::geom_line() + 
+    ggplot2::geom_vline(xintercept = c(1989, 1990), linewidth = 0.2) +
+    ggplot2::scale_y_continuous(limits = c(0, 0.4), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
+    ggplot2::labs(x = NULL, y = expression(eta[X*","*fu])) +
+    MKHthemes::xy_theme()
+}
 # Graph the world final-to-useful exergy efficiency
+all_countries_efficiency_graph(agg_eta_pfu_data)
+
 agg_eta_pfu_data |> 
-  dplyr::filter(Country == "World", 
-                Year >= 1971,
-                IEAMW == "IEA",
-                Energy.type == "X", 
-                GrossNet == "Gross", 
+  dplyr::filter(Country == "World", Year %in% c(1989, 1990), IEAMW == "IEA", 
+                Energy.type == "X", GrossNet == "Gross", 
                 Product.aggregation == "Specified",
                 Industry.aggregation == "Specified") |> 
-  # Select only the columns of interest to us
-  dplyr::select(Country, Energy.type, Year, eta_fu) |> 
-  ggplot2::ggplot(mapping = ggplot2::aes(x = Year, y = eta_fu)) +
-  ggplot2::geom_line() + 
-  ggplot2::geom_vline(xintercept = c(1989, 1990), linewidth = 0.2) +
-  ggplot2::scale_y_continuous(limits = c(0, 0.4), breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1)) +
-  ggplot2::labs(x = NULL, y = expression(eta[X*","*fu])) +
-  MKHthemes::xy_theme()
+  magrittr::extract2("eta_fu")
 ```
 
 We have two theories for the cause of this jump:
@@ -142,18 +153,27 @@ To test this theory, I removed CHNM as an exemplar for RUS and
 re-ran the `PFUDatbase` and `PFUAggDatabase` workflows.
 The results are shown in the following figure
 
-............................
+```{r}
+# Read aggregate PFU efficiency data
+agg_eta_pfu_data_v1.2a2 <- pins::pin_read(board = pinboard,
+                                          name = "agg_eta_pfu",
+                                          version = "20230925T113027Z-c707c") # v1.2a2
+all_countries_efficiency_graph(agg_eta_pfu_data_v1.2a2)
+agg_eta_pfu_data_v1.2a2 |> 
+  dplyr::filter(Country == "World", Year %in% c(1989, 1990), IEAMW == "IEA", 
+                Energy.type == "X", GrossNet == "Gross", 
+                Product.aggregation == "Specified",
+                Industry.aggregation == "Specified") |> 
+  magrittr::extract2("eta_fu")
+```
 
-
-
-
-
-
-
-
-
-
-
+So removing CHNM as a RUS exemplar provided 
+some reduction to magnitude of the bump,
+but not much.
+It appears that we are seeing an efficiency jump in 1990
+due to structural differences
+in the use of energy as we move from the Soviet era (1989)
+to the post-Soviet era (1990).
 
 
 ## Problem 2: $\eta_{E,pf} > 1$
