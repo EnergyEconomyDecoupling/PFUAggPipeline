@@ -9,6 +9,7 @@ get_pipeline(
   years = "all",
   do_chops,
   psut_release,
+  phi_vecs_release,
   aggregation_maps_path,
   pipeline_releases_folder,
   pipeline_caches_folder,
@@ -26,6 +27,8 @@ Default is "all", meaning all available years should be analyzed.}
 
 \item{psut_release}{The release we'll use from \code{pipeline_releases_folder}.
 See details.}
+
+\item{phi_vecs_release}{The release of the phi_vecs pin that we'll use.}
 
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}
 

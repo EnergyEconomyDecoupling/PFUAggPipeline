@@ -10,6 +10,7 @@
 #' @param do_chops A boolean that tells whether to perform the R and Y chops.
 #' @param psut_release The release we'll use from `pipeline_releases_folder`.
 #'                     See details.
+#' @param phi_vecs_release The release of the phi_vecs pin that we'll use.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param pipeline_caches_folder The path to a folder where releases of pipeline caches are stored.
@@ -23,6 +24,7 @@ get_pipeline <- function(countries = "all",
                          years = "all",
                          do_chops,
                          psut_release,
+                         phi_vecs_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
                          pipeline_caches_folder,
@@ -97,6 +99,11 @@ get_pipeline <- function(countries = "all",
       "PSUTRelease",
       unname(psut_release)
     ),
+    targets::tar_target_raw(
+      "PhivecsRelease",
+      unname(phi_vecs_release)
+    ),
+
 
 
     # PSUT ---------------------------------------------------------------------
@@ -112,6 +119,16 @@ get_pipeline <- function(countries = "all",
       name = "PSUTbyYear",
       command = PSUT,
       Year
+    ),
+
+    # Phivecs ------------------------------------------------------------------
+
+    # Pull in the phi_vecs data frame
+    targets::tar_target_raw(
+      "Phivecs",
+      quote(pins::board_folder(PinboardFolder, versioned = TRUE) |>
+              pins::pin_read("phi_vecs", version = PhivecsRelease) |>
+              PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
     ),
 
 
@@ -153,8 +170,10 @@ get_pipeline <- function(countries = "all",
     ),
 
 
-    # Product C ----------------------------------------------------------------
-    # A data frame of final demand sector efficiencies
+    # --------------------------------------------------------------------------
+    # Product Agg-A ------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # A data frame of final demand sector efficiencies -------------------------
 
     # Final demand sector aggregates and efficiencies
     targets::tar_target_raw(
@@ -251,6 +270,25 @@ get_pipeline <- function(countries = "all",
       quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
                                              targ = PSUT_Re_all_Chop_all_Ds_all_Gr_all,
                                              pin_name = "psut_re_all_chop_all_ds_all_gr_all",
+                                             release = Release))),
+
+
+
+    # --------------------------------------------------------------------------
+    # Product Agg-unknown ------------------------------------------------------
+    # --------------------------------------------------------------------------
+    # Exiobase coefficients ----------------------------------------------------
+
+    targets::tar_target_raw(
+      "ExiobaseCoeffs",
+      quote(exiobase_coeffs(Phivecs))
+    ),
+    targets::tar_target_raw(
+      "ReleaseExiobaseCoeffs",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = ExiobaseCoeffs,
+                                             pin_name = "exiobase_coeffs",
+                                             type = "csv",
                                              release = Release))),
 
 

@@ -44,6 +44,8 @@ psut_release <- "20230924T185331Z-13381"    # v1.2a2 (Includes new phi values, r
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
+phi_vecs_release <- "20230925T185052Z-1ba2e" # v1.2a2
+
 # Should we release the results?
 release <- FALSE
 
@@ -97,6 +99,7 @@ PFUAggDatabase::get_pipeline(countries = countries,
                              years = years,
                              do_chops = do_chops,
                              psut_release = psut_release,
+                             phi_vecs_release,
                              aggregation_maps_path = setup[["aggregation_mapping_path"]],
                              pipeline_releases_folder = setup[["pipeline_releases_folder"]],
                              pipeline_caches_folder = setup[["pipeline_caches_folder"]],
