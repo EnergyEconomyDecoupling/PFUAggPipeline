@@ -103,7 +103,8 @@ agg_eta_pfu_data |>
                 Energy.type == "X", GrossNet == "Gross", 
                 Product.aggregation == "Specified",
                 Industry.aggregation == "Specified") |> 
-  magrittr::extract2("eta_fu")
+  magrittr::extract2("eta_fu") |> 
+  diff()
 ```
 
 We have two theories for the cause of this jump:
@@ -164,11 +165,12 @@ agg_eta_pfu_data_v1.2a2 |>
                 Energy.type == "X", GrossNet == "Gross", 
                 Product.aggregation == "Specified",
                 Industry.aggregation == "Specified") |> 
-  magrittr::extract2("eta_fu")
+  magrittr::extract2("eta_fu") |> 
+  diff()
 ```
 
 So removing CHNM as a RUS exemplar provided 
-some reduction to magnitude of the bump,
+some reduction to size of the bump,
 but not much.
 It appears that we are seeing an efficiency jump in 1990
 due to structural differences
