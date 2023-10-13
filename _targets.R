@@ -64,13 +64,21 @@ release <- FALSE
 
 sys_info <- Sys.info()
 if (startsWith(sys_info[["nodename"]], "Mac")) {
-  setup <- PFUSetup::get_abs_paths()
+  setup <- PFUSetup::get_abs_paths(version = setup_version)
 } else if (endsWith(sys_info[["nodename"]], "arc4.leeds.ac.uk")) {
   uname <- sys_info[["user"]]
-  setup <- PFUSetup::get_abs_paths(home_path <- "/nobackup",
+  setup <- PFUSetup::get_abs_paths(version = setup_version,
+                                   home_path <- "/nobackup",
                                    dropbox_path = uname)
   # Set the location for the _targets folder.
   targets::tar_config_set(store = file.path(setup[["output_data_path"]], "_targets/"))
+} else if ((sys_info[["sysname"]] == "Linux") && (sys_info[["user"]] == "eeear")){
+  setup <- PFUSetup::get_abs_paths(version = setup_version)
+  setup["pipeline_releases_folder"] <- "/home/eeear/Documents/Datasets/GPFU_database/Releases"
+  setup[["aggregation_mapping_path"]] <- paste0("/home/eeear/Documents/Datasets/GPFU_database/InputData/",
+                                                setup_version,
+                                                "aggregation_mapping.xlsx")
+  setup[["country_concordance_path"]] <- "inst/exiobase_data/Country_Concordance_Full.xlsx"
 } else {
   stop("Unknown system in _targets.R for PFUAggDatabase. Can't set input and output locations.")
 }
