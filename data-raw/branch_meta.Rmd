@@ -51,3 +51,10 @@ Use this template to describe feature branches.
 * Date: 25 Sept 2023
 
 
+#### exiobase
+
+* Purpose: Workspace to develop a target for Exiobase coefficients
+* Next step: This branch is ready to be release once we are sure that the non_joss_review_develop branch has also the functionalities required.
+* Branched from: non_joss_review_develop
+* Author: Matthew Kuperus Heun
+* Date: 25 Sept 2023
