@@ -33,18 +33,22 @@ years <- 1960:2020
 # Tells whether to do the R and Y chops.
 do_chops <- FALSE
 
+setup_version <- "v1.2"
+
 # Set the release to be used for input.
 # psut_release <- "20230309T184624Z-7ace5"  # v0.9 (USA only)
 # psut_release <- "20221109T152414Z-7d7ad"  # v1.0 (with matrix objects)
 # psut_release <- "20230312T211924Z-007da"  # v1.0 (with Matrix objects)
 # psut_release <- "20230618T131003Z-4c70f"  # v1.1 (with Matrix objects)
 # psut_release <- "20230915T185731Z-c48a0"  # v1.2a1 (Lacks new phi values and updated IEA data)
-psut_release <- "20230924T185331Z-13381"    # v1.2a2 (Includes new phi values, removes CHNM as RUS exemplar. Lacks updated IEA data)
+# psut_release <- "20230924T185331Z-13381"  # v1.2a2 (Includes new phi values, removes CHNM as RUS exemplar. Lacks updated IEA data)
+psut_release <- "20231010T153905Z-c06bb"    # v1.2
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
-phi_vecs_release <- "20230925T185052Z-1ba2e" # v1.2a2
+# phi_vecs_release <- "20230925T185052Z-1ba2e" # v1.2a2
+phi_vecs_release <- "20230925T185052Z-1ba2e" # v1.2
 
 # Should we release the results?
 release <- FALSE
