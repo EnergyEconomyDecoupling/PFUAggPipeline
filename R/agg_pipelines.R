@@ -10,6 +10,8 @@
 #' @param do_chops A boolean that tells whether to perform the R and Y chops.
 #' @param psut_release The release we'll use from `pipeline_releases_folder`.
 #'                     See details.
+#' @param psut_without_neu_release The release we'll use from `pipeline_releases_folder`.
+#'                                 See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param pipeline_caches_folder The path to a folder where releases of pipeline caches are stored.
@@ -33,8 +35,11 @@ get_pipeline <- function(countries = "all",
   Country <- NULL
   Year <- NULL
   PSUT <- NULL
+  PSUTWithoutNEU <- NULL
   PSUT_Re_all <- NULL
+  PSUTWithoutNEU_Re_all <- NULL
   PSUT_Re_all_Chop_all_Ds_all_Gr_all <- NULL
+  PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all <- NULL
   PSUT_Re_World <- NULL
 
   list(
@@ -147,9 +152,23 @@ get_pipeline <- function(countries = "all",
       Country,
     ),
 
+    targets::tar_target_raw(
+      "PSUTWithoutNEU_Re_all",
+      quote(PSUTWithoutNEUbyYear |>
+              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
+                              world_aggregation_map = AggregationMaps$world_aggregation,
+                              continent = "Continent")),
+      pattern = quote(map(PSUTWithoutNEUbyYear))
+    ),
+    tarchetypes::tar_group_by(
+      "PSUTWithoutNEU_Re_all_grouped",
+      PSUTWithoutNEU_Re_all,
+      Country,
+    ),
+
 
     # Product Agg-E ------------------------------------------------------------
-    # A data frame of PSUT matrices with all aggregations
+    # A data frame of PSUT matrices (including NEU) with all aggregations
 
     # Chopping, despecifying, and grouping
     targets::tar_target_raw(
@@ -174,6 +193,34 @@ get_pipeline <- function(countries = "all",
       quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
                                              targ = PSUT_Re_all_Chop_all_Ds_all_Gr_all,
                                              pin_name = "psut_re_all_chop_all_ds_all_gr_all",
+                                             release = Release))),
+
+    # Product Agg-F ------------------------------------------------------------
+    # A data frame of PSUT matrices (excluding NEU) with all aggregations
+
+    # Chopping, despecifying, and grouping
+    targets::tar_target_raw(
+      "PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all",
+      quote(PSUTWithoutNEU_Re_all_grouped |>
+              pr_in_agg_pipeline(product_agg_map = ProductAggMap,
+                                 industry_agg_map = IndustryAggMap,
+                                 p_industries = unlist(PIndustryPrefixes),
+                                 do_chops = do_chops,
+                                 method = "SVD",
+                                 country = Recca::psut_cols$country,
+                                 year = Recca::psut_cols$year)) ,
+      pattern = quote(map(PSUTWithoutNEU_Re_all_grouped))
+    ),
+    tarchetypes::tar_group_by(
+      "PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all_grouped",
+      PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all,
+      Country
+    ),
+    targets::tar_target_raw(
+      "ReleasePSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all,
+                                             pin_name = "psut_without_neu_re_all_chop_all_ds_all_gr_all",
                                              release = Release))),
 
 
@@ -257,6 +304,71 @@ get_pipeline <- function(countries = "all",
                                              pin_name = "agg_eta_pfu_csv",
                                              type = "csv",
                                              release = Release))),
+
+
+
+
+
+
+
+    # Product Agg-G ------------------------------------------------------------
+    # Pin the EtaPFUWithoutNEU data frame
+
+    # PFUWithoutNEU aggregates and efficiencies
+    targets::tar_target_raw(
+      "AggEtaPFUWithoutNEU",
+      quote(PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
+              efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
+                                  fd_sectors = unlist(FinalDemandSectors)) |>
+              PFUPipelineTools::tar_ungroup()),
+      pattern = quote(map(PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all_grouped))
+    ),
+    targets::tar_target_raw(
+      "ReleaseAggEtaPFUWithoutNEU",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = AggEtaPFUWithoutNEU,
+                                             pin_name = "agg_eta_pfu_without_neu",
+                                             release = Release))
+    ),
+
+
+    # Product Agg-H ------------------------------------------------------------
+    # Write a CSV file of PFU efficiencies
+
+    # Pivot AggEtaPFUWithoutNEU in preparation for writing .csv file
+    targets::tar_target_raw(
+      "PivotedAggEtaPFUWithoutNEU",
+      quote(AggEtaPFUWithoutNEU |>
+              # Release only exergy data for people who do not have access to IEA WEEB
+              dplyr::filter(Energy.type == "X") |>
+              pivot_for_csv(val_cols = c("EX.p", "EX.f", "EX.u", "eta_pf", "eta_fu", "eta_pu")))
+    ),
+    targets::tar_target_raw(
+      "ReleaseAggEtaPFUWithoutNEUCSV",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = PivotedAggEtaPFUWithoutNEU,
+                                             pin_name = "agg_eta_pfu_without_neu_csv",
+                                             type = "csv",
+                                             release = Release))),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

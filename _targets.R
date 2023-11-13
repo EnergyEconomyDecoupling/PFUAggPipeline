@@ -10,13 +10,13 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
-# countries <- c("ZWE", "USA", "WRLD")
+countries <- c("ZWE", "USA", "WRLD")
 # countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
 # countries <- "GHA"
 # countries <- "all" # Run all countries in the PSUT target.
-countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
+# countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
 #                "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
@@ -24,8 +24,8 @@ countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
 
 
 # Set the years to be analyzed.
-years <- 1960:2020
-# years <- 1971:1973
+# years <- 1960:2020
+years <- 1971:1973
 # years <- 1971:1978
 # years <- 1971
 # years <- 1960:1961
@@ -45,7 +45,7 @@ psut_release <- "20231113T152259Z-2ec70"    # v1.2 (hopefully) final
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
-psut_without_new_release <- "20231113T152308Z-24a12"    # v1.2 (hopefully) final
+psut_without_neu_release <- "20231113T152308Z-24a12"    # v1.2 (hopefully) final
 
 
 # Should we release the results?
@@ -101,6 +101,7 @@ PFUAggDatabase::get_pipeline(countries = countries,
                              years = years,
                              do_chops = do_chops,
                              psut_release = psut_release,
+                             psut_without_neu_release = psut_without_neu_release,
                              aggregation_maps_path = setup[["aggregation_mapping_path"]],
                              pipeline_releases_folder = setup[["pipeline_releases_folder"]],
                              pipeline_caches_folder = setup[["pipeline_caches_folder"]],
