@@ -146,7 +146,7 @@ efficiency_pipeline <- function(.psut_data,
                                   pattern_type = pattern_type,
                                   prepositions = prepositions)
 
-    # Stack the data frames
+    # Reshape the data frames
     PFU_aggregates <- PSUT_Chop_all_Ds_all_Gr_all_St_fd |>
       dplyr::mutate(
         "{R}" := NULL,
@@ -163,12 +163,12 @@ efficiency_pipeline <- function(.psut_data,
         "{gross}" := ex_fd_gross,
         "{net}" := ex_fd_net
       ) |>
-      tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd) %>%
+      tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd) |>
       dplyr::mutate(
         "{ex_p}" := as.numeric(.data[[ex_p]]),
         "{ex_fd}" := as.numeric(.data[[ex_fd]])
       ) |>
-      tidyr::pivot_wider(names_from = last_stage, values_from = ex_fd) %>%
+      tidyr::pivot_wider(names_from = last_stage, values_from = ex_fd) |>
       dplyr::rename(
         "{ex_f}" := .data[[final]],
         "{ex_u}" := .data[[useful]]
