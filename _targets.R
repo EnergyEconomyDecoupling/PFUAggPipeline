@@ -10,8 +10,8 @@ library(targets)
 
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
-countries <- c("ZWE", "USA", "WRLD")
-# countries <- "USA"
+# countries <- c("ZWE", "USA", "WRLD")
+countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
 # countries <- "GHA"
@@ -25,9 +25,9 @@ countries <- c("ZWE", "USA", "WRLD")
 
 # Set the years to be analyzed.
 # years <- 1960:2020
-years <- 1971:1973
+# years <- 1971:1973
 # years <- 1971:1978
-# years <- 1971
+years <- 1971
 # years <- 1960:1961
 
 # Tells whether to do the R and Y chops.
