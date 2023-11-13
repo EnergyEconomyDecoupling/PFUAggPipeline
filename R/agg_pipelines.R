@@ -103,6 +103,10 @@ get_pipeline <- function(countries = "all",
       "PSUTRelease",
       unname(psut_release)
     ),
+    targets::tar_target_raw(
+      "PSUTWithoutNEURelease",
+      unname(psut_without_neu_release)
+    ),
 
 
     # PSUT ---------------------------------------------------------------------
@@ -126,7 +130,7 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUTWithoutNEU",
       quote(pins::board_folder(PinboardFolder, versioned = TRUE) |>
-              pins::pin_read("psut_without_NEU", version = PSUTWithoutNEURelease) |>
+              pins::pin_read("psut_without_neu", version = PSUTWithoutNEURelease) |>
               PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
     ),
     tarchetypes::tar_group_by(
