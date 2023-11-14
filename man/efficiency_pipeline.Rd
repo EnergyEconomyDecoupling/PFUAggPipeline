@@ -34,6 +34,8 @@ efficiency_pipeline(
   useful = IEATools::all_stages$useful,
   chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
   chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+  product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+  industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
   none = PFUAggDatabase::agg_metadata$none,
   ex_p = Recca::aggregate_cols$aggregate_primary,
   ex_f = IEATools::aggregate_cols$aggregate_final,

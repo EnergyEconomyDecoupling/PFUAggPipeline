@@ -74,7 +74,7 @@ calculate_pfu_efficiencies <- function(.eta_pfu_data,
 #'                                                        to assess whether primary, final, and useful
 #'                                                        aggregations are all same.
 #'
-#' @return A data frame of metadata columns and efficiencies
+#' @return A data frame of metadata columns and efficiencies.
 #'
 #' @export
 efficiency_pipeline <- function(.psut_data,
@@ -110,6 +110,8 @@ efficiency_pipeline <- function(.psut_data,
                                 useful = IEATools::all_stages$useful,
                                 chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
                                 chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+                                product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
+                                industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
                                 none = PFUAggDatabase::agg_metadata$none,
                                 ex_p = Recca::aggregate_cols$aggregate_primary,
                                 ex_f = IEATools::aggregate_cols$aggregate_final,
@@ -146,81 +148,133 @@ efficiency_pipeline <- function(.psut_data,
                                   pattern_type = pattern_type,
                                   prepositions = prepositions)
 
-    # Reshape the data frames
-    PFU_aggregates <- PSUT_Chop_all_Ds_all_Gr_all_St_fd |>
-      dplyr::mutate(
-        "{R}" := NULL,
-        "{U}" := NULL,
-        "{U_feed}" := NULL,
-        "{U_eiou}" := NULL,
-        "{r_eiou}" := NULL,
-        "{V}" := NULL,
-        "{Y}" := NULL,
-        "{S_units}" := NULL
-      ) |>
-      # Pivot to gross and net final demand energy stage
-      dplyr::rename(
-        "{gross}" := ex_fd_gross,
-        "{net}" := ex_fd_net
-      ) |>
-      tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd) |>
-      dplyr::mutate(
-        "{ex_p}" := as.numeric(.data[[ex_p]]),
-        "{ex_fd}" := as.numeric(.data[[ex_fd]])
-      ) |>
-      tidyr::pivot_wider(names_from = last_stage, values_from = ex_fd) |>
-      dplyr::rename(
-        "{ex_f}" := .data[[final]],
-        "{ex_u}" := .data[[useful]]
-      )
+    # # Reshape the data frames
+    # PFU_aggregates <- PSUT_Chop_all_Ds_all_Gr_all_St_fd |>
+    #   dplyr::mutate(
+    #     "{R}" := NULL,
+    #     "{U}" := NULL,
+    #     "{U_feed}" := NULL,
+    #     "{U_eiou}" := NULL,
+    #     "{r_eiou}" := NULL,
+    #     "{V}" := NULL,
+    #     "{Y}" := NULL,
+    #     "{S_units}" := NULL
+    #   ) |>
+    #   # Pivot to gross and net final demand energy stage
+    #   dplyr::rename(
+    #     "{gross}" := ex_fd_gross,
+    #     "{net}" := ex_fd_net
+    #   ) |>
+    #   tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd) |>
+    #   dplyr::mutate(
+    #     "{ex_p}" := as.numeric(.data[[ex_p]]),
+    #     "{ex_fd}" := as.numeric(.data[[ex_fd]])
+    #   ) |>
+    #   tidyr::pivot_wider(names_from = last_stage, values_from = ex_fd) |>
+    #   dplyr::rename(
+    #     "{ex_f}" := .data[[final]],
+    #     "{ex_u}" := .data[[useful]]
+    #   )
+    #
+    # # Verify that all non-chopped values are the same.
+    # # This is a strong test on the aggregations performed
+    # # above.
+    # if (chopped_mat %in% names(PFU_aggregates) & chopped_var %in% names(PFU_aggregates)) {
+    #   within_tol <- PFU_aggregates |>
+    #     dplyr::filter(.data[[chopped_mat]] == none, .data[[chopped_var]] == none) |>
+    #     # Each group of without_chops should have exactly same ex_p, ex_f, and ex_u
+    #     dplyr::summarise(
+    #       "{.primary_aggs_ok}" := abs(max(.data[[ex_p]]) - min(.data[[ex_p]])) < tol,
+    #       "{.final_aggs_ok}" := abs(max(.data[[ex_f]]) - min(.data[[ex_f]])) < tol,
+    #       "{.useful_aggs_ok}" := abs(max(.data[[ex_u]]) - min(.data[[ex_u]])) < tol,
+    #       .by = dplyr::any_of(c(country, method, energy_type, ieamw, year, gross_net)))
+    #   if (!all(within_tol[[.primary_aggs_ok]])) {
+    #     msg <- paste("Not all primary aggregates sum to same value. \n",
+    #                  within_tol |>
+    #                    dplyr::filter(!.data[[.primary_aggs_ok]]) |>
+    #                    matsindf::df_to_msg())
+    #     stop(msg)
+    #   }
+    #   if (!all(within_tol[[.final_aggs_ok]])) {
+    #     msg <- paste("Not all final aggregates sum to same value. \n",
+    #                  within_tol |>
+    #                    dplyr::filter(!.data[[.final_aggs_ok]]) |>
+    #                    matsindf::df_to_msg())
+    #     stop(msg)
+    #   }
+    #   if (!all(within_tol[[.useful_aggs_ok]])) {
+    #     msg <- paste("Not all useful aggregates sum to same value. \n",
+    #                  within_tol |>
+    #                    dplyr::filter(!.data[[.useful_aggs_ok]]) |>
+    #                    matsindf::df_to_msg())
+    #     stop(msg)
+    #   }
+    # }
+    #
+    # # Calculate efficiencies and return
+    # PFU_aggregates |>
+    #   dplyr::mutate(
+    #     "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]],
+    #     "{eta_fu}" := .data[[ex_u]] / .data[[ex_f]],
+    #     "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]]
+    #   ) |>
+    #   # Reorder columns
+    #   dplyr::select(-ex_p, -ex_f, -ex_u,
+    #                 -eta_pf, -eta_fu, -eta_pu,
+    #                 dplyr::everything(), ex_p, ex_f, ex_u,
+    #                 eta_pf, eta_fu, eta_pu)
 
-    # Verify that all non-chopped values are the same.
-    # This is a strong test on the aggregations performed
-    # above.
-    if (chopped_mat %in% names(PFU_aggregates) & chopped_var %in% names(PFU_aggregates)) {
-      within_tol <- PFU_aggregates |>
-        dplyr::filter(.data[[chopped_mat]] == none, .data[[chopped_var]] == none) |>
-        # Each group of without_chops should have exactly same ex_p, ex_f, and ex_u
-        dplyr::summarise(
-          "{.primary_aggs_ok}" := abs(max(.data[[ex_p]]) - min(.data[[ex_p]])) < tol,
-          "{.final_aggs_ok}" := abs(max(.data[[ex_f]]) - min(.data[[ex_f]])) < tol,
-          "{.useful_aggs_ok}" := abs(max(.data[[ex_u]]) - min(.data[[ex_u]])) < tol,
-          .by = dplyr::any_of(c(country, method, energy_type, ieamw, year, gross_net)))
-      if (!all(within_tol[[.primary_aggs_ok]])) {
-        msg <- paste("Not all primary aggregates sum to same value. \n",
-                     within_tol |>
-                       dplyr::filter(!.data[[.primary_aggs_ok]]) |>
-                       matsindf::df_to_msg())
-        stop(msg)
-      }
-      if (!all(within_tol[[.final_aggs_ok]])) {
-        msg <- paste("Not all final aggregates sum to same value. \n",
-                     within_tol |>
-                       dplyr::filter(!.data[[.final_aggs_ok]]) |>
-                       matsindf::df_to_msg())
-        stop(msg)
-      }
-      if (!all(within_tol[[.useful_aggs_ok]])) {
-        msg <- paste("Not all useful aggregates sum to same value. \n",
-                     within_tol |>
-                       dplyr::filter(!.data[[.useful_aggs_ok]]) |>
-                       matsindf::df_to_msg())
-        stop(msg)
-      }
-    }
 
-    # Calculate efficiencies and return
-    PFU_aggregates |>
-      dplyr::mutate(
-        "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]],
-        "{eta_fu}" := .data[[ex_u]] / .data[[ex_f]],
-        "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]]
-      ) |>
-      # Reorder columns
-      # dplyr::select(dplyr::everything(), .data[[ex_p]], .data[[ex_f]], .data[[ex_u]],
-      #               .data[[eta_pf]], .data[[eta_fu]], .data[[eta_pu]])
-      dplyr::select(-ex_p, -ex_f, -ex_u,
-                    -eta_pf, -eta_fu, -eta_pu,
-                    dplyr::everything(), ex_p, ex_f, ex_u,
-                    eta_pf, eta_fu, eta_pu)
+
+
+
+  # Create a data frame of gross and net versions of
+  # primary and final demand energy.
+  gross_net_p_fd <- PSUT_Chop_all_Ds_all_Gr_all_St_fd |>
+    dplyr::mutate(
+      "{R}" := NULL,
+      "{U}" := NULL,
+      "{U_feed}" := NULL,
+      "{U_eiou}" := NULL,
+      "{r_eiou}" := NULL,
+      "{V}" := NULL,
+      "{Y}" := NULL,
+      "{S_units}" := NULL
+    ) |>
+    # Pivot to gross and net primary and final demand energy stages
+    dplyr::rename(
+      "{gross}" := ex_fd_gross,
+      "{net}" := ex_fd_net
+    ) |>
+    tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd)
+
+  # Isolate only the final demand energy to work on final and useful stages.
+  gross_net_fu <- gross_net_p_fd |>
+    dplyr::mutate(
+      "{ex_p}" := NULL
+    ) |>
+    tidyr::pivot_wider(names_from = last_stage, values_from = ex_fd) |>
+    dplyr::rename(
+      "{ex_f}" := .data[[final]],
+      "{ex_u}" := .data[[useful]]
+    )
+
+  # Isolate only primary aggregatges.
+  gross_net_p <- gross_net_p_fd |>
+    dplyr::mutate(
+      "{ex_fd}" := NULL
+    )
+
+  # Join primary and final/useful, calculate efficiencies, and return.
+  dplyr::full_join(gross_net_p, gross_net_fu, by = names(gross_net_p) |> setdiff(c(ex_p, last_stage))) |>
+    dplyr::mutate(
+      "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]],
+      "{eta_fu}" := .data[[ex_u]] / .data[[ex_f]],
+      "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]]
+    ) |>
+    # Reorder columns
+    dplyr::select(-ex_p, -ex_f, -ex_u,
+                  -eta_pf, -eta_fu, -eta_pu,
+                  dplyr::everything(), ex_p, ex_f, ex_u,
+                  eta_pf, eta_fu, eta_pu)
 }
