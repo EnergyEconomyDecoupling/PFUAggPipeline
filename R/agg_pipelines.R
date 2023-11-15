@@ -276,8 +276,8 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "AggEtaPFU",
       quote(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
-              efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
-                                  fd_sectors = unlist(FinalDemandSectors)) |>
+              Recca::calc_agg_eta_pfus(p_industries = unlist(PIndustryPrefixes),
+                                       fd_sectors = unlist(FinalDemandSectors)) |>
               PFUPipelineTools::tar_ungroup()),
       pattern = quote(map(PSUT_Re_all_Chop_all_Ds_all_Gr_all_grouped))
     ),
@@ -322,8 +322,8 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "AggEtaPFUWithoutNEU",
       quote(PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
-              efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
-                                  fd_sectors = unlist(FinalDemandSectors)) |>
+              Recca::calc_agg_eta_pfus(p_industries = unlist(PIndustryPrefixes),
+                                       fd_sectors = unlist(FinalDemandSectors)) |>
               PFUPipelineTools::tar_ungroup()),
       pattern = quote(map(PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all_grouped))
     ),
