@@ -47,8 +47,7 @@ psut_release <- "20231010T153905Z-c06bb"    # v1.2
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
-# phi_vecs_release <- "20230925T185052Z-1ba2e" # v1.2a2
-phi_vecs_release <- "20231113T152219Z-7f1bd" # v1.2
+psut_without_neu_release <- "20231113T152308Z-24a12"    # v1.2 (hopefully) final
 
 # Should we release the results?
 release <- FALSE

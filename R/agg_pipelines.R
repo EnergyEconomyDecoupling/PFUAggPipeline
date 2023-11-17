@@ -10,6 +10,8 @@
 #' @param do_chops A boolean that tells whether to perform the R and Y chops.
 #' @param psut_release The release we'll use from `pipeline_releases_folder`.
 #'                     See details.
+#' @param phi_vecs_release The release we'll use from `pipeline_releases_folder`.
+#'                         See details.
 #' @param psut_without_neu_release The release we'll use from `pipeline_releases_folder`.
 #'                                 See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
@@ -26,6 +28,7 @@ get_pipeline <- function(countries = "all",
                          do_chops,
                          psut_release,
                          psut_without_neu_release,
+                         phi_vecs_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
                          pipeline_caches_folder,
