@@ -11,12 +11,12 @@ library(targets)
 # Set the countries to be analyzed.
 # countries <- c("GBR", "USA", "MEX")
 # countries <- c("ZWE", "USA", "WRLD")
-countries <- "USA"
+# countries <- "USA"
 # countries <- "WRLD"
 # countries <- "CHNM"
 # countries <- "GHA"
 # countries <- "all" # Run all countries in the PSUT target.
-# countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
+countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
 #                "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
@@ -24,10 +24,10 @@ countries <- "USA"
 
 
 # Set the years to be analyzed.
-# years <- 1960:2020
+years <- 1960:2020
 # years <- 1971:1973
 # years <- 1971:1978
-years <- 1971
+# years <- 1971
 # years <- 1960:1961
 
 # Tells whether to do the R and Y chops.
@@ -42,14 +42,15 @@ setup_version <- "v1.2"
 # psut_release <- "20230618T131003Z-4c70f"  # v1.1 (with Matrix objects)
 # psut_release <- "20230915T185731Z-c48a0"  # v1.2a1 (Lacks new phi values and updated IEA data)
 # psut_release <- "20230924T185331Z-13381"  # v1.2a2 (Includes new phi values, removes CHNM as RUS exemplar. Lacks updated IEA data)
-psut_release <- "20231010T153905Z-c06bb"    # v1.2
+psut_release <- "20231113T152259Z-2ec70"    # v1.2
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
+psut_without_neu_release <- "20231113T152308Z-24a12"    # v1.2 (hopefully) final
+
 phi_vecs_release <- "20231113T152219Z-7f1bd" # v1.2
 
-psut_without_neu_release <- "20231113T152308Z-24a12"    # v1.2 (hopefully) final
 
 # Should we release the results?
 release <- FALSE
