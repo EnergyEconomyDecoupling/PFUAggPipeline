@@ -8,7 +8,7 @@ which always resolves to the latest release.
 
 
 * Now creating efficiency data frames from both regular and "without NEU" 
-  versions of PSTU data frame.
+  versions of PSUT data frame.
 
 
 # PFUAggDatabase 0.1.4 (2023-11-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10210406.svg)](https://doi.org/10.5281/zenodo.10210406)
