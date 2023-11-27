@@ -6,6 +6,11 @@ output: html_document
 Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zenodo.6409759), 
 which always resolves to the latest release.
 
+
+* Fixed typos in README.Rmd and README.md stemming from earlier name change.
+  PFUAggWorkflow --> PFUAggDatabase.
+
+
 # PFUAggDatabase 0.1.3 (2023-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8265840.svg)](https://doi.org/10.5281/zenodo.8265840)
 
 * Fixed a bug where U_eiou wasn't in argument list 
