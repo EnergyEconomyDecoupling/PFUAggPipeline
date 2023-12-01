@@ -28,6 +28,7 @@ years <- 1960:2020
 # years <- 1971:1973
 # years <- 1971:1978
 # years <- 1971
+# years <- 1960
 # years <- 1960:1961
 
 # Tells whether to do the R and Y chops.

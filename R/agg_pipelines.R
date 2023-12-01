@@ -93,7 +93,7 @@ get_pipeline <- function(countries = "all",
     # Identify the regions to which we'll aggregate
     targets::tar_target_raw(
       "Regions",
-      substitute(AggregationMaps$region_aggregation$World)
+      substitute(names(AggregationMaps$region_aggregation))
     ),
 
     # Identify the continents to which we'll aggregate
@@ -103,8 +103,8 @@ get_pipeline <- function(countries = "all",
     ),
 
     targets::tar_target_raw(
-      "CountriesContinentsWorld",
-      substitute(c(Countries, Continents, "World"))
+      "CountriesRegionsContinentsWorld",
+      substitute(c(Countries, Regions, Continents, "World"))
     ),
 
     # Set the pin and release as targets
@@ -168,9 +168,9 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all",
       quote(PSUTbyYear |>
-              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
-                              world_aggregation_map = AggregationMaps$world_aggregation,
-                              continent = "Continent")),
+              region_pipeline(region_aggregation_map = AggregationMaps$region_aggregation,
+                              continent_aggregation_map = AggregationMaps$continent_aggregation,
+                              world_aggregation_map = AggregationMaps$world_aggregation)),
       pattern = quote(map(PSUTbyYear))
     ),
     tarchetypes::tar_group_by(
@@ -182,7 +182,8 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUTWithoutNEU_Re_all",
       quote(PSUTWithoutNEUbyYear |>
-              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
+              region_pipeline(region_aggregation_map = AggregationMaps$region_aggregation,
+                              continent_aggregation_map = AggregationMaps$continent_aggregation,
                               world_aggregation_map = AggregationMaps$world_aggregation,
                               continent = "Continent")),
       pattern = quote(map(PSUTWithoutNEUbyYear))
