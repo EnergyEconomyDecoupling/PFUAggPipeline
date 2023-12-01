@@ -61,7 +61,8 @@ usethis::use_data(output_file_info, overwrite = TRUE)
 # Aggregation file information
 #
 
-aggregation_file_tab_names <- list(continent_aggregation = "continent_aggregation",
+aggregation_file_tab_names <- list(region_aggregation = "region_aggregation",
+                                   continent_aggregation = "continent_aggregation",
                                    world_aggregation = "world_aggregation",
                                    ef_product_aggregation = "ef_product_aggregation",
                                    eu_product_aggregation = "eu_product_aggregation",

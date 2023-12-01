@@ -98,6 +98,7 @@
 #'
 #' @format A string list with `r length(aggregation_file_tab_names)` entries.
 #' \describe{
+#' \item{region_aggregation}{The name of the region aggregation tab, "region_aggregation".}
 #' \item{continent_aggregation}{The name of the continent aggregation tab, "continent_aggregation".}
 #' \item{world_aggregation}{The string name of the world aggregation tab. "world_aggregation".}
 #' \item{ef_product_aggregation}{The string name of the final energy product aggregation tab. "ef_product_aggregation".}

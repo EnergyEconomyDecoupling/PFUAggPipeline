@@ -90,6 +90,12 @@ get_pipeline <- function(countries = "all",
       quote(create_fd_sectors_list(IEATools::fd_sectors, AggregationMaps$ef_sector_aggregation))
     ),
 
+    # Identify the regions to which we'll aggregate
+    targets::tar_target_raw(
+      "Regions",
+      substitute(AggregationMaps$region_aggregation$World)
+    ),
+
     # Identify the continents to which we'll aggregate
     targets::tar_target_raw(
       "Continents",
