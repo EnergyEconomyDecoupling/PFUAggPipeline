@@ -33,10 +33,11 @@ Use this template to describe feature branches.
 
 #### Branch name
 
-* Purpose:
-* Next step:
-* Author:
-* Date:
+* Mother branch: 
+* Purpose: 
+* Next step: 
+* Author: 
+* Date: 
 
 
 
@@ -50,3 +51,11 @@ Use this template to describe feature branches.
 * Author: Matthew Kuperus Heun
 * Date: 25 Sept 2023
 
+
+#### region_agg
+
+* Mother branch: non_joss_review_develop
+* Purpose: Build aggregations for FoSUN and FoYUG into pipelines
+* Next step: Add to pipeline and test
+* Author: Matthew Kuperus Heun
+* Date: 1 Dec 2023
