@@ -170,8 +170,7 @@ get_pipeline <- function(countries = "all",
       quote(PSUTbyYear |>
               region_pipeline(region_aggregation_map = AggregationMaps$region_aggregation,
                               continent_aggregation_map = AggregationMaps$continent_aggregation,
-                              world_aggregation_map = AggregationMaps$world_aggregation,
-                              continent = "Continent")),
+                              world_aggregation_map = AggregationMaps$world_aggregation)),
       pattern = quote(map(PSUTbyYear))
     ),
     tarchetypes::tar_group_by(
@@ -183,7 +182,8 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUTWithoutNEU_Re_all",
       quote(PSUTWithoutNEUbyYear |>
-              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
+              region_pipeline(region_aggregation_map = AggregationMaps$region_aggregation,
+                              continent_aggregation_map = AggregationMaps$continent_aggregation,
                               world_aggregation_map = AggregationMaps$world_aggregation,
                               continent = "Continent")),
       pattern = quote(map(PSUTWithoutNEUbyYear))

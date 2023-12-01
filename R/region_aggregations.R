@@ -205,8 +205,9 @@ region_pipeline <- function(.psut_data,
                              few_colname = world,
                              drop_na_few = TRUE)
 
-  # Stach the data frames and return
+  # Stack the data frames and return
   dplyr::bind_rows(.psut_data,
+                   PSUT_Re_regions,
                    PSUT_Re_continents,
                    PSUT_Re_world)
 }
