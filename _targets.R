@@ -43,12 +43,12 @@ setup_version <- "v1.2"
 # psut_release <- "20230618T131003Z-4c70f"  # v1.1 (with Matrix objects)
 # psut_release <- "20230915T185731Z-c48a0"  # v1.2a1 (Lacks new phi values and updated IEA data)
 # psut_release <- "20230924T185331Z-13381"  # v1.2a2 (Includes new phi values, removes CHNM as RUS exemplar. Lacks updated IEA data)
-psut_release <- "20231123T165135Z-9a534"    # v1.2
+psut_release <- "20231202T180552Z-b93af"    # v1.2
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
-psut_without_neu_release <- "20231123T165148Z-a3b92"    # v1.2 (hopefully) final
+psut_without_neu_release <- "20231202T180604Z-2e1da"    # v1.2 (hopefully) final
 
 phi_vecs_release <- "20231123T165054Z-a2914" # v1.2
 
