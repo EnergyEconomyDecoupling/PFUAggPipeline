@@ -17,6 +17,9 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 <!-- badges: end -->
 
 The goal of PFUAggDatabase is to aggregate data in the `PFUDatabase`.
+Analyses are completed using the
+[targets](https://github.com/ropensci/targets) environment which
+provides helpful dependency management for the calculation pipeline.
 
 ## Installation
 
@@ -28,6 +31,35 @@ You can install the development version of `PFUAggDatabase` from
 devtools::install_github("EnergyEconomyDecoupling/PFUAggDatabase")
 ```
 
+## Quick start
+
+At the RStudio console, type
+
+``` r
+library(targets)              # to load the targets package   
+tar_visnetwork()              # to see a directed acyclic graph of the calculations that will take place   
+tar_make_future(workers = 2)  # to execute the calculations (or `workers = 8`, if you have enough cores)
+```
+
+### Accessing targets
+
+`targets::tar_read(<<target>>)` pulls the value of a target out of the
+`targets` cache. (`<<target>>` should be an unquoted symbol such as
+`Specified`.)
+
+### Fresh start
+
+`targets::tar_destroy()` invalidates the `targets` cache and forces
+reanalysis of everything. Reanalyzing everything may take a while.
+
 ## Example
 
 See the vignette entitled “Access PFU Database Products Via `Pins`”.
+
+## More Information
+
+For information about the `targets` package, see the [targets
+manual](https://books.ropensci.org/targets/).
+
+For documentation on the `PFUAggDatabase` package, see
+<https://EnergyEconomyDecoupling.github.io/PFUAggDatabase/>.
