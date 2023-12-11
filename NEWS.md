@@ -10,7 +10,7 @@ which always resolves to the latest release.
 
 * Delete continuous integration workflow.
   The vignettes cannot be built on GitHub, 
-  becuase input data are unavailable.
+  because input data are unavailable.
 * Now creating efficiency data frames from both regular and "without NEU" 
   versions of PSUT data frame.
 
