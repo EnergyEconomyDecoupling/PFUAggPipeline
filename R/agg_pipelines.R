@@ -10,6 +10,8 @@
 #' @param do_chops A boolean that tells whether to perform the R and Y chops.
 #' @param psut_release The release we'll use from `pipeline_releases_folder`.
 #'                     See details.
+#' @param phi_vecs_release The release we'll use from `pipeline_releases_folder`.
+#'                         See details.
 #' @param psut_without_neu_release The release we'll use from `pipeline_releases_folder`.
 #'                                 See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
@@ -26,6 +28,7 @@ get_pipeline <- function(countries = "all",
                          do_chops,
                          psut_release,
                          psut_without_neu_release,
+                         phi_vecs_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
                          pipeline_caches_folder,
@@ -87,6 +90,12 @@ get_pipeline <- function(countries = "all",
       quote(create_fd_sectors_list(IEATools::fd_sectors, AggregationMaps$ef_sector_aggregation))
     ),
 
+    # Identify the regions to which we'll aggregate
+    targets::tar_target_raw(
+      "Regions",
+      substitute(names(AggregationMaps$region_aggregation))
+    ),
+
     # Identify the continents to which we'll aggregate
     targets::tar_target_raw(
       "Continents",
@@ -94,14 +103,18 @@ get_pipeline <- function(countries = "all",
     ),
 
     targets::tar_target_raw(
-      "CountriesContinentsWorld",
-      substitute(c(Countries, Continents, "World"))
+      "CountriesRegionsContinentsWorld",
+      substitute(c(Countries, Regions, Continents, "World"))
     ),
 
     # Set the pin and release as targets
     targets::tar_target_raw(
       "PSUTRelease",
       unname(psut_release)
+    ),
+    targets::tar_target_raw(
+      "PhivecsRelease",
+      unname(phi_vecs_release)
     ),
     targets::tar_target_raw(
       "PSUTWithoutNEURelease",
@@ -122,6 +135,16 @@ get_pipeline <- function(countries = "all",
       name = "PSUTbyYear",
       command = PSUT,
       Year
+    ),
+
+    # Phivecs ------------------------------------------------------------------
+
+    # Pull in the phi_vecs data frame
+    targets::tar_target_raw(
+      "Phivecs",
+      quote(pins::board_folder(PinboardFolder, versioned = TRUE) |>
+              pins::pin_read("phi_vecs", version = PhivecsRelease) |>
+              PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
     ),
 
     # PSUTWithoutNEU -----------------------------------------------------------
@@ -145,9 +168,9 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUT_Re_all",
       quote(PSUTbyYear |>
-              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
-                              world_aggregation_map = AggregationMaps$world_aggregation,
-                              continent = "Continent")),
+              region_pipeline(region_aggregation_map = AggregationMaps$region_aggregation,
+                              continent_aggregation_map = AggregationMaps$continent_aggregation,
+                              world_aggregation_map = AggregationMaps$world_aggregation)),
       pattern = quote(map(PSUTbyYear))
     ),
     tarchetypes::tar_group_by(
@@ -159,7 +182,8 @@ get_pipeline <- function(countries = "all",
     targets::tar_target_raw(
       "PSUTWithoutNEU_Re_all",
       quote(PSUTWithoutNEUbyYear |>
-              region_pipeline(continent_aggregation_map = AggregationMaps$continent_aggregation,
+              region_pipeline(region_aggregation_map = AggregationMaps$region_aggregation,
+                              continent_aggregation_map = AggregationMaps$continent_aggregation,
                               world_aggregation_map = AggregationMaps$world_aggregation,
                               continent = "Continent")),
       pattern = quote(map(PSUTWithoutNEUbyYear))
@@ -229,7 +253,7 @@ get_pipeline <- function(countries = "all",
 
 
     # Product Agg-A ------------------------------------------------------------
-    # A data frame of final demand sector efficiencies
+    # A data frame of final demand sector efficiencies -------------------------
 
     # Final demand sector aggregates and efficiencies
     targets::tar_target_raw(
@@ -309,16 +333,9 @@ get_pipeline <- function(countries = "all",
                                              type = "csv",
                                              release = Release))),
 
-
-
-
-
-
-
     # Product Agg-G ------------------------------------------------------------
     # Pin the EtaPFUWithoutNEU data frame
 
-    # PFUWithoutNEU aggregates and efficiencies
     targets::tar_target_raw(
       "AggEtaPFUWithoutNEU",
       quote(PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all_grouped |>
@@ -354,111 +371,6 @@ get_pipeline <- function(countries = "all",
                                              pin_name = "agg_eta_pfu_without_neu_csv",
                                              type = "csv",
                                              release = Release))),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # # Code below here does chops for the World only.
-    # # This is temporary code that can be deleted when
-    # # chops are working for all countries.
-    # # Probably best to parameterize this code (eventually)
-    # # to chop only on selected countries.
-    #
-    # # PSUT_Re_World ------------------------------------------------------------
-    #
-    # targets::tar_target_raw(
-    #   "PSUT_Re_World",
-    #   quote(PSUT_Re_all |>
-    #           dplyr::filter(Country == "World"))
-    # ),
-    # tarchetypes::tar_group_by(
-    #   name = "PSUT_Re_WorldbyYear",
-    #   command = PSUT_Re_World,
-    #   Year
-    # ),
-    #
-    #
-    # # PSUT_Re_World_Chop_all_Ds_all_Gr_all -------------------------------------
-    #
-    # targets::tar_target_raw(
-    #   "PSUT_Re_World_Chop_all_Ds_all_Gr_all",
-    #   quote(PSUT_Re_WorldbyYear |>
-    #           pr_in_agg_pipeline(product_agg_map = ProductAggMap,
-    #                              industry_agg_map = IndustryAggMap,
-    #                              p_industries = unlist(PIndustryPrefixes),
-    #                              do_chops = do_chops,
-    #                              method = "SVD",
-    #                              country = Recca::psut_cols$country,
-    #                              year = Recca::psut_cols$year)),
-    #   pattern = quote(map(PSUT_Re_WorldbyYear))
-    # ),
-    #
-    #
-    # # Product H ----------------------------------------------------------------
-    # # World sector agg eta with chops
-    # targets::tar_target_raw(
-    #   "SectorAggEtaFUWorld",
-    #   quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
-    #           calculate_sector_agg_eta_fu(fd_sectors = unlist(FinalDemandSectors)) |>
-    #           PFUPipelineTools::tar_ungroup()),
-    #   pattern = quote(map(PSUT_Re_World_Chop_all_Ds_all_Gr_all))
-    # ),
-    # targets::tar_target_raw(
-    #   "ReleaseSectorAggEtaFUWorld",
-    #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
-    #                                          targ = SectorAggEtaFUWorld,
-    #                                          pin_name = "sector_agg_eta_fu_world",
-    #                                          release = Release))),
-    #
-    #
-    # # Product I ----------------------------------------------------------------
-    # # World PFU aggregates and efficiencies with chops -------------------------
-    #
-    # targets::tar_target_raw(
-    #   "AggEtaPFUWorld",
-    #   quote(PSUT_Re_World_Chop_all_Ds_all_Gr_all |>
-    #           efficiency_pipeline(p_industries = unlist(PIndustryPrefixes),
-    #                               fd_sectors = unlist(FinalDemandSectors)) |>
-    #           PFUPipelineTools::tar_ungroup()),
-    #   pattern = quote(map(PSUT_Re_World_Chop_all_Ds_all_Gr_all))
-    # ),
-    # targets::tar_target_raw(
-    #   "ReleaseAggEtaPFUWorld",
-    #   quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
-    #                                          targ = AggEtaPFUWorld,
-    #                                          pin_name = "agg_eta_pfu_world",
-    #                                          release = Release))),
-
 
     # Zip the cache and store in the pipeline_caches_folder --------------------
 

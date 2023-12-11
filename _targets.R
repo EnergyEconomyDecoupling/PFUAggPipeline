@@ -28,10 +28,13 @@ years <- 1960:2020
 # years <- 1971:1973
 # years <- 1971:1978
 # years <- 1971
+# years <- 1960
 # years <- 1960:1961
 
 # Tells whether to do the R and Y chops.
 do_chops <- FALSE
+
+setup_version <- "v1.2"
 
 # Set the release to be used for input.
 # psut_release <- "20230309T184624Z-7ace5"  # v0.9 (USA only)
@@ -40,12 +43,14 @@ do_chops <- FALSE
 # psut_release <- "20230618T131003Z-4c70f"  # v1.1 (with Matrix objects)
 # psut_release <- "20230915T185731Z-c48a0"  # v1.2a1 (Lacks new phi values and updated IEA data)
 # psut_release <- "20230924T185331Z-13381"  # v1.2a2 (Includes new phi values, removes CHNM as RUS exemplar. Lacks updated IEA data)
-psut_release <- "20231113T152259Z-2ec70"    # v1.2 (hopefully) final
+psut_release <- "20231207T124854Z-73744"    # v1.2
 # psut_release <- "20221219T143657Z-964a6"  # For WRLD
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 
-psut_without_neu_release <- "20231113T152308Z-24a12"    # v1.2 (hopefully) final
+psut_without_neu_release <- "20231207T124907Z-bdcbc"    # v1.2 (hopefully) final
+
+phi_vecs_release <- "20231207T124813Z-c8827" # v1.2
 
 
 # Should we release the results?
@@ -66,13 +71,21 @@ release <- FALSE
 
 sys_info <- Sys.info()
 if (startsWith(sys_info[["nodename"]], "Mac")) {
-  setup <- PFUSetup::get_abs_paths()
+  setup <- PFUSetup::get_abs_paths(version = setup_version)
 } else if (endsWith(sys_info[["nodename"]], "arc4.leeds.ac.uk")) {
   uname <- sys_info[["user"]]
-  setup <- PFUSetup::get_abs_paths(home_path <- "/nobackup",
+  setup <- PFUSetup::get_abs_paths(version = setup_version,
+                                   home_path <- "/nobackup",
                                    dropbox_path = uname)
   # Set the location for the _targets folder.
   targets::tar_config_set(store = file.path(setup[["output_data_path"]], "_targets/"))
+} else if ((sys_info[["sysname"]] == "Linux") && (sys_info[["user"]] == "eeear")){
+  setup <- PFUSetup::get_abs_paths(version = setup_version)
+  setup["pipeline_releases_folder"] <- "/home/eeear/Documents/Datasets/GPFU_database/Releases"
+  setup[["aggregation_mapping_path"]] <- paste0("/home/eeear/Documents/Datasets/GPFU_database/InputData/",
+                                                setup_version,
+                                                "aggregation_mapping.xlsx")
+  setup[["country_concordance_path"]] <- "inst/exiobase_data/Country_Concordance_Full.xlsx"
 } else {
   stop("Unknown system in _targets.R for PFUAggDatabase. Can't set input and output locations.")
 }
@@ -102,6 +115,7 @@ PFUAggDatabase::get_pipeline(countries = countries,
                              do_chops = do_chops,
                              psut_release = psut_release,
                              psut_without_neu_release = psut_without_neu_release,
+                             phi_vecs_release = phi_vecs_release,
                              aggregation_maps_path = setup[["aggregation_mapping_path"]],
                              pipeline_releases_folder = setup[["pipeline_releases_folder"]],
                              pipeline_caches_folder = setup[["pipeline_caches_folder"]],

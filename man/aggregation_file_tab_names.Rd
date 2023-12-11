@@ -5,8 +5,9 @@
 \alias{aggregation_file_tab_names}
 \title{Aggregation file tab information}
 \format{
-A string list with 5 entries.
+A string list with 6 entries.
 \describe{
+\item{region_aggregation}{The name of the region aggregation tab, "region_aggregation".}
 \item{continent_aggregation}{The name of the continent aggregation tab, "continent_aggregation".}
 \item{world_aggregation}{The string name of the world aggregation tab. "world_aggregation".}
 \item{ef_product_aggregation}{The string name of the final energy product aggregation tab. "ef_product_aggregation".}
