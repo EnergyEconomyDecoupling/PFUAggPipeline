@@ -8,6 +8,8 @@ which always resolves to the latest release.
 
 
 
+# PFUAggDatabase 0.1.5 (2023-12-10)
+
 * Delete continuous integration workflow.
   The vignettes cannot be built on GitHub, 
   because input data are unavailable.
