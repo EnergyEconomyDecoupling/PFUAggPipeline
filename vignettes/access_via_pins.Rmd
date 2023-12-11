@@ -24,9 +24,9 @@ This vignette demonstrates how to use the `pins` package to access products in t
 
 Take the following steps to prepare for accessing PFU Database products.
 
-## (1) Obtain Access to IEA WEEB Data
+## (1) Obtain Access to IEA EWEB Data
 
-The PFU database contains [World Extended Energy Balance](https://www.iea.org/data-and-statistics/data-product/world-energy-balances#energy-balances) (WEEB) data. To use the PFU Database, you or your institution must already have purchased the WEEB data, obtained a license to use the WEEB data, or subscribed to a data service with access to the WEEB data. At present, you must have access to all countries and all years of WEEB data to access the PFU Database.
+The PFU database contains [Extended World Energy Balance](https://www.iea.org/data-and-statistics/data-product/world-energy-balances#energy-balances) (EWEB) data. To use the PFU Database, you or your institution must already have purchased the EWEB data, obtained a license to use the EWEB data, or subscribed to a data service with access to the EWEB data. At present, you must have access to all countries and all years of EWEB data to access the PFU Database.
 
 ## (2) Install Dropbox
 
@@ -44,7 +44,7 @@ The [pins](https://pins.rstudio.com) package is the mechanism by which versions 
 
 ## (5) Become familiar with the PFU Database and products
 
-Strictly speaking, the PFU Database consists of only primary, final, and useful energy and exergy data for all countries and all years available in the IEA WEEB data. The data are arranged in Physical Supply Use Table (PSUT) format as described in the paper by [Heun et al.](https://doi.org/10.1016/j.apenergy.2018.05.109) entitled "A physical supply-use table framework for energy analysis on the energy conversion chain." The data are stored in the Dropbox folder as `.rds` files in [matsindf](https://cran.r-project.org/web/packages/matsindf/index.html) format.
+Strictly speaking, the PFU Database consists of only primary, final, and useful energy and exergy data for all countries and all years available in the IEA EWEB data. The data are arranged in Physical Supply Use Table (PSUT) format as described in the paper by [Heun et al.](https://doi.org/10.1016/j.apenergy.2018.05.109) entitled "A physical supply-use table framework for energy analysis on the energy conversion chain." The data are stored in the Dropbox folder as `.rds` files in [matsindf](https://cran.r-project.org/web/packages/matsindf/index.html) format.
 
 In addition to the database itself, there are several data products available, most of which are aggregations, subsets, or other calculations made from the database. For example, primary, final, and useful energy and exergy aggregations are available for each country and each year (data product C). Primary-to-final, final-to-useful, and primary-to-final efficiencies are also available for each country and each year (data product D).
 

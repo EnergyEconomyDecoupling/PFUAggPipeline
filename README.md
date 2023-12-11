@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# PFUAggWorkflow
+# PFUAggDatabase
 
 <!-- README.md is generated from README.Rmd. Please edit README.Rmd. -->
 <!-- badges: start -->
@@ -18,18 +18,18 @@ status](https://github.com/MatthewHeun/PFUAggDatabase/workflows/check-master-dev
 [![R-CMD-check](https://github.com/EnergyEconomyDecoupling/PFUAggDatabase/workflows/R-CMD-check/badge.svg)](https://github.com/EnergyEconomyDecoupling/PFUAggDatabase/actions)
 <!-- badges: end -->
 
-The goal of PFUAggWorkflow is to aggregate data in the `PFUDatabase`.
+The goal of PFUAggDatabase is to aggregate data in the `PFUDatabase`.
 
 ## Installation
 
-You can install the development version of `PFUAggWorkflow` from
+You can install the development version of `PFUAggDatabase` from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("EnergyEconomyDecoupling/PFUAggWorkflow")
+devtools::install_github("EnergyEconomyDecoupling/PFUAggDatabase")
 ```
 
 ## Example
 
-Add an example here.
+See the vignette entitled “Access PFU Database Products Via `Pins`”.
