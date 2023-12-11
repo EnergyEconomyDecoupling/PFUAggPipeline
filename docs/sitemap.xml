@@ -1,159 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>/articles/access_via_pins.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/articles/efficiency_graph_example.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/articles/access_via_pins.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/articles/efficiency_graph_example.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/articles/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/authors.html</loc>
   </url>
   <url>
-    <loc>/reference/agg_metadata.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/index.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregation_df_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregation_file_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/agg_metadata.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregation_file_tab_names.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/aggregation_df_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_finaldemand_aggregates.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/aggregation_file_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_finaluseful_ex_data.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/aggregation_file_tab_names.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_fu_ex_product.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calc_agg_etas.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_fu_ex_sector.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_finaldemand_aggregates.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_fu_ex_total.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_finaluseful_ex_data.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_p_ex_flow.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_fu_ex_product.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_p_ex_product.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_fu_ex_sector.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_p_ex_total.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_fu_ex_total.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_pfu_aggregates.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_p_ex_flow.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_primary_aggregates.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_p_ex_product.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_primary_ex_data.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_p_ex_total.html</loc>
   </url>
   <url>
-    <loc>/reference/calculate_sector_agg_eta_fu.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_pfu_aggregates.html</loc>
   </url>
   <url>
-    <loc>/reference/chopRY.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_pfu_efficiencies.html</loc>
   </url>
   <url>
-    <loc>/reference/continent_aggregation.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_primary_aggregates.html</loc>
   </url>
   <url>
-    <loc>/reference/continent_aggregation_map.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_primary_ex_data.html</loc>
   </url>
   <url>
-    <loc>/reference/create_fd_sectors_list.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_sector_agg_eta_fu.html</loc>
   </url>
   <url>
-    <loc>/reference/data.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/chopRY.html</loc>
   </url>
   <url>
-    <loc>/reference/despecified_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/continent_aggregation.html</loc>
   </url>
   <url>
-    <loc>/reference/efficiency_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/continent_aggregation_map.html</loc>
   </url>
   <url>
-    <loc>/reference/filter_countries.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/create_fd_sectors_list.html</loc>
   </url>
   <url>
-    <loc>/reference/get_pipeline.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/data.html</loc>
   </url>
   <url>
-    <loc>/reference/gross_net_metadata.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/despecified_aggregations.html</loc>
   </url>
   <url>
-    <loc>/reference/grouped_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/efficiency_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/efficiency_pipeline.html</loc>
   </url>
   <url>
-    <loc>/reference/join_psut_continents.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/exiobase_coeffs.html</loc>
   </url>
   <url>
-    <loc>/reference/load_aggregation_maps.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/filter_countries.html</loc>
   </url>
   <url>
-    <loc>/reference/output_file_info.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/filter_countries_and_years.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/get_pipeline.html</loc>
   </url>
   <url>
-    <loc>/reference/pivot_for_csv.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/gross_net_metadata.html</loc>
   </url>
   <url>
-    <loc>/reference/pr_in_agg_pipeline.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/grouped_aggregations.html</loc>
   </url>
   <url>
-    <loc>/reference/quasi-quote-assign.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/region_pipeline.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/join_psut_continents.html</loc>
   </url>
   <url>
-    <loc>/reference/rename_prime_psut_columns.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/load_aggregation_maps.html</loc>
   </url>
   <url>
-    <loc>/reference/rename_suffixed_psut_columns.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/output_file_info.html</loc>
   </url>
   <url>
-    <loc>/reference/sea_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/stack_chopped_ECCs.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pivot_agg_eta_wide_by_year.html</loc>
   </url>
   <url>
-    <loc>/reference/stack_despecification_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pivot_for_csv.html</loc>
   </url>
   <url>
-    <loc>/reference/stack_group_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pr_in_agg_pipeline.html</loc>
   </url>
   <url>
-    <loc>/reference/world_aggregation.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/quasi-quote-assign.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/region_pipeline.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/rename_prime_psut_columns.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/rename_suffixed_psut_columns.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/sea_cols.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/stack_chopped_ECCs.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/stack_despecification_aggregations.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/stack_group_aggregations.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/world_aggregation.html</loc>
+  </url>
+  <url>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/write_agg_etas_xlsx.html</loc>
   </url>
 </urlset>
