@@ -370,24 +370,24 @@ get_pipeline <- function(countries = "all",
                                              targ = PivotedAggEtaPFUWithoutNEU,
                                              pin_name = "agg_eta_pfu_without_neu_csv",
                                              type = "csv",
-                                             release = Release))),
+                                             release = Release))) #,
 
     # Zip the cache and store in the pipeline_caches_folder --------------------
 
-    targets::tar_target_raw(
-      "StoreCache",
-      quote(PFUPipelineTools::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
-                                          cache_folder = "_targets",
-                                          file_prefix = "pfu_agg_pipeline_cache_",
-                                          dependency = c(ReleasePSUT_Re_all_Chop_all_Ds_all_Gr_all, # The RUVY matrices for ECCs
-                                                         ReleaseSectorAggEtaFU,                     # Product C
-                                                         ReleaseSectorAggEtaFUCSV,                  # Product D
-                                                         ReleaseAggEtaPFU,                          # Product E
-                                                         ReleaseAggEtaPFUCSV,                       # Product F
-                                                         ReleaseSectorAggEtaFUWorld,                # Product G
-                                                         ReleaseAggEtaPFUWorld),                    # Product H
-                                          release = Release))
-    )
+    # targets::tar_target_raw(
+    #   "StoreCache",
+    #   quote(PFUPipelineTools::stash_cache(pipeline_caches_folder = PipelineCachesFolder,
+    #                                       cache_folder = "_targets",
+    #                                       file_prefix = "pfu_agg_pipeline_cache_",
+    #                                       dependency = c(ReleasePSUT_Re_all_Chop_all_Ds_all_Gr_all, # The RUVY matrices for ECCs
+    #                                                      ReleaseSectorAggEtaFU,                     # Product C
+    #                                                      ReleaseSectorAggEtaFUCSV,                  # Product D
+    #                                                      ReleaseAggEtaPFU,                          # Product E
+    #                                                      ReleaseAggEtaPFUCSV,                       # Product F
+    #                                                      ReleaseSectorAggEtaFUWorld,                # Product G
+    #                                                      ReleaseAggEtaPFUWorld),                    # Product H
+    #                                       release = Release))
+    # )
   )
 }
 
