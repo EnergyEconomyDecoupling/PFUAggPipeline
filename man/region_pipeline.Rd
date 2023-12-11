@@ -6,10 +6,12 @@
 \usage{
 region_pipeline(
   .psut_data,
+  region_aggregation_map,
   continent_aggregation_map,
   world_aggregation_map,
   country = Recca::psut_cols$country,
   year = Recca::psut_cols$year,
+  region = "Region",
   continent = "Continent",
   world = "World"
 )
@@ -17,8 +19,18 @@ region_pipeline(
 \arguments{
 \item{.psut_data}{A data frame of PSUT information.}
 
+\item{region_aggregation_map}{An aggregation map that shows how to
+aggregate countries to regions,
+like FoSUN and FoYUG.
+Entries in the each sublist are not
+assumed to be unique across sublists.
+I.e., a country could be in more than one region.}
+
 \item{continent_aggregation_map}{An aggregation map that shows how to
-aggregate countries to continents.}
+aggregate countries to continents.
+Entries in the each sublist are
+assumed to be unique across sublists.
+I.e., each country is in one and only one continent.}
 
 \item{world_aggregation_map}{An aggregation map that shows how to
 aggregate continents to the world.}
@@ -29,6 +41,9 @@ Default is \code{Recca::psut_cols$country}.}
 \item{year}{The name of the year column.
 Default is \code{Recca::psut_cols$year}.}
 
+\item{region}{The name of the region column.
+Default is "Region".}
+
 \item{continent}{The name of the continent column.
 Default is "Continent".}
 
@@ -37,7 +52,7 @@ Default is "World".}
 }
 \value{
 A data frame that includes new "Country"s for
-continents and the World.
+regions, continents, and the World.
 }
 \description{
 The database can benefit from continent and World aggregations.
