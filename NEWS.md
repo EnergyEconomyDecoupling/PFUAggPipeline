@@ -7,6 +7,9 @@ Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Add `Remotes:` field to `DESCRIPTION` to assist
+  installation with metapackage `CLPFUDatabase`.
+
 
 # PFUAggDatabase 0.1.5 (2023-12-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10345811.svg)](https://doi.org/10.5281/zenodo.10345811)
 
