@@ -13,7 +13,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# PFUAggDatabase
 
 <!-- README.md is generated from README.Rmd. Please edit README.Rmd. -->
 
@@ -24,19 +23,44 @@ knitr::opts_chunk$set(
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6409759.svg)](https://doi.org/10.5281/zenodo.6409759)
 <!-- badges: end -->
 
+# PFUAggPipeline
 
-The goal of PFUAggDatabase is to aggregate data in the `PFUDatabase`.
-Analyses are completed using the [targets](https://github.com/ropensci/targets) environment
-which provides helpful dependency management for the calculation pipeline. 
+
+## Statement of need
+
+The CL-PFU database uses many sources of input data
+spanning hundreds of data files. 
+The [targets](https://docs.ropensci.org/targets/) pipeline
+in the `PFUPipeline` package creates 
+**RUVY** matrices for the
+[PSUT](https://www.sciencedirect.com/science/article/pii/S0306261918308298?via%3Dihub)
+framework
+in [matsindf](https://MatthewHeun.github.io/matsindf/) format, 
+containing descriptions of energy conversion chains (ECCs)
+in energy and exergy terms.
+Those ECCs can be used as input data
+to create many aggregated versions of the ECCs,
+which are amenable to presentation and efficiency calculations.
+Computational tools to aggregate and calculate efficiencies
+are needed.
+
+This package (`PFUAggPipeline`) creates another 
+[targets](https://docs.ropensci.org/targets/) computational pipeline, 
+one that aggregates and calculates efficiencies
+from the results of `PFUPipeline` package.
+The [targets](https://docs.ropensci.org/targets/) computational pipeline
+provides helpful dependency management
+so what is done stays done
+during debugging.
 
 
 ## Installation
 
-You can install the development version of `PFUAggDatabase` from [GitHub](https://github.com/) with:
+You can install the development version of `PFUAggPipeline` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("EnergyEconomyDecoupling/PFUAggDatabase")
+devtools::install_github("EnergyEconomyDecoupling/PFUAggPipeline")
 ```
 
 
@@ -51,13 +75,13 @@ tar_make_future(workers = 2)  # to execute the calculations (or `workers = 8`, i
 ```
 
 
-### Accessing targets
+## Accessing targets
 
 `targets::tar_read(<<target>>)` pulls the value of a target out of the `targets` cache. 
 (`<<target>>` should be an unquoted symbol such as `Specified`.)
 
 
-### Fresh start
+## Fresh start
 
 `targets::tar_destroy()` invalidates the `targets` cache and forces reanalysis of everything.
 Reanalyzing everything may take a while.
@@ -73,8 +97,8 @@ See the vignette entitled "Access PFU Database Products Via `Pins`".
 For information about the `targets` package, 
 see the [targets manual](https://books.ropensci.org/targets/).
 
-For documentation on the `PFUAggDatabase` package, 
-see <https://EnergyEconomyDecoupling.github.io/PFUAggDatabase/>.
+For documentation on the `PFUAggPipeline` package, 
+see <https://EnergyEconomyDecoupling.github.io/PFUAggPipeline/>.
 
 
 
