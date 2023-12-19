@@ -36,7 +36,7 @@
     
     <a class="navbar-brand me-2" href="index.html">PFUAggDatabase</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,20 +70,23 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="pfuaggdatabase">PFUAggDatabase<a class="anchor" aria-label="anchor" href="#pfuaggdatabase"></a>
+  <main id="main" class="col-md-9">
+<div class="section level1">
+<div class="page-header"><h1 id="pfuaggpipeline">PFUAggPipeline<a class="anchor" aria-label="anchor" href="#pfuaggpipeline"></a>
 </h1></div>
-<!-- README.md is generated from README.Rmd. Please edit README.Rmd. -->
-<!-- badges: start -->
-
-<p>The goal of PFUAggDatabase is to aggregate data in the <code>PFUDatabase</code>. Analyses are completed using the <a href="https://github.com/ropensci/targets" class="external-link">targets</a> environment which provides helpful dependency management for the calculation pipeline.</p>
+<div class="section level2">
+<h2 id="statement-of-need">Statement of need<a class="anchor" aria-label="anchor" href="#statement-of-need"></a>
+</h2>
+<p>The CL-PFU database uses many sources of input data spanning hundreds of data files. The <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> pipeline in the <code>PFUPipeline</code> package creates <strong>RUVY</strong> matrices for the <a href="https://www.sciencedirect.com/science/article/pii/S0306261918308298?via%3Dihub" class="external-link">PSUT</a> framework in <a href="https://MatthewHeun.github.io/matsindf/" class="external-link">matsindf</a> format, containing descriptions of energy conversion chains (ECCs) in energy and exergy terms. Those ECCs can be used as input data to create many aggregated versions of the ECCs, which are amenable to presentation and efficiency calculations. Computational tools to aggregate and calculate efficiencies are needed.</p>
+<p>This package (<code>PFUAggPipeline</code>) creates another <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> computational pipeline, one that aggregates and calculates efficiencies from the results of <code>PFUPipeline</code> package. The <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a> computational pipeline provides helpful dependency management so what is done stays done during debugging.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <code>PFUAggDatabase</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the development version of <code>PFUAggPipeline</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"EnergyEconomyDecoupling/PFUAggDatabase"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"EnergyEconomyDecoupling/PFUAggPipeline"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -93,16 +96,16 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/targets/" class="external-link">targets</a></span><span class="op">)</span>              <span class="co"># to load the targets package   </span></span>
 <span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_visnetwork.html" class="external-link">tar_visnetwork</a></span><span class="op">(</span><span class="op">)</span>              <span class="co"># to see a directed acyclic graph of the calculations that will take place   </span></span>
 <span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_make_future.html" class="external-link">tar_make_future</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>  <span class="co"># to execute the calculations (or `workers = 8`, if you have enough cores)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="accessing-targets">Accessing targets<a class="anchor" aria-label="anchor" href="#accessing-targets"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="accessing-targets">Accessing targets<a class="anchor" aria-label="anchor" href="#accessing-targets"></a>
+</h2>
 <p><code>targets::tar_read(&lt;&lt;target&gt;&gt;)</code> pulls the value of a target out of the <code>targets</code> cache. (<code>&lt;&lt;target&gt;&gt;</code> should be an unquoted symbol such as <code>Specified</code>.)</p>
 </div>
-<div class="section level3">
-<h3 id="fresh-start">Fresh start<a class="anchor" aria-label="anchor" href="#fresh-start"></a>
-</h3>
+<div class="section level2">
+<h2 id="fresh-start">Fresh start<a class="anchor" aria-label="anchor" href="#fresh-start"></a>
+</h2>
 <p><code><a href="https://docs.ropensci.org/targets/reference/tar_destroy.html" class="external-link">targets::tar_destroy()</a></code> invalidates the <code>targets</code> cache and forces reanalysis of everything. Reanalyzing everything may take a while.</p>
-</div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -113,9 +116,10 @@
 <h2 id="more-information">More Information<a class="anchor" aria-label="anchor" href="#more-information"></a>
 </h2>
 <p>For information about the <code>targets</code> package, see the <a href="https://books.ropensci.org/targets/" class="external-link">targets manual</a>.</p>
-<p>For documentation on the <code>PFUAggDatabase</code> package, see <a href="https://EnergyEconomyDecoupling.github.io/PFUAggDatabase/" class="external-link uri">https://EnergyEconomyDecoupling.github.io/PFUAggDatabase/</a>.</p>
+<p>For documentation on the <code>PFUAggPipeline</code> package, see <a href="https://EnergyEconomyDecoupling.github.io/PFUAggPipeline/" class="external-link uri">https://EnergyEconomyDecoupling.github.io/PFUAggPipeline/</a>.</p>
 </div>
 </div>
+
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
