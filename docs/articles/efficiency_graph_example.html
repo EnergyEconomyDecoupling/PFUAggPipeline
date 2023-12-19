@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">PFUAggDatabase</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2023-12-10</h4>
+            <h4 data-toc-skip class="date">2023-12-19</h4>
       
       
       <div class="d-none name"><code>efficiency_graph_example.Rmd</code></div>
@@ -108,7 +108,7 @@ vignette.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">MKHthemes</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">PFUSetup</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://energyeconomydecoupling.github.io/PFUSetup/" class="external-link">PFUSetup</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pins.rstudio.com/" class="external-link">pins</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></code></pre></div>
@@ -131,7 +131,7 @@ package with the following code.</p>
 <code>pinboard_folder</code> might be different from this example, due
 to a different location on your computer.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pinboard_folder</span> <span class="op">&lt;-</span> <span class="fu">PFUSetup</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PFUSetup/man/get_abs_paths.html" class="external-link">get_abs_paths</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">"pipeline_releases_folder"</span><span class="op">]</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">pinboard_folder</span> <span class="op">&lt;-</span> <span class="fu">PFUSetup</span><span class="fu">::</span><span class="fu"><a href="https://energyeconomydecoupling.github.io/PFUSetup/reference/get_abs_paths.html" class="external-link">get_abs_paths</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">"pipeline_releases_folder"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">pinboard_folder</span></span>
 <span><span class="co">#&gt; [1] "/Users/mkh2/Dropbox/Fellowship 1960-2015 PFU database/OutputData/PipelineReleases"</span></span>
 <span><span class="va">pinboard</span> <span class="op">&lt;-</span> <span class="fu">pins</span><span class="fu">::</span><span class="fu"><a href="https://pins.rstudio.com/reference/board_folder.html" class="external-link">board_folder</a></span><span class="op">(</span><span class="va">pinboard_folder</span>, versioned <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -338,7 +338,7 @@ data frame.</p>
 <span><span class="co"># Users can create their own </span></span>
 <span><span class="co"># continent mapping data frame</span></span>
 <span><span class="co"># or ask for ours.</span></span>
-<span><span class="va">continents_file</span> <span class="op">&lt;-</span> <span class="fu">PFUSetup</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/PFUSetup/man/get_abs_paths.html" class="external-link">get_abs_paths</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">"aggregation_mapping_path"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">continents_file</span> <span class="op">&lt;-</span> <span class="fu">PFUSetup</span><span class="fu">::</span><span class="fu"><a href="https://energyeconomydecoupling.github.io/PFUSetup/reference/get_abs_paths.html" class="external-link">get_abs_paths</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">"aggregation_mapping_path"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">continents_file</span></span>
 <span><span class="co">#&gt; [1] "/Users/mkh2/Dropbox/Fellowship 1960-2015 PFU database/InputData/v1.2/aggregation_mapping.xlsx"</span></span>
 <span><span class="va">continents_agg_map</span> <span class="op">&lt;-</span> <span class="va">continents_file</span> <span class="op">|&gt;</span></span>
