@@ -7,6 +7,8 @@ Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# PFUAggDatabase 0.1.7 (2023-12-19)
+
 * Update order of dependencies to facilitate
   loading upon install.
 
