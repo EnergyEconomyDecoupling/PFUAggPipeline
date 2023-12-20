@@ -46,10 +46,10 @@ Suggests:
 Remotes:
     github::MatthewHeun/MKHthemes,
     github::MatthewHeun/IEATools,
-    github::MatthewHeun/Recca
+    github::MatthewHeun/Recca,
     github::EnergyEconomyDecoupling/MWTools,
     github::EnergyEconomyDecoupling/PFUSetup,
-    github::EnergyEconomyDecoupling/PFUPipelineTools,
+    github::EnergyEconomyDecoupling/PFUPipelineTools
 Depends: 
     R (>= 2.10)
 LazyData: true
