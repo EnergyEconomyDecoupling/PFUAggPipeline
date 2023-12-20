@@ -9,12 +9,12 @@ stack_group_aggregations(
   Gr_Pr = NULL,
   Gr_In = NULL,
   Gr_PrIn = NULL,
-  product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-  industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-  specified = PFUAggDatabase::aggregation_df_cols$specified,
-  despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-  ungrouped = PFUAggDatabase::aggregation_df_cols$ungrouped,
-  grouped = PFUAggDatabase::aggregation_df_cols$grouped
+  product_aggregation = PFUAggPipeline::aggregation_df_cols$product_aggregation,
+  industry_aggregation = PFUAggPipeline::aggregation_df_cols$industry_aggregation,
+  specified = PFUAggPipeline::aggregation_df_cols$specified,
+  despecified = PFUAggPipeline::aggregation_df_cols$despecified,
+  ungrouped = PFUAggPipeline::aggregation_df_cols$ungrouped,
+  grouped = PFUAggPipeline::aggregation_df_cols$grouped
 )
 }
 \arguments{
@@ -31,22 +31,22 @@ Default is \code{NULL}.}
 Default is \code{NULL}.}
 
 \item{product_aggregation}{The product aggregation column.
-Default is \code{PFUAggDatabase::aggregation_df_cols$product_aggregation}.}
+Default is \code{PFUAggPipeline::aggregation_df_cols$product_aggregation}.}
 
 \item{industry_aggregation}{The industry aggregation column.
-Default is \code{PFUAggDatabase::aggregation_df_cols$industry_aggregation}.}
+Default is \code{PFUAggPipeline::aggregation_df_cols$industry_aggregation}.}
 
 \item{specified}{A string that indicates a product or industry is specified.
-Default is \code{PFUAggDatabase::aggregation_df_cols$specified}.}
+Default is \code{PFUAggPipeline::aggregation_df_cols$specified}.}
 
 \item{despecified}{A string that indicates a product or industry is despecified
-Default is \code{PFUAggDatabase::aggregation_df_cols$despecified}.}
+Default is \code{PFUAggPipeline::aggregation_df_cols$despecified}.}
 
 \item{ungrouped}{A string that indicates a product or industry is grouped.
-Default is \code{PFUAggDatabase::aggregation_df_cols$ungrouped}.}
+Default is \code{PFUAggPipeline::aggregation_df_cols$ungrouped}.}
 
 \item{grouped}{A string that indicates a product or industry is grouped.
-Default is \code{PFUAggDatabase::aggregation_df_cols$grouped}.}
+Default is \code{PFUAggPipeline::aggregation_df_cols$grouped}.}
 }
 \value{
 A stacked set of data frames with different product and industry groupings

@@ -39,17 +39,17 @@ pr_in_agg_pipeline(
   Y_aggregated_colname = paste0(Y, aggregated_suffix),
   S_units_aggregated_colname = paste0(S_units, aggregated_suffix),
   aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
-  product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-  industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-  specified = PFUAggDatabase::aggregation_df_cols$specified,
-  despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-  grouped = PFUAggDatabase::aggregation_df_cols$grouped,
-  chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-  chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+  product_aggregation = PFUAggPipeline::aggregation_df_cols$product_aggregation,
+  industry_aggregation = PFUAggPipeline::aggregation_df_cols$industry_aggregation,
+  specified = PFUAggPipeline::aggregation_df_cols$specified,
+  despecified = PFUAggPipeline::aggregation_df_cols$despecified,
+  grouped = PFUAggPipeline::aggregation_df_cols$grouped,
+  chopped_mat = PFUAggPipeline::aggregation_df_cols$chopped_mat,
+  chopped_var = PFUAggPipeline::aggregation_df_cols$chopped_var,
   Y_matname = Recca::psut_cols$Y,
   R_matname = Recca::psut_cols$R,
-  product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-  none = PFUAggDatabase::agg_metadata$none
+  product_sector = PFUAggPipeline::aggregation_df_cols$product_sector,
+  none = PFUAggPipeline::agg_metadata$none
 )
 }
 \arguments{
@@ -101,16 +101,16 @@ Defaults are the matrix names with \code{aggregated_suffix} appended.}
 \item{aggregated_suffix}{The suffix for aggregated column names.
 See \code{Recca::aggregate_cols}.}
 
-\item{product_aggregation, industry_aggregation, specified, despecified, grouped, product_sector}{See \code{PFUAggDatabase::aggregation_df_cols}.}
+\item{product_aggregation, industry_aggregation, specified, despecified, grouped, product_sector}{See \code{PFUAggPipeline::aggregation_df_cols}.}
 
 \item{chopped_mat, chopped_var}{Column names that indicate which matrix has been chopped, \strong{R} or \strong{Y}.
-Default values are from \code{PFUAggDatabase::aggregation_df_cols}.}
+Default values are from \code{PFUAggPipeline::aggregation_df_cols}.}
 
 \item{Y_matname, R_matname}{Matrix names for the \code{chopped_mat} and \code{chopped_var} columns.
 Default values are from \code{Recca::psut_cols$R} and \code{Recca::psut_cols$Y}.}
 
 \item{none}{The string to specify no aggregations.
-Default is \code{PFUAggDatabase::agg_metadata$none}.}
+Default is \code{PFUAggPipeline::agg_metadata$none}.}
 }
 \value{
 A data frame of efficiencies for the original, despecified, and grouped versions

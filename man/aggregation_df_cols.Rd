@@ -3,7 +3,7 @@
 \docType{data}
 \name{aggregation_df_cols}
 \alias{aggregation_df_cols}
-\title{PFUAggDatabase data frame column names}
+\title{PFUAggPipeline data frame column names}
 \format{
 A string list with 9 entries.
 \describe{

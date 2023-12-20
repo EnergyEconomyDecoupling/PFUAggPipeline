@@ -106,7 +106,7 @@ chop_Y_eccs <- function(.psut_data,
 #'                            Defaults are taken from `Recca::psut_cols`.
 #' @param product_sector The name of the data frame column that contains the variable that has been chopped.
 #' @param none The string for no chopping. Used with `PSUT_Re_all_Gr_all`.
-#'             Default is `PFUAggDatabase::agg_metadata$none`.
+#'             Default is `PFUAggPipeline::agg_metadata$none`.
 #'
 #' @return A row-bound version of `PSUT_Re_all_Gr_all`, `PSUT_Re_all_Gr_all_Chop_Y`, and `PSUT_Re_all_Gr_all_Chop_R`.
 #'
@@ -114,12 +114,12 @@ chop_Y_eccs <- function(.psut_data,
 stack_chopped_ECCs <- function(psut,
                                chop_R = NULL,
                                chop_Y = NULL,
-                               chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-                               chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+                               chopped_mat = PFUAggPipeline::aggregation_df_cols$chopped_mat,
+                               chopped_var = PFUAggPipeline::aggregation_df_cols$chopped_var,
                                Y_matname = Recca::psut_cols$Y,
                                R_matname = Recca::psut_cols$R,
-                               product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-                               none = PFUAggDatabase::agg_metadata$none) {
+                               product_sector = PFUAggPipeline::aggregation_df_cols$product_sector,
+                               none = PFUAggPipeline::agg_metadata$none) {
 
   # Build a combined data frame.
   out <- psut %>%

@@ -128,7 +128,7 @@
 
 
 
-#' PFUAggDatabase data frame column names
+#' PFUAggPipeline data frame column names
 #'
 #' Aggregation data frame column names
 #'

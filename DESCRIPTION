@@ -1,4 +1,4 @@
-Package: PFUAggDatabase
+Package: PFUAggPipeline
 Title: Calculate Aggregations and Efficiencies For Energy Conversion Chains in PSUT Format
 Version: 0.1.7
 Date: 2022-12-19

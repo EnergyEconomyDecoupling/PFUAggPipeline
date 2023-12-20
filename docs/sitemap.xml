@@ -1,186 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/404.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/404.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/CODE_OF_CONDUCT.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/CONTRIBUTING.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/LICENSE-text.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/LICENSE.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/articles/access_via_pins.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/articles/access_via_pins.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/articles/efficiency_graph_example.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/articles/efficiency_graph_example.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/articles/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/authors.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/authors.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/index.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/news/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/news/index.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/agg_metadata.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/agg_metadata.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/aggregation_df_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/aggregation_df_cols.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/aggregation_file_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/aggregation_file_cols.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/aggregation_file_tab_names.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/aggregation_file_tab_names.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calc_agg_etas.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calc_agg_etas.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_finaldemand_aggregates.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_finaldemand_aggregates.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_finaluseful_ex_data.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_finaluseful_ex_data.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_fu_ex_product.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_fu_ex_product.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_fu_ex_sector.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_fu_ex_sector.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_fu_ex_total.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_fu_ex_total.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_p_ex_flow.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_p_ex_flow.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_p_ex_product.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_p_ex_product.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_p_ex_total.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_p_ex_total.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_pfu_aggregates.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_pfu_aggregates.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_pfu_efficiencies.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_pfu_efficiencies.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_primary_aggregates.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_primary_aggregates.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_primary_ex_data.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_primary_ex_data.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/calculate_sector_agg_eta_fu.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/calculate_sector_agg_eta_fu.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/chopRY.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/chopRY.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/continent_aggregation.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/continent_aggregation.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/continent_aggregation_map.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/continent_aggregation_map.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/create_fd_sectors_list.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/create_fd_sectors_list.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/data.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/data.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/despecified_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/despecified_aggregations.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/efficiency_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/efficiency_cols.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/efficiency_pipeline.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/efficiency_pipeline.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/exiobase_coeffs.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/exiobase_coeffs.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/filter_countries.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/filter_countries.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/filter_countries_and_years.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/filter_countries_and_years.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/get_pipeline.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/get_pipeline.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/gross_net_metadata.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/gross_net_metadata.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/grouped_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/grouped_aggregations.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/index.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/join_psut_continents.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/join_psut_continents.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/load_aggregation_maps.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/load_aggregation_maps.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/output_file_info.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/output_file_info.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pipe.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pivot_agg_eta_wide_by_year.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/pivot_agg_eta_wide_by_year.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pivot_for_csv.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/pivot_for_csv.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/pr_in_agg_pipeline.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/pr_in_agg_pipeline.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/quasi-quote-assign.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/quasi-quote-assign.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/region_pipeline.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/region_pipeline.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/rename_prime_psut_columns.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/rename_prime_psut_columns.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/rename_suffixed_psut_columns.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/rename_suffixed_psut_columns.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/sea_cols.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/sea_cols.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/stack_chopped_ECCs.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/stack_chopped_ECCs.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/stack_despecification_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/stack_despecification_aggregations.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/stack_group_aggregations.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/stack_group_aggregations.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/world_aggregation.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/world_aggregation.html</loc>
   </url>
   <url>
-    <loc>https://energyeconomydecoupling.github.io/PFUAggDatabase/reference/write_agg_etas_xlsx.html</loc>
+    <loc>https://energyeconomydecoupling.github.io/PFUAggPipeline/reference/write_agg_etas_xlsx.html</loc>
   </url>
 </urlset>

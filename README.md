@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/PFUAggDatabase)](https://cran.r-project.org/package=PFUAggDatabase)
+status](https://www.r-pkg.org/badges/version/PFUAggPipeline)](https://cran.r-project.org/package=PFUAggPipeline)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: Active – The project has reached a stable, usable

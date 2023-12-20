@@ -11,11 +11,11 @@
 #' @param aggregation_file_tabs A list of tabs in the aggregation file.
 #'                              The names are the programmatic names for the tabs.
 #'                              The items are the actual names.
-#'                              Default is `PFUAggDatabase::aggregation_file_tabs`.
+#'                              Default is `PFUAggPipeline::aggregation_file_tabs`.
 #' @param many_colname The name for the many column in the aggregation tables.
-#'                     Default is `PFUAggDatabase::aggregation_file_info$many_colname`.
+#'                     Default is `PFUAggPipeline::aggregation_file_info$many_colname`.
 #' @param few_colname The name for the few column in the aggregation tables.
-#'                    Default is `PFUAggDatabase::aggregation_file_info$few_colname`.
+#'                    Default is `PFUAggPipeline::aggregation_file_info$few_colname`.
 #'
 #' @return A named list of aggregation maps.
 #'         The names give the aggregation map.
@@ -23,9 +23,9 @@
 #'
 #' @export
 load_aggregation_maps <- function(path,
-                                  aggregation_file_tabs = PFUAggDatabase::aggregation_file_tab_names,
-                                  many_colname = PFUAggDatabase::aggregation_file_cols$many_colname,
-                                  few_colname = PFUAggDatabase::aggregation_file_cols$few_colname) {
+                                  aggregation_file_tabs = PFUAggPipeline::aggregation_file_tab_names,
+                                  many_colname = PFUAggPipeline::aggregation_file_cols$many_colname,
+                                  few_colname = PFUAggPipeline::aggregation_file_cols$few_colname) {
 
   lapply(aggregation_file_tabs, function(sheet) {
     readxl::read_excel(path = path, sheet = sheet) %>%
