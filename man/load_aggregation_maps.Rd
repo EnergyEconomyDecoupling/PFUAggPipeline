@@ -6,9 +6,9 @@
 \usage{
 load_aggregation_maps(
   path,
-  aggregation_file_tabs = PFUAggDatabase::aggregation_file_tab_names,
-  many_colname = PFUAggDatabase::aggregation_file_cols$many_colname,
-  few_colname = PFUAggDatabase::aggregation_file_cols$few_colname
+  aggregation_file_tabs = PFUAggPipeline::aggregation_file_tab_names,
+  many_colname = PFUAggPipeline::aggregation_file_cols$many_colname,
+  few_colname = PFUAggPipeline::aggregation_file_cols$few_colname
 )
 }
 \arguments{
@@ -17,13 +17,13 @@ load_aggregation_maps(
 \item{aggregation_file_tabs}{A list of tabs in the aggregation file.
 The names are the programmatic names for the tabs.
 The items are the actual names.
-Default is \code{PFUAggDatabase::aggregation_file_tabs}.}
+Default is \code{PFUAggPipeline::aggregation_file_tabs}.}
 
 \item{many_colname}{The name for the many column in the aggregation tables.
-Default is \code{PFUAggDatabase::aggregation_file_info$many_colname}.}
+Default is \code{PFUAggPipeline::aggregation_file_info$many_colname}.}
 
 \item{few_colname}{The name for the few column in the aggregation tables.
-Default is \code{PFUAggDatabase::aggregation_file_info$few_colname}.}
+Default is \code{PFUAggPipeline::aggregation_file_info$few_colname}.}
 }
 \value{
 A named list of aggregation maps.

@@ -1,4 +1,4 @@
 library(testthat)
-library(PFUAggDatabase)
+library(PFUAggPipeline)
 
-test_check("PFUAggDatabase")
+test_check("PFUAggPipeline")

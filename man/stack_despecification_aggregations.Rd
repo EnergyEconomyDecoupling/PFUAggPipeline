@@ -9,10 +9,10 @@ stack_despecification_aggregations(
   Ds_Pr = NULL,
   Ds_In = NULL,
   Ds_PrIn = NULL,
-  product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-  industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-  specified = PFUAggDatabase::aggregation_df_cols$specified,
-  despecified = PFUAggDatabase::aggregation_df_cols$despecified
+  product_aggregation = PFUAggPipeline::aggregation_df_cols$product_aggregation,
+  industry_aggregation = PFUAggPipeline::aggregation_df_cols$industry_aggregation,
+  specified = PFUAggPipeline::aggregation_df_cols$specified,
+  despecified = PFUAggPipeline::aggregation_df_cols$despecified
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ stack_despecification_aggregations(
 
 \item{Ds_PrIn}{A data frame in which both products and industries are despecified.}
 
-\item{product_aggregation, industry_aggregation, specified, despecified}{See \code{PFUAggDatabase::aggregation_df_cols}.}
+\item{product_aggregation, industry_aggregation, specified, despecified}{See \code{PFUAggPipeline::aggregation_df_cols}.}
 }
 \value{
 A stacked data frame containing new metadata columns for product and industry specification.

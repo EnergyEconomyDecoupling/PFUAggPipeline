@@ -8,7 +8,7 @@
 
     <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
     
-    <a class="navbar-brand me-2" href="../index.html">PFUAggDatabase</a>
+    <a class="navbar-brand me-2" href="../index.html">PFUAggPipeline</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
 
@@ -80,9 +80,9 @@
 <span>  primary <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/all_stages.html" class="external-link">all_stages</a></span><span class="op">$</span><span class="va">primary</span>,</span>
 <span>  final <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/all_stages.html" class="external-link">all_stages</a></span><span class="op">$</span><span class="va">final</span>,</span>
 <span>  useful <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/all_stages.html" class="external-link">all_stages</a></span><span class="op">$</span><span class="va">useful</span>,</span>
-<span>  chopped_mat <span class="op">=</span> <span class="fu">PFUAggDatabase</span><span class="fu">::</span><span class="va"><a href="aggregation_df_cols.html">aggregation_df_cols</a></span><span class="op">$</span><span class="va">chopped_mat</span>,</span>
-<span>  chopped_var <span class="op">=</span> <span class="fu">PFUAggDatabase</span><span class="fu">::</span><span class="va"><a href="aggregation_df_cols.html">aggregation_df_cols</a></span><span class="op">$</span><span class="va">chopped_var</span>,</span>
-<span>  none <span class="op">=</span> <span class="fu">PFUAggDatabase</span><span class="fu">::</span><span class="va"><a href="agg_metadata.html">agg_metadata</a></span><span class="op">$</span><span class="va">none</span>,</span>
+<span>  chopped_mat <span class="op">=</span> <span class="fu">PFUAggPipeline</span><span class="fu">::</span><span class="va"><a href="aggregation_df_cols.html">aggregation_df_cols</a></span><span class="op">$</span><span class="va">chopped_mat</span>,</span>
+<span>  chopped_var <span class="op">=</span> <span class="fu">PFUAggPipeline</span><span class="fu">::</span><span class="va"><a href="aggregation_df_cols.html">aggregation_df_cols</a></span><span class="op">$</span><span class="va">chopped_var</span>,</span>
+<span>  none <span class="op">=</span> <span class="fu">PFUAggPipeline</span><span class="fu">::</span><span class="va"><a href="agg_metadata.html">agg_metadata</a></span><span class="op">$</span><span class="va">none</span>,</span>
 <span>  ex_p <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/Recca/man/aggregate_cols.html" class="external-link">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_primary</span>,</span>
 <span>  ex_f <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/aggregate_cols.html" class="external-link">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_final</span>,</span>
 <span>  ex_u <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/aggregate_cols.html" class="external-link">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_useful</span>,</span>
@@ -151,12 +151,12 @@ Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/prepositions_list.htm
 
 <dt>chopped_mat, chopped_var</dt>
 <dd><p>Column names identifying chopped matrices and variables.
-See <code><a href="aggregation_df_cols.html">PFUAggDatabase::aggregation_df_cols</a></code></p></dd>
+See <code><a href="aggregation_df_cols.html">PFUAggPipeline::aggregation_df_cols</a></code></p></dd>
 
 
 <dt>none</dt>
 <dd><p>A string signifying no aggregation is present.
-Default is <code>PFUAggDatabase::agg_metadata$none</code>.</p></dd>
+Default is <code>PFUAggPipeline::agg_metadata$none</code>.</p></dd>
 
 
 <dt>ex_p, ex_fd_gross, ex_fd_net, ex_fd</dt>

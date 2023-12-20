@@ -1,5 +1,5 @@
 ---
-title: "Branches for `PFUAggDatabase`"
+title: "Branches for `PFUAggPipeline`"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 output: html_document

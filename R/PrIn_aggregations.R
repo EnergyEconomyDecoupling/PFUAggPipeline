@@ -159,7 +159,7 @@ grouped_aggregations <- function(.psut_data,
 #' @param Ds_Pr A data frame in which products are despecified.
 #' @param Ds_In A data frame in which industries are despecified.
 #' @param Ds_PrIn A data frame in which both products and industries are despecified.
-#' @param product_aggregation,industry_aggregation,specified,despecified See `PFUAggDatabase::aggregation_df_cols`.
+#' @param product_aggregation,industry_aggregation,specified,despecified See `PFUAggPipeline::aggregation_df_cols`.
 #'
 #' @return A stacked data frame containing new metadata columns for product and industry specification.
 #'
@@ -168,10 +168,10 @@ stack_despecification_aggregations <- function(specified_df,
                                                Ds_Pr = NULL,
                                                Ds_In = NULL,
                                                Ds_PrIn = NULL,
-                                               product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-                                               industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-                                               specified = PFUAggDatabase::aggregation_df_cols$specified,
-                                               despecified = PFUAggDatabase::aggregation_df_cols$despecified) {
+                                               product_aggregation = PFUAggPipeline::aggregation_df_cols$product_aggregation,
+                                               industry_aggregation = PFUAggPipeline::aggregation_df_cols$industry_aggregation,
+                                               specified = PFUAggPipeline::aggregation_df_cols$specified,
+                                               despecified = PFUAggPipeline::aggregation_df_cols$despecified) {
 
   out <- specified_df %>%
     dplyr::mutate(
@@ -221,17 +221,17 @@ stack_despecification_aggregations <- function(specified_df,
 #' @param Gr_PrIn The data frame with both grouped products and industries.
 #'                Default is `NULL`.
 #' @param product_aggregation The product aggregation column.
-#'                            Default is `PFUAggDatabase::aggregation_df_cols$product_aggregation`.
+#'                            Default is `PFUAggPipeline::aggregation_df_cols$product_aggregation`.
 #' @param industry_aggregation The industry aggregation column.
-#'                            Default is `PFUAggDatabase::aggregation_df_cols$industry_aggregation`.
+#'                            Default is `PFUAggPipeline::aggregation_df_cols$industry_aggregation`.
 #' @param specified A string that indicates a product or industry is specified.
-#'                  Default is `PFUAggDatabase::aggregation_df_cols$specified`.
+#'                  Default is `PFUAggPipeline::aggregation_df_cols$specified`.
 #' @param despecified A string that indicates a product or industry is despecified
-#'                    Default is `PFUAggDatabase::aggregation_df_cols$despecified`.
+#'                    Default is `PFUAggPipeline::aggregation_df_cols$despecified`.
 #' @param ungrouped A string that indicates a product or industry is grouped.
-#'                  Default is `PFUAggDatabase::aggregation_df_cols$ungrouped`.
+#'                  Default is `PFUAggPipeline::aggregation_df_cols$ungrouped`.
 #' @param grouped A string that indicates a product or industry is grouped.
-#'                Default is `PFUAggDatabase::aggregation_df_cols$grouped`.
+#'                Default is `PFUAggPipeline::aggregation_df_cols$grouped`.
 #'
 #' @return A stacked set of data frames with different product and industry groupings
 #'
@@ -240,12 +240,12 @@ stack_group_aggregations <- function(despecified_df,
                                      Gr_Pr = NULL,
                                      Gr_In = NULL,
                                      Gr_PrIn = NULL,
-                                     product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-                                     industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-                                     specified = PFUAggDatabase::aggregation_df_cols$specified,
-                                     despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-                                     ungrouped = PFUAggDatabase::aggregation_df_cols$ungrouped,
-                                     grouped = PFUAggDatabase::aggregation_df_cols$grouped) {
+                                     product_aggregation = PFUAggPipeline::aggregation_df_cols$product_aggregation,
+                                     industry_aggregation = PFUAggPipeline::aggregation_df_cols$industry_aggregation,
+                                     specified = PFUAggPipeline::aggregation_df_cols$specified,
+                                     despecified = PFUAggPipeline::aggregation_df_cols$despecified,
+                                     ungrouped = PFUAggPipeline::aggregation_df_cols$ungrouped,
+                                     grouped = PFUAggPipeline::aggregation_df_cols$grouped) {
 
   out <- despecified_df
   if (!is.null(Gr_Pr)) {
@@ -377,13 +377,13 @@ rename_suffixed_psut_columns <- function(.psut_data,
 #'                          See `Recca::aggregate_cols`.
 #' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_eiou_aggregated_colname,U_eiou_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname The names of output aggregated columns.
 #'                          Defaults are the matrix names with `aggregated_suffix` appended.
-#' @param product_aggregation,industry_aggregation,specified,despecified,grouped,product_sector See `PFUAggDatabase::aggregation_df_cols`.
+#' @param product_aggregation,industry_aggregation,specified,despecified,grouped,product_sector See `PFUAggPipeline::aggregation_df_cols`.
 #' @param chopped_mat,chopped_var Column names that indicate which matrix has been chopped, **R** or **Y**.
-#'                                Default values are from `PFUAggDatabase::aggregation_df_cols`.
+#'                                Default values are from `PFUAggPipeline::aggregation_df_cols`.
 #' @param Y_matname,R_matname Matrix names for the `chopped_mat` and `chopped_var` columns.
 #'                            Default values are from `Recca::psut_cols$R` and `Recca::psut_cols$Y`.
 #' @param none The string to specify no aggregations.
-#'             Default is `PFUAggDatabase::agg_metadata$none`.
+#'             Default is `PFUAggPipeline::agg_metadata$none`.
 #'
 #' @return A data frame of efficiencies for the original, despecified, and grouped versions
 #'         of `.psut_data`.
@@ -429,18 +429,18 @@ pr_in_agg_pipeline <- function(.psut_data,
                                # The suffix added to the name of the columns of aggregated matrices
                                aggregated_suffix = Recca::aggregate_cols$aggregated_suffix,
                                # Some identifying strings
-                               product_aggregation = PFUAggDatabase::aggregation_df_cols$product_aggregation,
-                               industry_aggregation = PFUAggDatabase::aggregation_df_cols$industry_aggregation,
-                               specified = PFUAggDatabase::aggregation_df_cols$specified,
-                               despecified = PFUAggDatabase::aggregation_df_cols$despecified,
-                               grouped = PFUAggDatabase::aggregation_df_cols$grouped,
+                               product_aggregation = PFUAggPipeline::aggregation_df_cols$product_aggregation,
+                               industry_aggregation = PFUAggPipeline::aggregation_df_cols$industry_aggregation,
+                               specified = PFUAggPipeline::aggregation_df_cols$specified,
+                               despecified = PFUAggPipeline::aggregation_df_cols$despecified,
+                               grouped = PFUAggPipeline::aggregation_df_cols$grouped,
                                # Strings for chopping
-                               chopped_mat = PFUAggDatabase::aggregation_df_cols$chopped_mat,
-                               chopped_var = PFUAggDatabase::aggregation_df_cols$chopped_var,
+                               chopped_mat = PFUAggPipeline::aggregation_df_cols$chopped_mat,
+                               chopped_var = PFUAggPipeline::aggregation_df_cols$chopped_var,
                                Y_matname = Recca::psut_cols$Y,
                                R_matname = Recca::psut_cols$R,
-                               product_sector = PFUAggDatabase::aggregation_df_cols$product_sector,
-                               none = PFUAggDatabase::agg_metadata$none) {
+                               product_sector = PFUAggPipeline::aggregation_df_cols$product_sector,
+                               none = PFUAggPipeline::agg_metadata$none) {
 
   if (nrow(.psut_data) == 0) {
     return(NULL)

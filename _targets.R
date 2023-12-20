@@ -87,7 +87,7 @@ if (startsWith(sys_info[["nodename"]], "Mac")) {
                                                 "aggregation_mapping.xlsx")
   setup[["country_concordance_path"]] <- "inst/exiobase_data/Country_Concordance_Full.xlsx"
 } else {
-  stop("Unknown system in _targets.R for PFUAggDatabase. Can't set input and output locations.")
+  stop("Unknown system in _targets.R for PFUAggPipeline. Can't set input and output locations.")
 }
 
 # Set up for multithreaded work on the local machine.
@@ -95,7 +95,7 @@ future::plan(future.callr::callr)
 
 # Set options for all targets.
 targets::tar_option_set(
-  packages = "PFUAggDatabase",
+  packages = "PFUAggPipeline",
   # Indicate that storage and retrieval of subtargets
   # should be done by the worker thread,
   # not the main thread.
@@ -110,7 +110,7 @@ targets::tar_option_set(
 )
 
 # Pull in the pipeline
-PFUAggDatabase::get_pipeline(countries = countries,
+PFUAggPipeline::get_pipeline(countries = countries,
                              years = years,
                              do_chops = do_chops,
                              psut_release = psut_release,
