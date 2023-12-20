@@ -7,7 +7,7 @@ Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# PFUAggPipeline 0.1.8 (2023-12-20)
+# PFUAggPipeline 0.1.8 (2023-12-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10413279.svg)](https://doi.org/10.5281/zenodo.10413279)
 
 * Name change to `PFUAggPipeline`.
 
