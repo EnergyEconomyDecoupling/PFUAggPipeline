@@ -56,7 +56,7 @@ If energy carriers are mis-identified for aggregation,
 at a primary, final, or useful stage. 
 
 
-## Industry aggregation
+## Industry aggregations
 
 There are, again, three options for values in the Industry.aggregation column:
 
