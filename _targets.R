@@ -17,26 +17,26 @@ library(targets)
 # countries <- "CHNM"
 # countries <- "GHA"
 # countries <- "all" # Run all countries in the PSUT target.
-countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
 # Countries with unique allocation data plus BEL and TUR (for Pierre).
 # countries <- c("BRA", "CAN", "CHNM", "DEU", "DNK", "ESP", "FRA", "GBR", "GHA", "GRC",
 #                "HKG", "HND", "IDN", "IND", "JOR", "JPN", "KOR", "MEX", "NOR", "PRT",
 #                "RUS", "USA", "WABK", "WMBK", "ZAF", "BEL", "TUR")
+countries <- c(PFUPipelineTools::canonical_countries, "WRLD") |> as.character()
 
 
 # Set the years to be analyzed.
-years <- 1960:2020
 # years <- 1971:1973
 # years <- 1971:1978
 # years <- 1971
 # years <- 1960
 # years <- 1960:1961
+years <- 1960:2020
 
 # Tells whether to do the R and Y chops.
 do_chops <- FALSE
 
 setup_version <- "v1.3"
-output_version <- "v1.3b1"
+output_version <- "v1.3b2"
 
 # Set the release to be used for input.
 # psut_release <- "20230309T184624Z-7ace5"  # v0.9 (USA only)
@@ -50,14 +50,17 @@ output_version <- "v1.3b1"
 # psut_release <- "20230130T150642Z-631e2"  # For WRLD, 1971
 # psut_release <- "20230130T192359Z-1d3ec"  # For WRLD, 1971-2019
 psut_release <- PFUSetup::pin_versions(output_version)[["psut"]]
+Y_fu_U_EIOU_fu_details_release <- PFUSetup::pin_versions(output_version)[["Y_fu_U_EIOU_fu_details"]]
 
 # psut_without_neu_release <- "20231207T124907Z-bdcbc"    # v1.2 (hopefully) final
 psut_without_neu_release <- PFUSetup::pin_versions(output_version)[["psut_without_neu"]]
 # phi_vecs_release <- "20231207T124813Z-c8827" # v1.2
 phi_vecs_release <- PFUSetup::pin_versions(output_version)[["phi_vecs"]]
 
+
+
 # Should we release the results?
-release <- TRUE
+release <- FALSE
 
 
 
@@ -119,6 +122,7 @@ PFUAggPipeline::get_pipeline(countries = countries,
                              psut_release = psut_release,
                              psut_without_neu_release = psut_without_neu_release,
                              phi_vecs_release = phi_vecs_release,
+                             Y_fu_U_EIOU_fu_details_release = Y_fu_U_EIOU_fu_details_release,
                              aggregation_maps_path = setup[["aggregation_mapping_path"]],
                              pipeline_releases_folder = setup[["pipeline_releases_folder"]],
                              pipeline_caches_folder = setup[["pipeline_caches_folder"]],
