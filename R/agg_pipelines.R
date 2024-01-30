@@ -14,8 +14,8 @@
 #'                                 See details.
 #' @param phi_vecs_release The release we'll use from `pipeline_releases_folder`.
 #'                         See details.
-#' @param Y_fu_U_EIOU_details_release The release we'll use from `pipeline_releases_folder`.
-#'                                    See details.
+#' @param Y_fu_U_EIOU_fu_details_release The release we'll use from `pipeline_releases_folder`.
+#'                                       See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param pipeline_caches_folder The path to a folder where releases of pipeline caches are stored.
@@ -47,6 +47,7 @@ get_pipeline <- function(countries = "all",
   PSUT_Re_all_Chop_all_Ds_all_Gr_all <- NULL
   PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all <- NULL
   PSUT_Re_World <- NULL
+  YfuUEIOUfuDetails <- NULL
 
   list(
 
