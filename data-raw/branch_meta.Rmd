@@ -41,21 +41,3 @@ Use this template to describe feature branches.
 
 
 
-#### non_joss_review_develop
-
-* Purpose: Holds code that is not part of the JOSS paper review.
-           We will treat this branch as the "develop" branch
-           until the JOSS paper review is complete.
-* Next step: Branch off of non_joss_review_develop to create 
-             new features for the aggregation computational pipeline. 
-* Author: Matthew Kuperus Heun
-* Date: 25 Sept 2023
-
-
-#### region_agg
-
-* Mother branch: non_joss_review_develop
-* Purpose: Build aggregations for FoSUN and FoYUG into pipelines
-* Next step: Add to pipeline and test
-* Author: Matthew Kuperus Heun
-* Date: 1 Dec 2023
