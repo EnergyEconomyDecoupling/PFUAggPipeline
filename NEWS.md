@@ -7,25 +7,25 @@ Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# PFUAggPipeline 0.1.9 (2024-02-07) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10633138.svg)](https://doi.org/10.5281/zenodo.10633138)
+## PFUAggPipeline 0.1.9 (2024-02-07) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10633138.svg)](https://doi.org/10.5281/zenodo.10633138)
 
 * New target called "YfuUEIOUfudetails_Re_all"
   that aggregates details matrices to 
   regional, continental, and world levels.
 
 
-# PFUAggPipeline 0.1.8 (2023-12-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10413279.svg)](https://doi.org/10.5281/zenodo.10413279)
+## PFUAggPipeline 0.1.8 (2023-12-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10413279.svg)](https://doi.org/10.5281/zenodo.10413279)
 
 * Name change to `PFUAggPipeline`.
 
 
-# PFUAggDatbase 0.1.7 (2023-12-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10408255.svg)](https://doi.org/10.5281/zenodo.10408255)
+## PFUAggDatabase 0.1.7 (2023-12-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10408255.svg)](https://doi.org/10.5281/zenodo.10408255)
 
 * Update order of dependencies to facilitate
   loading upon install.
 
 
-# PFUAggDatbase 0.1.6 (2023-12-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10407920.svg)](https://doi.org/10.5281/zenodo.10407920)
+## PFUAggDatabase 0.1.6 (2023-12-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10407920.svg)](https://doi.org/10.5281/zenodo.10407920)
 
 * Cache is no longer saved.
 * Add statement of need to the `README.Rmd` file.
@@ -33,7 +33,7 @@ which always resolves to the latest release.
   installation with metapackage `CLPFUDatabase`.
 
 
-# PFUAggDatbase 0.1.5 (2023-12-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10345811.svg)](https://doi.org/10.5281/zenodo.10345811)
+## PFUAggDatabase 0.1.5 (2023-12-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10345811.svg)](https://doi.org/10.5281/zenodo.10345811)
 
 * Delete continuous integration workflow.
   The vignettes cannot be built on GitHub, 
@@ -42,14 +42,14 @@ which always resolves to the latest release.
   versions of PSUT data frame.
 
 
-# PFUAggDatbase 0.1.4 (2023-11-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10210406.svg)](https://doi.org/10.5281/zenodo.10210406)
+## PFUAggDatabase 0.1.4 (2023-11-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10210406.svg)](https://doi.org/10.5281/zenodo.10210406)
 
 * Fixed typos in README.Rmd and README.md stemming from earlier name change
   in response to JOSS paper review.
   Specifically, PFUAggWorkflow --> PFUAggPipeline.
 
 
-# PFUAggDatbase 0.1.3 (2023-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8265840.svg)](https://doi.org/10.5281/zenodo.8265840)
+## PFUAggDatabase 0.1.3 (2023-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8265840.svg)](https://doi.org/10.5281/zenodo.8265840)
 
 * Fixed a bug where U_eiou wasn't in argument list 
   for a call to `Recca::finaldemand_aggregates()`.
@@ -64,12 +64,12 @@ which always resolves to the latest release.
   An nicely formatted error is thrown if they are not.
 
 
-# PFUAggDatbase 0.1.2 (2023-06-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8011597.svg)](https://doi.org/10.5281/zenodo.8011597)
+## PFUAggDatabase 0.1.2 (2023-06-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8011597.svg)](https://doi.org/10.5281/zenodo.8011597)
 
 * Updated targets store location.
 
 
-# PFUAggDatbase 0.1.1 (2022-06-05) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8007869.svg)](https://doi.org/10.5281/zenodo.8007869)
+## PFUAggDatabase 0.1.1 (2022-06-05) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8007869.svg)](https://doi.org/10.5281/zenodo.8007869)
 
 * Preparing pipeline for execution on ARC facilities at Leeds University.
 * Rearranged the order of operations for the pipeline.
@@ -87,7 +87,7 @@ which always resolves to the latest release.
 * Now creates targets for a vector of pins from the `PFUDatabase`.
 
 
-# PFUAggDatbase 0.1.0 (2022-04-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6463858.svg)](https://doi.org/10.5281/zenodo.6463858)
+## PFUAggDatabase 0.1.0 (2022-04-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6463858.svg)](https://doi.org/10.5281/zenodo.6463858)
 
 * First fully-working version where the pipeline
   completes in parallel on its own,
@@ -102,7 +102,7 @@ which always resolves to the latest release.
 * Add DOI badge to Readme.Rmd.
 
 
-# PFUAggDatbase 0.0.1 (2022-04-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6409760.svg)](https://doi.org/10.5281/zenodo.6409760)
+## PFUAggDatabase 0.0.1 (2022-04-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6409760.svg)](https://doi.org/10.5281/zenodo.6409760)
 
 * Now saving important results to a pinboard.
 * Now saving workflow cache to a .zip file.
