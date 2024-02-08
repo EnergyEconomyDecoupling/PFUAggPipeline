@@ -11,6 +11,7 @@ get_pipeline(
   psut_release,
   psut_without_neu_release,
   phi_vecs_release,
+  Y_fu_U_EIOU_fu_details_release,
   aggregation_maps_path,
   pipeline_releases_folder,
   pipeline_caches_folder,
@@ -33,6 +34,9 @@ See details.}
 See details.}
 
 \item{phi_vecs_release}{The release we'll use from \code{pipeline_releases_folder}.
+See details.}
+
+\item{Y_fu_U_EIOU_fu_details_release}{The release we'll use from \code{pipeline_releases_folder}.
 See details.}
 
 \item{aggregation_maps_path}{The path to the Excel file of aggregation maps.}

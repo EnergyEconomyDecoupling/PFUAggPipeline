@@ -1,0 +1,94 @@
+---
+title: "Industry and Product Aggregation"
+output: rmarkdown::html_vignette
+author: Matthew Kuperus Heun
+vignette: >
+  %\VignetteIndexEntry{Industry and Product Aggregation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Introduction
+
+Some CL-PFU database products contain aggregated
+products (energy carriers) and industries (sectors) on
+rows and columns of the **RUVY** matrices that describe 
+energy conversion chains (ECCs).
+This vignette discusses the meaning of the some columns 
+in `matsindf` data frames such as `agg_eta_pfu`.
+
+
+## Product aggregations
+
+The `Product.aggregation` column tells how products (i.e., energy carriers) 
+are aggregated in the **RUVY** matrices.
+There are three possible values.
+
+- _Specified_:
+  No aggregation is applied before summing to primary, final, and useful stages.  
+  Energy carriers are listed as, for example, "Anthracite [from Coal mines]".
+  Specification gives the source of the Anthracite, in this case "Coal mines".
+- _Despecified_:
+  Some aggregation has been applied before summing to primary, final, and useful stages.  
+  Energy carriers are listed as, simply, Anthracite.  
+  There is no specific information about the source of the Anthracite.
+- _Grouped_:
+  Energy carriers are aggregated to groups.  
+  For example, Anthracite, Brown coal, and all other coals are aggregated 
+  to "Coal & coal products".  
+
+In many data frames, rows for all of
+"Specified", "Despecified", and "Grouped"
+are present.
+Although there should be no difference between "Specified", "Despecified", and "Grouped"
+when summing to primary, final, and useful stages, 
+I usually choose "Specified".
+If energy carriers are mis-identified for aggregation, 
+"Despecified" and "Grouped" will contain less than all of the energy or exergy
+at a primary, final, or useful stage. 
+
+
+## Industry aggregations
+
+There are, again, three options for values in the Industry.aggregation column:
+
+- _Specified_:
+  No aggregation has been applied to before summing to primary, final, and useful stages.  
+  Some sectors are listed as, for example, "Imports [of Brown coal]".
+- _Despecified_:
+  Some aggregation has been applied before summing to primary, final, and useful stages.  
+  Some sectors are listed simply as "Imports" without specifying 
+  the energy carrier that is imported.  
+- _Grouped_:
+  Some sectors are aggregated to groups before summing to primary, final, and useful stages.
+  For example,
+  "World aviation bunkers", 
+  "Domestic aviation",
+  "Road", 
+  "Rail", 
+  "Pipeline transport", 
+  "World marine bunkers", 
+  "Domestic navigation", 
+  "Transport not elsewhere specified",
+  "International aviation", and
+  "International navigation" 
+  are aggregated to "Transport".
+
+Again, I usually choose the "Specified" option, 
+although when summing to primary, final, and useful stages,
+there should be no difference between Specified, Despecified, and Grouped.
+
+
+## Conclusion
+
+This vignette described the meaning of the some columns 
+("Product.aggregation" and "Industry.aggregation")
+in `matsindf` data frames such as `agg_eta_pfu`.

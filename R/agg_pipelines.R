@@ -10,10 +10,12 @@
 #' @param do_chops A boolean that tells whether to perform the R and Y chops.
 #' @param psut_release The release we'll use from `pipeline_releases_folder`.
 #'                     See details.
-#' @param phi_vecs_release The release we'll use from `pipeline_releases_folder`.
-#'                         See details.
 #' @param psut_without_neu_release The release we'll use from `pipeline_releases_folder`.
 #'                                 See details.
+#' @param phi_vecs_release The release we'll use from `pipeline_releases_folder`.
+#'                         See details.
+#' @param Y_fu_U_EIOU_fu_details_release The release we'll use from `pipeline_releases_folder`.
+#'                                       See details.
 #' @param aggregation_maps_path The path to the Excel file of aggregation maps.
 #' @param pipeline_releases_folder The path to a folder where releases of output targets are pinned.
 #' @param pipeline_caches_folder The path to a folder where releases of pipeline caches are stored.
@@ -29,6 +31,7 @@ get_pipeline <- function(countries = "all",
                          psut_release,
                          psut_without_neu_release,
                          phi_vecs_release,
+                         Y_fu_U_EIOU_fu_details_release,
                          aggregation_maps_path,
                          pipeline_releases_folder,
                          pipeline_caches_folder,
@@ -44,6 +47,7 @@ get_pipeline <- function(countries = "all",
   PSUT_Re_all_Chop_all_Ds_all_Gr_all <- NULL
   PSUTWithoutNEU_Re_all_Chop_all_Ds_all_Gr_all <- NULL
   PSUT_Re_World <- NULL
+  YfuUEIOUfuDetails <- NULL
 
   list(
 
@@ -120,6 +124,10 @@ get_pipeline <- function(countries = "all",
       "PSUTWithoutNEURelease",
       unname(psut_without_neu_release)
     ),
+    targets::tar_target_raw(
+      "YfuUEIOUfuDetailsRelease",
+      unname(Y_fu_U_EIOU_fu_details_release)
+    ),
 
 
     # PSUT ---------------------------------------------------------------------
@@ -159,6 +167,21 @@ get_pipeline <- function(countries = "all",
     tarchetypes::tar_group_by(
       name = "PSUTWithoutNEUbyYear",
       command = PSUTWithoutNEU,
+      Year
+    ),
+
+    # Y_fu_U_EIOU_fu_details ---------------------------------------------------------------------
+
+    # Pull in the PSUT data frame
+    targets::tar_target_raw(
+      "YfuUEIOUfuDetails",
+      quote(pins::board_folder(PinboardFolder, versioned = TRUE) |>
+              pins::pin_read("Y_fu_U_EIOU_fu_details", version = YfuUEIOUfuDetailsRelease) |>
+              PFUPipelineTools::filter_countries_years(countries = Countries, years = Years))
+    ),
+    tarchetypes::tar_group_by(
+      name = "YfuUEIOUfuDetailsbyYear",
+      command = YfuUEIOUfuDetails,
       Year
     ),
 
@@ -370,7 +393,26 @@ get_pipeline <- function(countries = "all",
                                              targ = PivotedAggEtaPFUWithoutNEU,
                                              pin_name = "agg_eta_pfu_without_neu_csv",
                                              type = "csv",
-                                             release = Release))) #,
+                                             release = Release))),
+
+
+    targets::tar_target_raw(
+      "YfuUEIOUfudetails_Re_all",
+      quote(YfuUEIOUfuDetailsbyYear |>
+              region_pipeline(region_aggregation_map = AggregationMaps$region_aggregation,
+                              continent_aggregation_map = AggregationMaps$continent_aggregation,
+                              world_aggregation_map = AggregationMaps$world_aggregation) |>
+              PFUPipelineTools::tar_ungroup()),
+      pattern = quote(map(YfuUEIOUfuDetailsbyYear))
+    ),
+    targets::tar_target_raw(
+      "ReleaseYfuUEIOUfudetails_Re_all",
+      quote(PFUPipelineTools::release_target(pipeline_releases_folder = PinboardFolder,
+                                             targ = YfuUEIOUfudetails_Re_all,
+                                             pin_name = "Y_fu_U_EIOU_fu_details_Re_all",
+                                             release = Release))
+    )
+
 
     # Zip the cache and store in the pipeline_caches_folder --------------------
 

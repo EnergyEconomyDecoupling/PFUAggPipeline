@@ -3,13 +3,13 @@ citHeader("To cite package ‘PSUTAggWorkflow’ in publications use:")
 citEntry(entry = "Manual",
   title        = "PFUAggPipeline: Calculate Aggregations and Efficiencies For Energy Conversion Chains in PSUT Format",
   author       = personList(as.person("Matthew Kuperus Heun")),
-  year         = "2023",
-  note         = "R package version 0.1.8",
+  year         = "2024",
+  note         = "R package version 0.1.9",
   url          = "https://doi.org/10.5281/zenodo.6409759",
 
   textVersion  =
-  paste("Matthew Kuperus Heun (2023).",
+  paste("Matthew Kuperus Heun (2024).",
         "PFUAggPipeline: Calculate Aggregations and Efficiencies For Energy Conversion Chains in PSUT Format",
-        "R package version 0.1.8.",
+        "R package version 0.1.9.",
         "https://doi.org/10.5281/zenodo.6409759")
 )
